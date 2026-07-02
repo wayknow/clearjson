@@ -69,6 +69,13 @@ clearjson/
 │       ├── stream-parser.js   # Web Worker streaming parser
 │       ├── virtual-tree.js    # Virtual scrolling tree view
 │       └── tree.js            # Standard tree view renderer
+├── tests/                     # Test suite (Node built-in test runner)
+│   ├── helpers/setup.js
+│   ├── test-parser.js
+│   ├── test-tokenizer.js
+│   ├── test-jwt.js
+│   ├── test-license.js
+│   └── test-export.js
 ├── icons/
 │   ├── icon.svg
 │   ├── icon16.png
@@ -84,6 +91,9 @@ clearjson/
 # 1. chrome://extensions/ → Developer mode ON
 # 2. Load unpacked → select the project root
 # 3. Edit files and click refresh on the extension card
+
+# Run tests (zero dependencies, Node 18+):
+npm test
 ```
 
 ### Phase 1 (current)

@@ -44,8 +44,10 @@
 - URL 排除列表（正则匹配）
 - 导出菜单（Pro 解锁 CSV/TS/YAML，免费可复制/下载 JSON）
 - Pro 升级页面 + 许可证输入 + 激活/停用
+- JWT 自动解码（Pro）：检测 `eyJ...` token，内联展示 Header + Payload
+- 正式测试套件（132 个测试，Node 原生 test runner，零依赖）
 
-**代码量：** 24 个文件，5,325 行（含 CSS 729 行）
+**代码量：** 27 个文件，6,500+ 行（含 CSS 830+ 行）
 
 ---
 
@@ -135,10 +137,9 @@
 
 ### 技术债
 1. **Worker 脚本是内联 Blob URL**：符合 CSP 但不够优雅，长期考虑独立 worker 文件
-3. **虚拟树的 ROW_HEIGHT 硬编码为 22px**：如果用户缩放页面会错位。需要改为动态测量
-4. **搜索不支持正则（免费版）**：代码留了接口，但正则按钮仅 Pro 可见
-5. **没有单元测试文件**：测试是通过 bash heredoc 临时跑的，需要建正式的 `tests/` 目录
-6. **内容脚本在 `document_start` 时 `document.body` 为 null**：通过 `requestAnimationFrame` 轮询，这在极慢连接下可能失败
+2. **虚拟树的 ROW_HEIGHT 硬编码为 22px**：如果用户缩放页面会错位。需要改为动态测量
+3. **搜索不支持正则（免费版）**：代码留了接口，但正则按钮仅 Pro 可见
+4. **内容脚本在 `document_start` 时 `document.body` 为 null**：通过 `requestAnimationFrame` 轮询，这在极慢连接下可能失败
 
 ### 性能边界
 - 免费版：建议 < 2MB
@@ -196,11 +197,15 @@ ClearJSON.License.storeLicense(key)
 
 ### 运行测试
 ```bash
-node << 'NODEEOF'
-// 测试脚本在 conversation history 里，需要提取到 tests/ 目录
-// TODO: 创建正式测试套件
-NODEEOF
+npm test                    # 全部 132 个测试
+npm run test:parser         # 仅 parser 模块
+npm run test:tokenizer      # 仅 tokenizer 模块
+npm run test:jwt            # 仅 JWT 模块
+npm run test:license        # 仅 license 模块
+npm run test:export         # 仅 export 模块
 ```
+
+零依赖，使用 Node.js 内置 test runner (`node:test`)。
 
 ### 项目结构
 ```
@@ -232,6 +237,14 @@ clearjson/
 │       ├── stream-parser.js   # Web Worker 大文件解析器
 │       ├── virtual-tree.js    # 虚拟滚动树形视图
 │       └── tree.js            # 标准递归树形视图
+├── tests/                     # 测试套件（Node 原生 test runner）
+│   ├── helpers/setup.js       # 测试环境模拟
+│   ├── test-parser.js
+│   ├── test-tokenizer.js
+│   ├── test-jwt.js
+│   ├── test-license.js
+│   └── test-export.js
+├── package.json               # npm test 脚本
 ├── features.md                # 完整功能列表
 ├── PRODUCT.md                 # 企划书
 └── README.md                  # 公开的 README
