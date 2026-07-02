@@ -205,8 +205,11 @@ var ClearJSON = window.ClearJSON || {};
       } else if (typeof val === 'number') {
         valHTML = '<span class="cj-number">' + val + '</span>';
       } else if (typeof val === 'string') {
-        // Check for URL
-        if (C.Tokenizer && C.Tokenizer.isImageURL(val)) {
+        // Check for JWT (Pro feature), URL, or image
+	        if (C.JWT && C.JWT.isProEnabled() && C.JWT.isJWT(val)) {
+	          var jwtRender = C.JWT.renderJWT(val);
+	          valHTML = jwtRender.full;
+	        } else if (C.Tokenizer && C.Tokenizer.isImageURL(val)) {
           valHTML = '<span class="cj-string">"</span><span class="cj-image" data-img-src="' + escapeHTML(val) + '">' + escapeHTML(val) + '</span><span class="cj-string">"</span>';
         } else if (C.Tokenizer && C.Tokenizer.isURL(val)) {
           valHTML = '<span class="cj-string">"</span><a href="' + escapeHTML(val) + '" target="_blank" rel="noopener" class="cj-link">' + escapeHTML(val) + '</a><span class="cj-string">"</span>';

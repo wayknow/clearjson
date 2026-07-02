@@ -289,8 +289,12 @@ var ClearJSON = window.ClearJSON || {};
       span.className += ' cj-number';
       span.textContent = formatNumber(value);
     } else if (typeof value === 'string') {
-      // Check for URL or image
-      if (C.Tokenizer.isImageURL(value)) {
+      // Check for JWT (Pro feature)
+      if (C.JWT && C.JWT.isProEnabled() && C.JWT.isJWT(value)) {
+        var jwtRender = C.JWT.renderJWT(value);
+        span.className += ' cj-jwt';
+        span.innerHTML = jwtRender.full;
+      } else if (C.Tokenizer.isImageURL(value)) {
         span.className += ' cj-image';
         span.setAttribute('data-img-src', value);
         span.innerHTML = '<span class="cj-string">"</span>' +

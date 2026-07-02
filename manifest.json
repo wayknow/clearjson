@@ -32,6 +32,7 @@
         "src/utils/themes.js",
         "src/utils/license.js",
         "src/utils/export.js",
+        "src/utils/jwt.js",
         "src/utils/stream-parser.js",
         "src/utils/virtual-tree.js",
         "src/utils/tree.js",
