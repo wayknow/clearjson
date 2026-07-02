@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-07-02 | 当前版本：v0.1.0（Phase 2 完成）
+> 最后更新：2026-07-02 | 当前版本：v0.2.0（许可证系统接入 Creem，在线验证）
 
 ---
 
@@ -92,10 +92,14 @@
 - 实现：Worker 构建 flat node array → 主线程虚拟树只渲染可见行
 
 ### 许可证系统设计
-- 不做在线验证（隐私承诺 + 无服务器）
-- 本地 HMAC-checksum 校验：`CLEARJSON-XXXX-XXXX-XXXX` 格式
+- 在线验证：`POST https://api.wayknow.tech/clearjson/api/license/verify`
+- Cloudflare Worker + D1，与 SnapMark 共享 `api.wayknow.tech` 域名，按路径前缀分发
+- 设备绑定：每 key 最多 3 台设备，自动激活和去重
+- 7 天缓存 + 离线降级（服务器不可达时降级为本地格式校验）
 - 通过 `localStorage` + `chrome.storage.local` 双层存储
-- Phase 2 足够用，上市前升级为真正的 HMAC-SHA256 签名
+- 开发模式：`localStorage.setItem('clearjson_pro_dev', '1')` 绕过所有验证
+- Key 格式：`CLJ-XXXX-XXXX-XXXX`（29 个字符，不含 0/O/1/I/l 避免混淆）
+- Creem 支付 webhook → 自动生成 key → 存入 D1
 
 ---
 
@@ -130,8 +134,7 @@
 3. **主题切换在 content script 场景**：如果用户在新标签页打开 JSON URL，主题会重置为默认（因为 settings 异步加载）。已通过 `loadSettings` 处理，但首次加载有闪烁
 
 ### 技术债
-1. **许可证校验是简化版**：上市前需升级为 HMAC-SHA256
-2. **Worker 脚本是内联 Blob URL**：符合 CSP 但不够优雅，长期考虑独立 worker 文件
+1. **Worker 脚本是内联 Blob URL**：符合 CSP 但不够优雅，长期考虑独立 worker 文件
 3. **虚拟树的 ROW_HEIGHT 硬编码为 22px**：如果用户缩放页面会错位。需要改为动态测量
 4. **搜索不支持正则（免费版）**：代码留了接口，但正则按钮仅 Pro 可见
 5. **没有单元测试文件**：测试是通过 bash heredoc 临时跑的，需要建正式的 `tests/` 目录
@@ -149,9 +152,8 @@
 
 ### 必须完成（阻塞发布）
 1. **Chrome Web Store 商店页面准备**：截图、描述、关键词、分类
-2. **许可证系统加密升级**：checksum → HMAC-SHA256
-3. **至少 2 周的实机测试**：在日常使用中发现 bug
-4. **隐私政策页面**：GitHub Pages 或扩展内置页
+2. **至少 2 周的实机测试**：在日常使用中发现 bug
+3. **隐私政策页面**：GitHub Pages 或扩展内置页
 
 ### 应该完成（提升转化）
 5. **JWT 自动解码**（Pro）：检测 `eyJ...` token，内联展示 header+payload
@@ -205,6 +207,11 @@ NODEEOF
 clearjson/
 ├── manifest.json              # MV3, 最小权限
 ├── icons/                     # 16/48/128 PNG
+├── server/                    # Cloudflare Worker + D1 许可证服务
+│   ├── src/index.js           # API: verify/generate/webhook/admin
+│   ├── schema.sql             # D1 表结构
+│   ├── wrangler.toml          # name = "clearjson-license"
+│   └── README.md              # 部署文档
 ├── src/
 │   ├── content/               # 内容脚本（注入到 JSON 页面的核心逻辑）
 │   │   ├── content.js         # 检测 → 解析 → 渲染 → 搜索 → 快捷键
@@ -220,12 +227,13 @@ clearjson/
 │       ├── parser.js          # JSON 检测 + 解析 + 统计
 │       ├── tokenizer.js       # 语法高亮分词器
 │       ├── themes.js          # 30 主题 CSS 变量定义
-│       ├── license.js         # Pro 许可证系统
+│       ├── license.js         # Pro 许可证系统（在线验证 + 离线降级）
 │       ├── export.js          # CSV/TSV/YAML/TypeScript 导出
 │       ├── stream-parser.js   # Web Worker 大文件解析器
 │       ├── virtual-tree.js    # 虚拟滚动树形视图
 │       └── tree.js            # 标准递归树形视图
 ├── features.md                # 完整功能列表
+├── PRODUCT.md                 # 企划书
 └── README.md                  # 公开的 README
 ```
 
@@ -245,6 +253,7 @@ parser.js → tokenizer.js → themes.js → license.js → export.js
 
 ### Pro 功能门控
 - 所有 Pro 功能通过 `ClearJSON.License.isActive()` 检查
+- 验证流程：在线验证 → 7 天缓存 → 离线降级格式校验
 - 许可证存储在 `localStorage`（主） + `chrome.storage.local`（备）
 - 开发模式可设置 `localStorage.setItem('clearjson_pro_dev', '1')` 绕过
 

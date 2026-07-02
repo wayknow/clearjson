@@ -1,0 +1,20 @@
+# ClearJSON License Server — Cloudflare Workers config
+name = "clearjson-license"
+main = "src/index.js"
+compatibility_date = "2025-07-01"
+
+# Bind a D1 database — uncomment after running:
+#   npx wrangler d1 create clearjson-license-db
+# Then paste the database_id here:
+[[d1_databases]]
+binding = "DB"
+database_name = "clearjson-license-db"
+database_id = "66d28ea7-b5f7-45ed-a55c-ade5ea26197f"
+
+# Environment variables
+[vars]
+# Set via `npx wrangler secret put ADMIN_API_KEY` (use a strong random string)
+# ADMIN_API_KEY is read from secrets, not vars
+
+# Custom domain — after first deploy with workers.dev, add this in Cloudflare Dashboard:
+# Workers & Pages → clearjson-license → Triggers → Custom Domains → Add "api.wayknow.tech/clearjson"

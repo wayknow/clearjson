@@ -1,0 +1,18 @@
+{
+  "name": "clearjson-license-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ClearJSON license verification & generation API (Cloudflare Workers + D1)",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:create": "wrangler d1 create clearjson-license-db",
+    "db:init": "wrangler d1 execute clearjson-license-db --file=./schema.sql",
+    "db:local-init": "wrangler d1 execute clearjson-license-db --file=./schema.sql --local",
+    "token:generate": "node scripts/generate-token.js"
+  },
+  "devDependencies": {
+    "wrangler": "^3.60.0"
+  }
+}

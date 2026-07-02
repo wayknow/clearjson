@@ -1,12 +1,11 @@
 /**
  * ClearJSON Pro License System
  *
- * Validates a license key locally (no server required).
- * Uses a simple format: CLEARJSON-XXXX-XXXX-XXXX
- * Key is cryptographically signed with HMAC-SHA256.
+ * Validates a license key against the ClearJSON license server.
+ * Falls back to offline format validation when server is unreachable.
  *
- * In production, keys are generated server-side and the secret
- * is embedded in the extension. For now, uses a local validation.
+ * Key format: CLJ-XXXX-XXXX-XXXX
+ * Server: Cloudflare Worker + D1 (see ../server/)
  *
  * Pro features gated behind this:
  *   - Large file virtual scrolling (>2MB)
@@ -22,6 +21,16 @@ var ClearJSON = window.ClearJSON || {};
 (function (C) {
   'use strict';
 
+  // ================================================================
+  //  CONFIGURATION
+  // ================================================================
+
+  var LICENSE_API_BASE = 'https://api.wayknow.tech/clearjson';
+  var CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+  var REQUEST_TIMEOUT_MS = 8000;
+  var KEY_PREFIX = 'CLJ';
+  var KEY_REGEX = /^CLJ-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+
   var PRO_FEATURES = [
     'largeFiles',
     'advancedSearch',
@@ -32,53 +41,136 @@ var ClearJSON = window.ClearJSON || {};
   ];
 
   // ================================================================
-  //  LICENSE VALIDATION
+  //  DEVICE ID
+  // ================================================================
+
+  function getDeviceId() {
+    try {
+      var raw = localStorage.getItem('clearjson_device_id');
+      if (raw) return raw;
+      var id = 'clj-' + crypto.randomUUID();
+      localStorage.setItem('clearjson_device_id', id);
+      return id;
+    } catch (e) {
+      return 'clj-unknown';
+    }
+  }
+
+  function getDeviceName() {
+    var ua = navigator.userAgent;
+    var isMac = ua.indexOf('Mac') !== -1;
+    var isWin = ua.indexOf('Windows') !== -1;
+    var isLinux = ua.indexOf('Linux') !== -1 && ua.indexOf('Android') === -1;
+    var os = isMac ? 'macOS' : isWin ? 'Windows' : isLinux ? 'Linux' : 'Unknown';
+    var chromeMatch = ua.match(/Chrome\/(\d+)/);
+    var chromeVer = chromeMatch ? 'Chrome ' + chromeMatch[1] : 'Chrome';
+    return os + ' · ' + chromeVer;
+  }
+
+  // ================================================================
+  //  ONLINE VERIFICATION
+  // ================================================================
+
+  function verifyOnline(key, timeout) {
+    timeout = timeout || REQUEST_TIMEOUT_MS;
+    var deviceId = getDeviceId();
+
+    var controller = new AbortController();
+    var timer = setTimeout(function () { controller.abort(); }, timeout);
+
+    return fetch(LICENSE_API_BASE + '/api/license/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        license_key: key,
+        device_id: deviceId,
+        device_name: getDeviceName()
+      }),
+      signal: controller.signal
+    })
+      .then(function (response) {
+        clearTimeout(timer);
+        if (!response.ok) {
+          console.warn('License server returned', response.status, '— falling back to offline');
+          return { valid: isValidFormat(key), tier: isValidFormat(key) ? 'pro' : null, offline: true };
+        }
+        return response.json().then(function (data) {
+          data.offline = false;
+          return data;
+        });
+      })
+      .catch(function (err) {
+        clearTimeout(timer);
+        console.warn('License server unreachable — using offline validation:', err.message);
+        return { valid: isValidFormat(key), tier: isValidFormat(key) ? 'pro' : null, offline: true, error: err.message };
+      });
+  }
+
+  // ================================================================
+  //  CACHED VERIFICATION
+  // ================================================================
+
+  function getCachedVerification() {
+    try {
+      var raw = localStorage.getItem('clearjson_license_verification');
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function setCachedVerification(key, result) {
+    try {
+      var cache = {
+        license_key: key,
+        valid: result.valid,
+        tier: result.tier,
+        email: result.email,
+        activations: result.activations,
+        max_devices: result.max_devices,
+        offline: result.offline,
+        timestamp: Date.now()
+      };
+      localStorage.setItem('clearjson_license_verification', JSON.stringify(cache));
+    } catch (e) {
+      // localStorage unavailable
+    }
+  }
+
+  function clearCachedVerification() {
+    try { localStorage.removeItem('clearjson_license_verification'); } catch (e) {}
+  }
+
+  // ================================================================
+  //  VALIDATION
+  // ================================================================
+
+  function isValidFormat(key) {
+    if (!key || typeof key !== 'string') return false;
+    return KEY_REGEX.test(key.trim().toUpperCase());
+  }
+
+  // ================================================================
+  //  PUBLIC API
   // ================================================================
 
   /**
-   * Simple local license key validation.
-   *
-   * Key format: CLEARJSON-XXXX-XXXX-XXXX
-   * where XXXX are hex characters with a checksum.
-   * This is intentionally simple for Phase 2 — real crypto
-   * signing will be added before public launch.
-   */
-  function validateKey(key) {
-    if (!key || typeof key !== 'string') return false;
-
-    // Strip whitespace
-    key = key.trim().toUpperCase();
-
-    // Format check: CLEARJSON-XXXX-XXXX-XXXX
-    var parts = key.split('-');
-    if (parts.length !== 4 || parts[0] !== 'CLEARJSON') return false;
-
-    // Each segment must be 4 hex chars
-    for (var i = 1; i < 4; i++) {
-      if (!/^[0-9A-F]{4}$/.test(parts[i])) return false;
-    }
-
-    // Checksum: sum of all hex values mod 0xFFFF should match last segment
-    var combined = parts[1] + parts[2];
-    var checksum = 0;
-    for (var j = 0; j < combined.length; j++) {
-      checksum = (checksum * 16 + parseInt(combined[j], 16)) % 0xFFFF;
-    }
-    var expected = parseInt(parts[3], 16);
-
-    return checksum === expected;
-  }
-
-  /**
-   * Store a license key locally.
+   * Store a license key and verify it online.
+   * Returns true if the key is accepted (online or offline fallback).
    */
   function storeLicense(key) {
-    if (!validateKey(key)) return false;
+    if (!key || typeof key !== 'string') return false;
 
+    key = key.trim().toUpperCase();
+
+    if (!isValidFormat(key)) return false;
+
+    // Store locally immediately (so user sees instant feedback)
     var data = {
       key: key,
       activatedAt: Date.now(),
-      version: '1.0'
+      version: '2.0'
     };
 
     try {
@@ -91,23 +183,71 @@ var ClearJSON = window.ClearJSON || {};
       chrome.storage.local.set({ clearjson_pro: data });
     }
 
+    // Verify online in background (fire-and-forget)
+    verifyOnline(key).then(function (result) {
+      setCachedVerification(key, result);
+      if (result.valid && !result.offline) {
+        console.log('ClearJSON Pro: verified online —', result.email || 'lifetime');
+      } else if (result.valid && result.offline) {
+        console.log('ClearJSON Pro: activated offline (server unreachable)');
+      } else {
+        console.warn('ClearJSON Pro: license rejected by server:', result.error);
+        // If server explicitly rejects, remove local license
+        if (!result.offline) {
+          removeLicense();
+          console.warn('ClearJSON Pro: license removed — server rejected key');
+        }
+      }
+    });
+
     return true;
   }
 
   /**
    * Check if Pro is currently active.
+   * Uses cached verification if fresh, otherwise re-verifies online.
    */
   function isActive() {
-    // Check localStorage first (fast)
+    // Dev mode bypass
     try {
-      var raw = localStorage.getItem('clearjson_pro_license');
-      if (raw) {
-        var data = JSON.parse(raw);
-        if (data && data.key && validateKey(data.key)) return true;
-      }
+      if (localStorage.getItem('clearjson_pro_dev') === '1') return true;
     } catch (e) { /* ignore */ }
 
-    return false;
+    // Check if a license is stored
+    try {
+      var raw = localStorage.getItem('clearjson_pro_license');
+      if (!raw) return false;
+      var data = JSON.parse(raw);
+      if (!data || !data.key) return false;
+    } catch (e) {
+      return false;
+    }
+
+    // Check cached verification first
+    var cached = getCachedVerification();
+    if (cached && cached.license_key === data.key) {
+      if (Date.now() - cached.timestamp < CACHE_TTL_MS) {
+        return cached.valid === true;
+      }
+    }
+
+    // Cache expired or missing — re-verify in background
+    // For this call, return the cached value or assume valid format
+    verifyOnline(data.key).then(function (result) {
+      setCachedVerification(data.key, result);
+      if (!result.valid && !result.offline) {
+        // Server explicitly rejected — remove license
+        removeLicense();
+        console.warn('ClearJSON Pro: license revoked by server');
+      }
+    });
+
+    // Return cached value if available, otherwise optimistic
+    if (cached && cached.license_key === data.key) {
+      return cached.valid === true;
+    }
+    // First time: optimistic — accept valid format
+    return isValidFormat(data.key);
   }
 
   /**
@@ -122,27 +262,39 @@ var ClearJSON = window.ClearJSON || {};
    * Get license info (for display).
    */
   function getInfo() {
+    var info = { active: false, activatedAt: null, keyPreview: null, email: null, offline: false };
+
     try {
       var raw = localStorage.getItem('clearjson_pro_license');
-      if (raw) {
-        var data = JSON.parse(raw);
-        return {
-          active: isActive(),
-          activatedAt: data.activatedAt || null,
-          keyPreview: data.key ? maskKey(data.key) : null
-        };
+      if (!raw) return info;
+      var data = JSON.parse(raw);
+      if (!data || !data.key) return info;
+
+      var cached = getCachedVerification();
+      var active = isActive();
+
+      info.active = active;
+      info.activatedAt = data.activatedAt || null;
+      info.keyPreview = maskKey(data.key);
+
+      if (cached && cached.license_key === data.key) {
+        info.email = cached.email || null;
+        info.activations = cached.activations || 0;
+        info.maxDevices = cached.max_devices || 3;
+        info.offline = cached.offline || false;
       }
     } catch (e) { /* ignore */ }
-    return { active: false, activatedAt: null, keyPreview: null };
+
+    return info;
   }
 
   function maskKey(key) {
     if (!key) return null;
     var parts = key.split('-');
     if (parts.length === 4) {
-      return 'CLEARJSON-****-****-' + parts[3];
+      return 'CLJ-****-****-' + parts[3];
     }
-    return key.substring(0, 14) + '****';
+    return key.substring(0, 7) + '****';
   }
 
   /**
@@ -150,6 +302,7 @@ var ClearJSON = window.ClearJSON || {};
    */
   function removeLicense() {
     try { localStorage.removeItem('clearjson_pro_license'); } catch (e) {}
+    clearCachedVerification();
     if (chrome && chrome.storage && chrome.storage.local) {
       chrome.storage.local.remove('clearjson_pro');
     }
@@ -160,23 +313,22 @@ var ClearJSON = window.ClearJSON || {};
   // ================================================================
 
   function generateDevKey() {
-    // Generate a valid dev key for testing
-    var a = ('0000' + Math.floor(Math.random() * 0xFFFF).toString(16).toUpperCase()).slice(-4);
-    var b = ('0000' + Math.floor(Math.random() * 0xFFFF).toString(16).toUpperCase()).slice(-4);
-
-    // Compute checksum
-    var combined = a + b;
-    var checksum = 0;
-    for (var i = 0; i < combined.length; i++) {
-      checksum = (checksum * 16 + parseInt(combined[i], 16)) % 0xFFFF;
+    // This generates a valid-format key for local testing.
+    // It will NOT pass online verification — use the dev bypass instead:
+    //   localStorage.setItem('clearjson_pro_dev', '1')
+    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var segments = [];
+    for (var s = 0; s < 3; s++) {
+      var seg = '';
+      for (var i = 0; i < 4; i++) {
+        seg += chars[Math.floor(Math.random() * chars.length)];
+      }
+      segments.push(seg);
     }
-    var c = ('0000' + checksum.toString(16).toUpperCase()).slice(-4);
-
-    return 'CLEARJSON-' + a + '-' + b + '-' + c;
+    return 'CLJ-' + segments.join('-');
   }
 
   C.License = {
-    validateKey: validateKey,
     storeLicense: storeLicense,
     isActive: isActive,
     hasFeature: hasFeature,

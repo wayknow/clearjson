@@ -45,6 +45,10 @@ ClearJSON is a Chrome extension that automatically detects and formats JSON resp
 ```
 clearjson/
 ├── manifest.json              # Chrome Extension manifest (MV3)
+├── server/                    # License server (Cloudflare Worker + D1)
+│   ├── src/index.js           # API: verify/generate/webhook/admin
+│   ├── schema.sql             # D1 database schema
+│   └── wrangler.toml          # Worker config
 ├── src/
 │   ├── content/
 │   │   ├── content.js         # Content script (JSON detection + viewer injection)
@@ -59,7 +63,12 @@ clearjson/
 │   └── utils/
 │       ├── parser.js          # JSON detection + parsing
 │       ├── tokenizer.js       # Syntax highlighting tokenizer
-│       └── tree.js            # Interactive tree view renderer
+│       ├── themes.js          # 30 theme definitions
+│       ├── license.js         # Pro license system (online verify + offline fallback)
+│       ├── export.js          # CSV/TSV/YAML/TypeScript export
+│       ├── stream-parser.js   # Web Worker streaming parser
+│       ├── virtual-tree.js    # Virtual scrolling tree view
+│       └── tree.js            # Standard tree view renderer
 ├── icons/
 │   ├── icon.svg
 │   ├── icon16.png
