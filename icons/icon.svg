@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e1e2e"/>
+      <stop offset="100%" stop-color="#282840"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="128" height="128" rx="24" fill="url(#bg)"/>
+  <!-- JSON brackets -->
+  <text x="28" y="74" font-family="SF Mono, Menlo, Monaco, monospace" font-size="56" font-weight="700" fill="#89b4fa">{ }</text>
+  <!-- Small accent dots -->
+  <circle cx="40" cy="100" r="4" fill="#a6e3a1"/>
+  <circle cx="64" cy="100" r="4" fill="#fab387"/>
+  <circle cx="88" cy="100" r="4" fill="#cba6f7"/>
+</svg>

@@ -1,0 +1,71 @@
+{
+  "manifest_version": 3,
+  "name": "ClearJSON",
+  "version": "0.1.0",
+  "description": "Privacy-first, open-source JSON viewer. Zero tracking. Fully local.",
+  "author": "ClearJSON",
+  "homepage_url": "https://github.com/clearjson/clearjson",
+  "minimum_chrome_version": "110",
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+
+  "host_permissions": [
+    "*://*/*",
+    "file:///*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["*://*/*", "file:///*"],
+      "js": [
+        "src/utils/parser.js",
+        "src/utils/tokenizer.js",
+        "src/utils/themes.js",
+        "src/utils/license.js",
+        "src/utils/export.js",
+        "src/utils/stream-parser.js",
+        "src/utils/virtual-tree.js",
+        "src/utils/tree.js",
+        "src/content/content.js"
+      ],
+      "css": [
+        "src/content/content.css"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "themes/*.css",
+        "src/viewer/*"
+      ],
+      "matches": ["*://*/*", "file:///*"]
+    }
+  ],
+
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "ClearJSON — Settings"
+  },
+
+  "options_ui": {
+    "page": "src/viewer/viewer.html",
+    "open_in_tab": false
+  }
+}

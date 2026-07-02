@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClearJSON</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup">
+    <header class="popup-header">
+      <h1 class="popup-logo">ClearJSON</h1>
+      <span class="popup-version">v0.1.0</span>
+    </header>
+
+    <div class="popup-body">
+      <p class="popup-tagline">
+        Privacy-first JSON viewer.<br>
+        Open source. Zero tracking.
+      </p>
+
+      <div class="popup-section">
+        <h3>Current Page</h3>
+        <p id="page-status" class="popup-status">Loading…</p>
+      </div>
+
+      <div class="popup-section">
+        <h3>Quick Actions</h3>
+        <button id="btn-viewer" class="popup-btn popup-btn-primary">
+          Open JSON Viewer
+        </button>
+      </div>
+    </div>
+
+    <footer class="popup-footer">
+      <a href="https://github.com/clearjson/clearjson" target="_blank" rel="noopener">
+        GitHub (MIT)
+      </a>
+    </footer>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

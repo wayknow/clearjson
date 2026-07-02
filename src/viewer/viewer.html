@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClearJSON — Viewer</title>
+  <link rel="stylesheet" href="../content/content.css">
+  <style>
+    body { margin: 0; padding: 0; }
+
+    /* ============================================
+       LANDING PAGE
+       ============================================ */
+
+    .cj-viewer-landing {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      padding: 40px;
+      text-align: center;
+    }
+    .cj-viewer-landing h2 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+    .cj-viewer-landing > p { color: var(--cj-text-secondary); margin-bottom: 24px; max-width: 400px; line-height: 1.6; }
+
+    .cj-input-area { width: 100%; max-width: 600px; margin: 0 auto; }
+    .cj-input-area textarea {
+      width: 100%; height: 200px; padding: 16px;
+      font-family: 'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+      font-size: 13px; line-height: 1.6;
+      color: var(--cj-text); background: var(--cj-surface);
+      border: 2px solid var(--cj-guide); border-radius: 8px; resize: vertical; outline: none;
+      transition: border-color 0.15s;
+    }
+    .cj-input-area textarea:focus { border-color: var(--cj-key); }
+    .cj-input-area textarea::placeholder { color: var(--cj-line-number); }
+
+    .cj-input-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+    .cj-input-actions button {
+      padding: 8px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 13px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer;
+      transition: all 0.15s;
+    }
+    .cj-btn-format { background: #89b4fa; color: #1e1e2e; flex: 1; }
+    .cj-btn-format:hover { opacity: 0.85; }
+    .cj-btn-load {
+      background: var(--cj-surface); color: var(--cj-text);
+      border: 1px solid var(--cj-guide) !important;
+    }
+    .cj-btn-load:hover { background: var(--cj-hover); }
+    .cj-btn-clear { background: transparent; color: var(--cj-text-secondary); border: 1px solid transparent !important; }
+    .cj-btn-clear:hover { color: var(--cj-null); background: var(--cj-hover); }
+
+    .cj-drop-zone {
+      width: 100%; max-width: 600px; margin: 24px auto; padding: 40px 20px;
+      border: 2px dashed var(--cj-guide); border-radius: 12px;
+      text-align: center; color: var(--cj-text-secondary); cursor: pointer;
+      transition: all 0.15s;
+    }
+    .cj-drop-zone:hover, .cj-drop-zone.cj-drag-over {
+      border-color: var(--cj-key); background: var(--cj-hover); color: var(--cj-key);
+    }
+    .cj-drop-zone-icon { font-size: 32px; margin-bottom: 8px; }
+    .cj-drop-zone p { font-size: 12px; margin: 0; }
+
+    /* ============================================
+       SETTINGS PANEL
+       ============================================ */
+
+    .cj-settings-panel {
+      max-width: 500px; margin: 40px auto; padding: 24px;
+    }
+    .cj-settings-panel h2 { font-size: 20px; margin-bottom: 20px; }
+    .cj-settings-group { margin-bottom: 20px; }
+    .cj-settings-group label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--cj-text-secondary); margin-bottom: 6px; }
+
+    .cj-settings-group select, .cj-settings-group input[type="text"] {
+      width: 100%; padding: 8px 12px; font-family: inherit; font-size: 13px;
+      color: var(--cj-text); background: var(--cj-surface);
+      border: 1px solid var(--cj-guide); border-radius: 6px; outline: none;
+    }
+    .cj-settings-group select:focus, .cj-settings-group input:focus { border-color: var(--cj-key); }
+
+    .cj-theme-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 8px;
+    }
+    .cj-theme-chip {
+      padding: 8px 10px; font-family: inherit; font-size: 11px; text-align: center;
+      color: var(--cj-text-secondary); background: var(--cj-surface);
+      border: 2px solid var(--cj-guide); border-radius: 8px; cursor: pointer;
+      transition: all 0.12s;
+    }
+    .cj-theme-chip:hover { border-color: var(--cj-key); color: var(--cj-text); }
+    .cj-theme-chip.cj-active { border-color: var(--cj-key); color: var(--cj-key); font-weight: 600; background: var(--cj-selected); }
+    .cj-theme-chip.cj-pro-theme { position: relative; }
+    .cj-theme-chip .cj-pro-badge {
+      position: absolute; top: 2px; right: 4px;
+      font-size: 7px; color: var(--cj-key); font-weight: 700;
+    }
+
+    .cj-url-list { display: flex; flex-direction: column; gap: 4px; }
+    .cj-url-row { display: flex; gap: 4px; }
+    .cj-url-row input { flex: 1; }
+    .cj-url-row button {
+      padding: 4px 10px; font-family: inherit; font-size: 12px;
+      background: transparent; color: var(--cj-null); border: 1px solid var(--cj-guide); border-radius: 4px; cursor: pointer;
+    }
+    .cj-url-row button:hover { background: var(--cj-hover); }
+
+    /* ============================================
+       UPGRADE / PRO PAGE
+       ============================================ */
+
+    .cj-pro-page { max-width: 560px; margin: 40px auto; padding: 32px; text-align: center; }
+    .cj-pro-page h2 { font-size: 24px; margin-bottom: 8px; }
+    .cj-pro-page .cj-pro-price { font-size: 36px; font-weight: 800; color: var(--cj-key); margin: 16px 0; }
+    .cj-pro-page .cj-pro-price span { font-size: 16px; font-weight: 400; color: var(--cj-text-secondary); }
+    .cj-pro-feature-list { text-align: left; margin: 20px 0; display: flex; flex-direction: column; gap: 8px; }
+    .cj-pro-feature { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--cj-text); }
+    .cj-pro-feature .cj-check { color: var(--cj-string); font-weight: 700; flex-shrink: 0; }
+    .cj-license-input {
+      display: flex; gap: 8px; margin-top: 24px; justify-content: center;
+    }
+    .cj-license-input input {
+      padding: 10px 14px; font-family: 'SF Mono', 'Menlo', monospace; font-size: 14px;
+      color: var(--cj-text); background: var(--cj-surface);
+      border: 2px solid var(--cj-guide); border-radius: 8px; outline: none;
+      width: 280px; text-align: center; letter-spacing: 1px;
+    }
+    .cj-license-input input:focus { border-color: var(--cj-key); }
+    .cj-license-status { font-size: 12px; margin-top: 8px; min-height: 20px; }
+
+    #file-input { display: none; }
+
+    /* Bottom status in toolbar */
+    .cj-tb-status { font-size: 10px; color: var(--cj-key); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div id="clearjson-app" class="cj-theme-dark">
+    <!-- Toolbar (visible when viewing JSON) -->
+    <div id="cj-toolbar" class="cj-toolbar" style="display: none;">
+      <div class="cj-tb-left">
+        <button class="cj-tb-btn" id="btn-back" title="New">← New</button>
+        <button class="cj-tb-btn" id="btn-collapse" title="Collapse all">▹▹</button>
+        <button class="cj-tb-btn" id="btn-expand" title="Expand all">◁◁</button>
+      </div>
+      <div class="cj-tb-center">
+        <div class="cj-search-wrap">
+          <span class="cj-search-icon">🔍</span>
+          <input type="text" id="cj-search-input" class="cj-search-input" placeholder="Search…" spellcheck="false">
+          <span id="cj-search-count" class="cj-search-count"></span>
+          <button class="cj-tb-btn cj-search-nav" id="btn-search-prev">▲</button>
+          <button class="cj-tb-btn cj-search-nav" id="btn-search-next">▼</button>
+        </div>
+      </div>
+      <div class="cj-tb-right">
+        <button class="cj-tb-btn" id="btn-export" title="Export">📥 Export</button>
+        <button class="cj-tb-btn" id="btn-raw" title="Toggle raw/tree view">Raw</button>
+        <button class="cj-tb-btn" id="btn-copy" title="Copy">Copy</button>
+        <button class="cj-tb-btn" id="btn-theme" title="Cycle theme">Theme</button>
+        <button class="cj-tb-btn" id="btn-settings-view" title="Settings">⚙</button>
+      </div>
+    </div>
+
+    <!-- Main content area -->
+    <div id="cj-main" class="cj-tree-container">
+      <!-- Landing page (default) -->
+      <div id="cj-landing" class="cj-viewer-landing">
+        <h2>ClearJSON Viewer</h2>
+        <p>Paste JSON, drop a file, or load from disk. Everything stays on your machine — zero data leaves this tab.</p>
+        <div class="cj-input-area">
+          <textarea id="json-input" placeholder='Paste JSON here…
+e.g. {"name": "ClearJSON", "free": true, "themes": ["dark","light","sepia"]}'></textarea>
+          <div class="cj-input-actions">
+            <button class="cj-btn-format" id="btn-format">Format JSON</button>
+            <button class="cj-btn-load" id="btn-load-file">📂 Load File…</button>
+            <button class="cj-btn-clear" id="btn-clear">Clear</button>
+          </div>
+        </div>
+        <div class="cj-drop-zone" id="drop-zone">
+          <div class="cj-drop-zone-icon">📂</div>
+          <p>Or drop a .json file here</p>
+        </div>
+      </div>
+
+      <!-- Settings page -->
+      <div id="cj-settings-page" class="cj-settings-panel" style="display: none;">
+        <h2>Settings</h2>
+        <div class="cj-settings-group">
+          <label>Theme</label>
+          <div class="cj-theme-grid" id="theme-grid"></div>
+        </div>
+        <div class="cj-settings-group">
+          <label>Default Indent</label>
+          <select id="setting-indent">
+            <option value="16">2 spaces (compact)</option>
+            <option value="20" selected>4 spaces (standard)</option>
+            <option value="28">8 spaces (wide)</option>
+          </select>
+        </div>
+        <div class="cj-settings-group">
+          <label>Initial Expand Depth</label>
+          <select id="setting-depth">
+            <option value="1">1 level</option>
+            <option value="2" selected>2 levels</option>
+            <option value="3">3 levels</option>
+            <option value="99">All</option>
+          </select>
+        </div>
+        <div class="cj-settings-group">
+          <label>Exclude URLs (regex, one per line)</label>
+          <div class="cj-url-list" id="url-list"></div>
+          <button class="cj-tb-btn" id="btn-add-url" style="margin-top: 6px;">+ Add Pattern</button>
+        </div>
+        <div style="margin-top: 20px; display: flex; gap: 8px;">
+          <button class="cj-btn-primary" id="btn-save-settings">Save Settings</button>
+          <button class="cj-btn-clear" id="btn-close-settings">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Pro / Upgrade page -->
+      <div id="cj-pro-page" class="cj-pro-page" style="display: none;">
+        <h2>ClearJSON Pro</h2>
+        <p>One-time purchase. Lifetime access. No subscription. No tracking.</p>
+        <div class="cj-pro-price">$29 <span>lifetime</span></div>
+        <div class="cj-pro-feature-list">
+          <div class="cj-pro-feature"><span class="cj-check">✓</span> Large file virtual scrolling — 500 MB JSON without freezing</div>
+          <div class="cj-pro-feature"><span class="cj-check">✓</span> Regex search with result navigation</div>
+          <div class="cj-pro-feature"><span class="cj-check">✓</span> JWT auto-decode (header + payload inline)</div>
+          <div class="cj-pro-feature"><span class="cj-check">✓</span> Export to CSV, YAML, TypeScript types</div>
+          <div class="cj-pro-feature"><span class="cj-check">✓</span> 30 premium themes (Dracula, Nord, Catppuccin, Tokyo Night…)</div>
+          <div class="cj-pro-feature"><span class="cj-check">✓</span> Custom keyboard shortcuts</div>
+        </div>
+        <div id="cj-license-section">
+          <p style="font-size: 12px; color: var(--cj-text-secondary);">Enter your license key to activate Pro:</p>
+          <div class="cj-license-input">
+            <input type="text" id="license-key" placeholder="CLEARJSON-XXXX-XXXX-XXXX" maxlength="30">
+            <button class="cj-btn-primary" id="btn-activate">Activate</button>
+          </div>
+          <p class="cj-license-status" id="license-status"></p>
+        </div>
+        <div id="cj-pro-active" style="display: none;">
+          <p style="color: var(--cj-string); font-size: 14px; font-weight: 600;">✓ Pro is active</p>
+          <p style="font-size: 11px; color: var(--cj-text-secondary); margin-top: 4px;" id="pro-active-info"></p>
+          <button class="cj-btn-clear" id="btn-deactivate" style="margin-top: 8px;">Deactivate</button>
+        </div>
+      </div>
+
+      <!-- Tree view (hidden initially) -->
+      <div id="cj-tree-view" style="display: none;"></div>
+
+      <!-- Raw view (hidden initially) -->
+      <pre id="cj-raw-view" class="cj-raw-view" style="display: none;"></pre>
+    </div>
+
+    <!-- Stats bar -->
+    <div id="cj-stats-bar" class="cj-stats-bar" style="display: none;"></div>
+  </div>
+
+  <input type="file" id="file-input" accept=".json,application/json,.txt">
+
+  <script src="../utils/parser.js"></script>
+  <script src="../utils/tokenizer.js"></script>
+  <script src="../utils/themes.js"></script>
+  <script src="../utils/license.js"></script>
+  <script src="../utils/export.js"></script>
+  <script src="../utils/tree.js"></script>
+  <script src="viewer.js"></script>
+</body>
+</html>

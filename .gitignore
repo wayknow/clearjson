@@ -1,0 +1,7 @@
+.claude/
+.DS_Store
+*.crx
+*.pem
+node_modules/
+dist/
+企划书.md
