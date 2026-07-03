@@ -12,22 +12,25 @@ ClearJSON is a Chrome extension that automatically detects and formats JSON resp
 - ✅ Auto-detect & format JSON/JSON-LD/JSON:API/NDJSON
 - ✅ Collapsible tree view with indent guides
 - ✅ Syntax highlighting (strings, numbers, booleans, null)
-- ✅ 3 themes (Dark, Light, Sepia) with system-follow
+- ✅ 10 themes (Dark, Light, Sepia, Monokai, Dracula, Nord, One Dark, Solarized Light, GitHub, High Contrast)
+- ✅ System-follow theme switching
 - ✅ Click-to-copy values, right-click for JSONPath
-- ✅ Auto-detected links (clickable) and image previews
+- ✅ Auto-detected links (clickable) and image previews (hover)
 - ✅ Line numbers in raw view
 - ✅ Stats bar (node count, depth, file size, parse time)
-- ✅ Keyboard shortcuts (`[` collapse, `]` expand, `D` theme, `R` raw)
+- ✅ Keyboard shortcuts (`[` collapse, `]` expand, `D` theme, `R` raw, `Enter` search nav)
+- ✅ Standalone viewer (paste JSON, drag-and-drop, file load)
+- ✅ URL exclusion list (regex patterns)
 - ✅ 100% local processing — zero network requests
 - ✅ MIT licensed, open source
 
 ### Pro ($29 lifetime)
 - 💰 Large file virtual scrolling (100MB+ without freezing)
 - 💰 Advanced search (regex, fuzzy match, result navigation)
-- 💰 JWT auto-decode (header + payload inline)
-- 💰 Multi-format export (CSV, TSV, YAML, XML, TypeScript types)
-- 💰 30 premium themes (Monokai, Dracula, Nord, One Dark, Solarized, etc.)
-- 💰 Custom keyboard shortcuts
+- 💰 JWT auto-decode (header + payload inline, expiry detection)
+- 💰 Multi-format export (CSV, TSV, YAML, TypeScript types with recursive inference)
+- 💰 30 premium themes (Catppuccin, Tokyo Night, Gruvbox, Nord, Dracula, Monokai…)
+- 💰 Custom keyboard shortcuts (6 configurable bindings)
 
 ## Install
 
