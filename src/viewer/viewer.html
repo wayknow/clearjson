@@ -36,33 +36,29 @@
     .cj-input-area textarea:focus { border-color: var(--cj-key); }
     .cj-input-area textarea::placeholder { color: var(--cj-line-number); }
 
-    .cj-input-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-    .cj-input-actions button {
-      padding: 8px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 13px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer;
+    .cj-input-actions {
+      display: flex; align-items: center; gap: 6px;
+      margin-top: 12px;
+    }
+    .cj-btn-format {
+      padding: 8px 20px; font-size: 13px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 600; border: none; border-radius: 6px; cursor: pointer;
+      background: #89b4fa; color: #1e1e2e;
       transition: all 0.15s;
     }
-    .cj-btn-format { background: #89b4fa; color: #1e1e2e; flex: 1; }
     .cj-btn-format:hover { opacity: 0.85; }
-    .cj-btn-load {
-      background: var(--cj-surface); color: var(--cj-text);
-      border: 1px solid var(--cj-guide) !important;
-    }
-    .cj-btn-load:hover { background: var(--cj-hover); }
-    .cj-btn-clear { background: transparent; color: var(--cj-text-secondary); border: 1px solid transparent !important; }
-    .cj-btn-clear:hover { color: var(--cj-null); background: var(--cj-hover); }
-
-    .cj-drop-zone {
-      width: 100%; max-width: 600px; margin: 24px auto; padding: 40px 20px;
-      border: 2px dashed var(--cj-guide); border-radius: 12px;
-      text-align: center; color: var(--cj-text-secondary); cursor: pointer;
+    .cj-btn-load, .cj-btn-clear {
+      padding: 8px 12px; font-size: 13px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 500; border: none; border-radius: 6px; cursor: pointer;
+      color: var(--cj-text-secondary);
       transition: all 0.15s;
     }
-    .cj-drop-zone:hover, .cj-drop-zone.cj-drag-over {
-      border-color: var(--cj-key); background: var(--cj-hover); color: var(--cj-key);
-    }
-    .cj-drop-zone-icon { font-size: 32px; margin-bottom: 8px; }
-    .cj-drop-zone p { font-size: 12px; margin: 0; }
+    .cj-btn-load { background: var(--cj-surface); border: 1px solid var(--cj-guide); }
+    .cj-btn-load:hover { background: var(--cj-hover); color: var(--cj-text); }
+    .cj-btn-clear { background: transparent; margin-left: auto; }
+    .cj-btn-clear:hover { color: var(--cj-null); }
 
     /* ============================================
        SETTINGS PANEL
@@ -159,8 +155,8 @@
     <div id="cj-toolbar" class="cj-toolbar" style="display: none;">
       <div class="cj-tb-left">
         <button class="cj-tb-btn" id="btn-back" title="New">← New</button>
-        <button class="cj-tb-btn" id="btn-collapse" title="Collapse all">▹▹</button>
-        <button class="cj-tb-btn" id="btn-expand" title="Expand all">◁◁</button>
+        <button class="cj-tb-btn" id="btn-collapse" title="Collapse all">Collapse</button>
+        <button class="cj-tb-btn" id="btn-expand" title="Expand all">Expand</button>
       </div>
       <div class="cj-tb-center">
         <div class="cj-search-wrap">
@@ -172,9 +168,9 @@
         </div>
       </div>
       <div class="cj-tb-right">
-        <button class="cj-tb-btn" id="btn-export" title="Export">📥 Export</button>
         <button class="cj-tb-btn" id="btn-raw" title="Toggle raw/tree view">Raw</button>
-        <button class="cj-tb-btn" id="btn-copy" title="Copy">Copy</button>
+        <button class="cj-tb-btn" id="btn-copy" title="Copy to clipboard">Copy</button>
+        <button class="cj-tb-btn" id="btn-export" title="Download / Export">Export</button>
         <button class="cj-tb-btn" id="btn-theme" title="Cycle theme">Theme</button>
         <button class="cj-tb-btn" id="btn-settings-view" title="Settings">⚙</button>
       </div>
@@ -192,12 +188,9 @@ e.g. {"name": "ClearJSON", "free": true, "themes": ["dark","light","sepia"]}'></
           <div class="cj-input-actions">
             <button class="cj-btn-format" id="btn-format">Format JSON</button>
             <button class="cj-btn-load" id="btn-load-file">📂 Load File…</button>
+            <button class="cj-btn-load" id="btn-load-sample">Try Sample</button>
             <button class="cj-btn-clear" id="btn-clear">Clear</button>
           </div>
-        </div>
-        <div class="cj-drop-zone" id="drop-zone">
-          <div class="cj-drop-zone-icon">📂</div>
-          <p>Or drop a .json file here</p>
         </div>
       </div>
 

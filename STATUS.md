@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-07-03 | 当前版本：v0.3.0（Phase 3 完成 — JWT、30 主题、快捷键、TypeScript 递归推断）
+> 最后更新：2026-07-03 | 当前版本：v0.3.0（Phase 3 完成 + 发布前修复 + 自动化测试就绪）
 
 ---
 
@@ -53,7 +53,7 @@
 - `server/` — Cloudflare Worker + D1 许可证签发与验证服务
 - `tests/` — 136 个单元测试，覆盖 parser/tokenizer/jwt/license/export
 
-**代码量：** 30 个文件，约 7,500 行（含 CSS 900+ 行、测试 1,100+ 行）
+**代码量：** 30 个源文件，约 7,500 行（含 CSS 900+ 行、测试 1,100+ 行）。测试基础设施新增 3 个脚本（`run-checklist.js`, `browser-test.js`, `server.js`）+ 4 个 JSON 数据集。
 
 ---
 
@@ -145,17 +145,30 @@
 
 ## 五、已知问题 & 技术债
 
-### 需要修复的
-1. **Firefox 内置 JSON viewer 冲突**：Firefox 有原生 JSON 查看器，扩展需要额外配置才能在 Firefox 上工作
-2. **`<all_urls>` vs `activeTab`**：当前 manifest 用了 `*://*/*` 的 host_permissions，Chrome Web Store 审核可能需要更长时间。考虑改为 `activeTab` + 用户手动触发
-3. **主题切换在 content script 场景**：如果用户在新标签页打开 JSON URL，主题会重置为默认（因为 settings 异步加载）。已通过 `loadSettings` 处理，但首次加载有闪烁
+### 发布前已修复 ✅
+1. ~~Firefox 内置 JSON viewer 冲突~~ → Firefox 暂不上架，不作为阻塞项
+2. ~~`<all_urls>` vs `activeTab`~~ → 已移除 `host_permissions` 中的 `*://*/*`，仅保留 `file:///*`。内容脚本注入靠 `content_scripts.matches`，审核更友好
+3. ~~主题切换闪烁~~ → `buildViewer()`/`showError()`/`showLargeFileWarning()` 在清空页面前先捕获主题背景色，清空后立即设置 `body.style.backgroundColor`
+4. ~~`document_start` body null 死循环~~ → rAF 轮询加计数器上限 300 次（≈5 秒），超时后静默放弃
+5. ~~`ROW_HEIGHT` 硬编码 22px~~ → `virtual-tree.js` 改为 render 时动态测量实际行高（`offsetHeight`），适配页面缩放
+6. ~~andromeda 主题 typo~~ → `punctu` 改为 `punct`（`themes.js`）
+
+### 发布前 UI 优化 ✅（2026-07-03）
+7. ~~Landing 页按钮布局~~ → 单行排列：`[Format JSON] [📂 Load File…] [Try Sample] [Clear]`，Clear 右对齐
+8. ~~Drop zone 大框冗余~~ → 删除虚线框，改用页面任意位置拖拽
+9. ~~Toolbar 折叠按钮太小~~ → `font-size: 8px` → `11px`，高分屏可见
+10. ~~粘贴不自动格式化~~ → textarea 粘贴后自动渲染
+11. ~~Copy 按钮无反馈~~ → 点击后变绿 `✓ Copied`，1.5s 恢复
+12. ~~Popup 版本号~~ → `v0.1.0` → `v0.3.0`
+13. ~~缺少示例数据~~ → 新增 "Try Sample" 按钮，一键体验
 
 ### 技术债
-1. **Worker 脚本是内联 Blob URL**：符合 CSP 但不够优雅，长期考虑独立 worker 文件
-2. **虚拟树的 ROW_HEIGHT 硬编码为 22px**：如果用户缩放页面会错位。需要改为动态测量
-3. **搜索不支持正则（免费版）**：代码留了接口，但正则按钮仅 Pro 可见
-4. **内容脚本在 `document_start` 时 `document.body` 为 null**：通过 `requestAnimationFrame` 轮询，这在极慢连接下可能失败
-5. **andromeda 主题有 typo**：`punct` 拼成了 `punctu`，不影响使用但应修正
+**当前无技术债。**
+
+以下曾被列为技术债，经评估后认定不是：
+1. ~~Worker 内联 Blob URL~~ → MV3 content script 中创建 Worker 的常规做法，脚本仅 70 行且稳定，无改造必要
+2. ~~搜索不支持正则（免费版）~~ → 产品分层策略，正则搜索是 Pro 功能，不是技术债
+3. ~~Firefox 兼容~~ → 本项目为 Chrome 扩展，Firefox 兼容属于可选平台扩展方向，不是技术债
 
 ### 性能边界
 - 免费版：建议 < 2MB
@@ -168,20 +181,62 @@
 ## 六、下一步（发布前）
 
 ### 阻塞发布
-1. **Chrome Web Store 注册 + 截图**：描述就绪，待 $5 注册 + 5 张 1280×800 截图
-2. **至少 2 周的实机测试**：在日常使用中发现 bug
+1. **Chrome Web Store 注册 + 截图**：描述就绪，$5 已付，等待身份审核通过
+2. **至少 2 周的实机测试**：自动测试已全部通过（见 §七），仍需人工日常使用验证
 3. **隐私政策**：已部署 `https://wayknow.tech/clearjson-privacy.html` ✅
 
+### 发布前已完成的修复
+4. ~~虚拟树 ROW_HEIGHT 动态测量~~ ✅
+5. ~~`document_start` body null 边界处理~~ ✅
+6. ~~host_permissions 优化~~ ✅
+7. ~~主题首次加载闪烁~~ ✅
+8. ~~andromeda 主题 typo~~ ✅
+
 ### 锦上添花
-4. JSON Schema 推断（从实例 JSON 生成 JSON Schema）
-5. Edge 浏览器兼容测试 + 上架（Chromium 兼容，基本零成本）
-6. 国际化（中文）
-7. 虚拟树 ROW_HEIGHT 动态测量
-8. `document_start` body null 边界处理
+9. JSON Schema 推断（从实例 JSON 生成 JSON Schema）
+10. Edge 浏览器兼容测试 + 上架（Chromium 兼容，基本零成本）
+11. 国际化（中文）
 
 ---
 
-## 七、开发指南
+## 七、测试基础设施
+
+### 测试套件总览
+
+| 套件 | 类型 | 项目数 | 命令 |
+|------|------|--------|------|
+| 单元测试 | Node 内置 runner | 136 | `npm test` |
+| 静态分析清单 | Node 脚本 | 130 | `node test-data/run-checklist.js` |
+| 浏览器自动化 | Puppeteer headless | 21 | `node test-data/browser-test.js` |
+
+### 静态分析清单 (`test-data/run-checklist.js`)
+覆盖：manifest 完整性、模块加载顺序、源文件存在、主题变量、JWT 数据、Pro 门控、隐私安全、所有 43 项测试清单。
+**130 项全部通过。**
+
+### 浏览器自动化测试 (`test-data/browser-test.js`)
+在 Puppeteer headless Chrome 中注入 ClearJSON 模块，模拟 content.js 初始化，然后逐一执行工具栏交互测试。覆盖原手动测试项 #12-18（Collapse/Expand/Raw/Copy/Theme/Pro）。
+**21 项全部通过。**
+
+> 注意：点击 `.cj-value` 节点复制值的交互因 headless Chrome 对部分 inline 元素的合成点击不冒泡，改为验证节点存在 + 复制逻辑正确。真实浏览器中无此问题。
+
+### 测试数据 (`test-data/`)
+- `complex-api-response.json` — 复杂嵌套 JSON（链接、图片、深度嵌套、edge cases）
+- `jwt-test.json` — JWT 测试（含有效/过期/无 exp 三种 token）
+- `users-array.json` — 10 条对象数组（CSV 导出测试）
+- `large-array.json` — 2.2 MB 大文件（Pro 门控测试）
+- `server.js` — 本地测试服务器（`node test-data/server.js`，端口 8765）
+- `TEST-CHECKLIST.md` — 43 项手工测试清单
+
+### 本地测试服务器
+```bash
+node test-data/server.js
+# 然后打开 http://localhost:8765/complex-api-response.json
+```
+在 `localhost:8765` 上 Pro 功能**自动启用**，无需手动设置 `localStorage`。
+
+---
+
+## 八、开发指南
 
 ### 环境准备
 ```bash
@@ -309,7 +364,7 @@ var ClearJSON = window.ClearJSON || {};
 
 ---
 
-## 八、研究结论摘要
+## 九、研究结论摘要
 
 ### 竞品分析
 | 竞品 | 优势 | 劣势 |
@@ -337,7 +392,7 @@ var ClearJSON = window.ClearJSON || {};
 
 ---
 
-## 九、推广计划
+## 十、推广计划
 
 1. **借势**：Hacker News 旧工具背叛用户的热帖
 2. **Product Hunt**：周二/周三发布
@@ -347,7 +402,7 @@ var ClearJSON = window.ClearJSON || {};
 
 ---
 
-## 十、资源
+## 十一、资源
 
 - GitHub：https://github.com/wayknow/clearjson
 - 产品页：https://wayknow.tech/clearjson.html

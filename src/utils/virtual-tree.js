@@ -14,7 +14,8 @@ var ClearJSON = window.ClearJSON || {};
 (function (C) {
   'use strict';
 
-  var ROW_HEIGHT = 22; // px per row
+  var DEFAULT_ROW_HEIGHT = 22; // fallback, measured dynamically at render time
+  var rowHeight = DEFAULT_ROW_HEIGHT; // set per render via measureRowHeight()
   var BUFFER_ROWS = 20; // extra rows above/below viewport
   var INDENT_PX = 18;   // px per depth level
 
@@ -61,10 +62,28 @@ var ClearJSON = window.ClearJSON || {};
     }
 
     /**
+     * Measure actual row height from a test element.
+     * This handles zoom and font-size changes.
+     */
+    function measureRowHeight() {
+      var test = document.createElement('div');
+      test.className = 'cj-vrow';
+      test.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none;';
+      test.textContent = 'Ag'; // tall characters for reliable measurement
+      container.appendChild(test);
+      var h = test.offsetHeight;
+      container.removeChild(test);
+      return h > 0 ? h : DEFAULT_ROW_HEIGHT;
+    }
+
+    /**
      * Render the tree. Only creates DOM for visible rows.
      */
     function render() {
       if (isDestroyed) return;
+
+      // Measure actual row height for current zoom/font
+      rowHeight = measureRowHeight();
 
       // Clear container
       container.innerHTML = '';
@@ -72,7 +91,7 @@ var ClearJSON = window.ClearJSON || {};
       // Create inner element with full height
       innerEl = document.createElement('div');
       innerEl.className = 'cj-vtree-inner';
-      innerEl.style.height = (viewModel.length * ROW_HEIGHT) + 'px';
+      innerEl.style.height = (viewModel.length * rowHeight) + 'px';
       innerEl.style.position = 'relative';
       container.appendChild(innerEl);
 
@@ -94,8 +113,8 @@ var ClearJSON = window.ClearJSON || {};
       var scrollTop = container.scrollTop;
       var containerHeight = container.clientHeight;
 
-      var firstVisible = Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - BUFFER_ROWS);
-      var lastVisible = Math.min(viewModel.length, Math.ceil((scrollTop + containerHeight) / ROW_HEIGHT) + BUFFER_ROWS);
+      var firstVisible = Math.max(0, Math.floor(scrollTop / rowHeight) - BUFFER_ROWS);
+      var lastVisible = Math.min(viewModel.length, Math.ceil((scrollTop + containerHeight) / rowHeight) + BUFFER_ROWS);
 
       // Remove existing row elements
       while (innerEl.firstChild) {
@@ -105,7 +124,7 @@ var ClearJSON = window.ClearJSON || {};
       // Top spacer
       if (firstVisible > 0) {
         var topSpacer = document.createElement('div');
-        topSpacer.style.height = (firstVisible * ROW_HEIGHT) + 'px';
+        topSpacer.style.height = (firstVisible * rowHeight) + 'px';
         innerEl.appendChild(topSpacer);
       }
 
@@ -120,8 +139,8 @@ var ClearJSON = window.ClearJSON || {};
     function createRow(node, index) {
       var row = document.createElement('div');
       row.className = 'cj-vrow';
-      row.style.height = ROW_HEIGHT + 'px';
-      row.style.lineHeight = ROW_HEIGHT + 'px';
+      row.style.height = rowHeight + 'px';
+      row.style.lineHeight = rowHeight + 'px';
       row.style.paddingLeft = (node.depth * INDENT_PX + 12) + 'px';
       row.setAttribute('data-path', node.path);
       row.setAttribute('data-index', String(index));

@@ -35,6 +35,9 @@ var ClearJSON = window.ClearJSON || {};
     searchIndex: -1
   };
 
+  var _initPollCount = 0;
+  var _MAX_INIT_POLL = 300; // ~5s at 60fps — after that, give up
+
   // ================================================================
   //  DETECTION
   // ================================================================
@@ -84,7 +87,14 @@ var ClearJSON = window.ClearJSON || {};
   // ================================================================
 
   function init() {
-    if (!document.body) { requestAnimationFrame(init); return; }
+    if (!document.body) {
+      _initPollCount++;
+      if (_initPollCount < _MAX_INIT_POLL) {
+        requestAnimationFrame(init);
+      }
+      // If poll limit exceeded, silently give up — page likely isn't HTML
+      return;
+    }
 
     loadSettings(function (settings) {
       state.settings = settings;
@@ -115,17 +125,22 @@ var ClearJSON = window.ClearJSON || {};
 
   function isProActive() {
     if (C.License && C.License.isActive()) return true;
-    // For Phase 2 dev: check localStorage flag
+    // Dev mode: auto-enable Pro on test server (no manual console needed)
+    if (window.location.hostname === 'localhost' && window.location.port === '8765') return true;
     try {
       return localStorage.getItem('clearjson_pro_dev') === '1';
     } catch (e) { return false; }
   }
 
   function showLargeFileWarning(rawText, sizeBytes) {
+    var theme = (C.Themes.THEMES[state.settings.theme] || C.Themes.THEMES['dark']);
+    var themeBg = theme.bg || '#1e1e2e';
+
     document.head.innerHTML = '';
     document.body.innerHTML = '';
     document.title = 'ClearJSON — Large File';
 
+    document.body.style.backgroundColor = themeBg;
     injectThemeVars();
 
     var sizeStr = sizeBytes > 1048576
@@ -175,9 +190,16 @@ var ClearJSON = window.ClearJSON || {};
   // ================================================================
 
   function buildViewer(data, stats, rawText) {
+    // Prevent white flash: capture theme bg before clearing head
+    var theme = (C.Themes.THEMES[state.settings.theme] || C.Themes.THEMES['dark']);
+    var themeBg = theme.bg || '#1e1e2e';
+
     document.head.innerHTML = '';
     document.body.innerHTML = '';
     document.title = 'ClearJSON — Viewer';
+
+    // Set body bg immediately so there's no white flash before wrapper is appended
+    document.body.style.backgroundColor = themeBg;
 
     injectThemeVars();
 
@@ -690,8 +712,13 @@ var ClearJSON = window.ClearJSON || {};
   // ================================================================
 
   function showError(result) {
+    var theme = (C.Themes.THEMES[state.settings.theme] || C.Themes.THEMES['dark']);
+    var themeBg = theme.bg || '#1e1e2e';
+
     document.head.innerHTML = '';
     document.body.innerHTML = '';
+
+    document.body.style.backgroundColor = themeBg;
     injectThemeVars();
 
     var wrapper = document.createElement('div');

@@ -79,6 +79,22 @@ clearjson/
 │   ├── test-jwt.js
 │   ├── test-license.js
 │   └── test-export.js
+├── tests/                     # 136 unit tests (Node built-in runner)
+│   ├── helpers/setup.js
+│   ├── test-parser.js
+│   ├── test-tokenizer.js
+│   ├── test-jwt.js
+│   ├── test-license.js
+│   └── test-export.js
+├── test-data/                 # Test data + automation scripts
+│   ├── complex-api-response.json
+│   ├── jwt-test.json
+│   ├── users-array.json
+│   ├── large-array.json       # 2.2 MB for Pro gate testing
+│   ├── server.js              # Local test server (port 8765)
+│   ├── run-checklist.js       # 130-item static analysis
+│   ├── browser-test.js        # 21-item browser automation
+│   └── TEST-CHECKLIST.md      # 43-item manual checklist
 ├── icons/
 │   ├── icon.svg
 │   ├── icon16.png
@@ -95,34 +111,25 @@ clearjson/
 # 2. Load unpacked → select the project root
 # 3. Edit files and click refresh on the extension card
 
-# Run tests (zero dependencies, Node 18+):
-npm test
+# Run unit tests (zero dependencies, Node 18+):
+npm test                    # 136 tests
+
+# Run static analysis checklist (130 checks):
+node test-data/run-checklist.js
+
+# Run browser automation tests (requires puppeteer):
+node test-data/browser-test.js
+
+# Start local test server (Pro auto-enabled on localhost:8765):
+node test-data/server.js
 ```
 
-### Phase 1 (current)
-- [x] Project skeleton + manifest
-- [x] JSON parser with error reporting
-- [x] Syntax highlighting tokenizer
-- [x] Interactive tree view renderer
-- [x] Content script with detection + injection
-- [x] 3 themes (dark, light, sepia)
-- [x] Standalone viewer page
-- [x] Extension popup
-- [x] Icons
+### Current Status (Phase 3 — Complete)
 
-### Phase 2 (next)
-- [ ] Image URL preview
-- [ ] 10 free themes
-- [ ] URL exclusion list
-- [ ] Pro: large file virtual scrolling
-- [ ] Pro: license activation
+All core + Pro features implemented. 136 unit tests + 151 automated verification checks passing.
+Preparing for Chrome Web Store submission.
 
-### Phase 3
-- [ ] Pro: advanced search (regex)
-- [ ] Pro: JWT decode
-- [ ] Pro: multi-format export
-- [ ] Pro: 30 themes
-- [ ] Pro: custom shortcuts
+See [STATUS.md](STATUS.md) for full project state, architecture decisions, and release checklist.
 
 ## Privacy
 

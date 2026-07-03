@@ -11,6 +11,14 @@
     "test:license": "node --test tests/test-license.js",
     "test:export": "node --test tests/test-export.js"
   },
-  "keywords": ["json", "viewer", "chrome-extension", "privacy"],
-  "license": "MIT"
+  "keywords": [
+    "json",
+    "viewer",
+    "chrome-extension",
+    "privacy"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^25.3.0"
+  }
 }

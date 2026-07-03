@@ -1,0 +1,162 @@
+{
+  "repository": {
+    "id": 123456789,
+    "name": "clearjson",
+    "full_name": "wayknow/clearjson",
+    "description": "Privacy-first, open-source browser JSON viewer. Zero tracking. Fully local.",
+    "private": false,
+    "html_url": "https://github.com/wayknow/clearjson",
+    "homepage": "https://wayknow.tech/clearjson.html",
+    "size": 2048,
+    "stargazers_count": 42,
+    "watchers_count": 42,
+    "language": "JavaScript",
+    "has_issues": true,
+    "has_projects": true,
+    "has_downloads": true,
+    "has_wiki": false,
+    "has_pages": false,
+    "has_discussions": true,
+    "forks_count": 5,
+    "archived": false,
+    "disabled": false,
+    "open_issues_count": 3,
+    "allow_forking": true,
+    "is_template": false,
+    "license": {
+      "key": "mit",
+      "name": "MIT License",
+      "spdx_id": "MIT",
+      "url": "https://api.github.com/licenses/mit",
+      "node_id": "MDc6TGljZW5zZW1pdA=="
+    },
+    "topics": [
+      "json",
+      "json-viewer",
+      "json-formatter",
+      "chrome-extension",
+      "privacy",
+      "open-source",
+      "developer-tools"
+    ],
+    "visibility": "public",
+    "created_at": "2025-01-15T10:30:00Z",
+    "updated_at": "2026-07-03T08:00:00Z",
+    "pushed_at": "2026-07-03T07:45:00Z"
+  },
+  "owner": {
+    "login": "wayknow",
+    "id": 98765432,
+    "avatar_url": "https://i.pravatar.cc/150?u=wayknow.jpg",
+    "html_url": "https://github.com/wayknow",
+    "type": "User",
+    "site_admin": false
+  },
+  "contributors": [
+    {
+      "login": "wayknow",
+      "contributions": 150,
+      "avatar_url": "https://avatars.githubusercontent.com/u/98765432?v=4"
+    },
+    {
+      "login": "contributor2",
+      "contributions": 25,
+      "avatar_url": "https://avatars.githubusercontent.com/u/11111111?v=4"
+    }
+  ],
+  "stats": {
+    "commits": 187,
+    "lines_added": 8750,
+    "lines_deleted": 1200,
+    "branches": 3,
+    "tags": [
+      "v0.1.0",
+      "v0.2.0",
+      "v0.3.0"
+    ],
+    "build_status": "passing",
+    "coverage_percent": 87.5,
+    "last_deployment": null
+  },
+  "settings": {
+    "features": {
+      "auto_format": true,
+      "syntax_highlight": true,
+      "tree_view": true,
+      "search": true,
+      "themes": true,
+      "export_csv": false,
+      "jwt_decode": false,
+      "virtual_scroll": false
+    },
+    "limits": {
+      "max_file_size_free": 2097152,
+      "max_file_size_pro": 524288000,
+      "max_depth": 50,
+      "max_nodes": 500000
+    },
+    "pricing": {
+      "free": 0,
+      "pro_lifetime": 29.0,
+      "currency": "USD",
+      "available": true
+    }
+  },
+  "releases": [
+    {
+      "tag_name": "v0.3.0",
+      "name": "Phase 3 — JWT, 30 Themes, Shortcuts",
+      "prerelease": false,
+      "published_at": "2026-07-01T12:00:00Z",
+      "assets": [],
+      "body": "### What's New\n- JWT auto-decode\n- 30 themes with cycle\n- Custom keyboard shortcuts\n- TypeScript recursive inference\n- 136 unit tests"
+    },
+    {
+      "tag_name": "v0.2.0",
+      "name": "Phase 2 — Core Features",
+      "prerelease": false,
+      "published_at": "2026-06-15T10:00:00Z",
+      "assets": [],
+      "body": "### What's New\n- 10 themes + 20 Pro themes\n- Search with navigation\n- Image URL preview\n- Large file Pro gate\n- Standalone viewer\n- URL exclusion list\n- License activation system"
+    },
+    {
+      "tag_name": "v0.1.0",
+      "name": "Phase 1 — MVP",
+      "prerelease": false,
+      "published_at": "2026-06-01T08:00:00Z",
+      "assets": [],
+      "body": "### Initial Release\n- JSON detection & formatting\n- Collapsible tree view\n- Syntax highlighting\n- Click-to-copy values\n- JSONPath copy"
+    }
+  ],
+  "edge_cases": {
+    "empty_string": "",
+    "empty_array": [],
+    "empty_object": {},
+    "null_value": null,
+    "boolean_true": true,
+    "boolean_false": false,
+    "zero": 0,
+    "negative": -42,
+    "float": 3.141592653589793,
+    "scientific": 15000000000.0,
+    "unicode": "Hello 🌍 — 你好 — こんにちは",
+    "escape_chars": "Line1\nLine2\tTabbed\"Quoted\\Backslash/Forward",
+    "very_long_string": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    "url_example": "https://example.com/api/v1/users?page=1&limit=100",
+    "image_url": "https://picsum.photos/seed/clearjson/800/600.jpg",
+    "nested_deeply": {
+      "level1": {
+        "level2": {
+          "level3": {
+            "level4": {
+              "level5": {
+                "found": "deep value at level 5"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "logo_url": "https://picsum.photos/seed/clearjson/800/600.jpg"
+}

@@ -9,7 +9,7 @@
   'use strict';
 
   var app, toolbar, main, statsBar, landing, treeView, rawView, settingsPage, proPage;
-  var textarea, dropZone, fileInput;
+  var textarea, fileInput;
 
   var state = {
     parsedData: null,
@@ -69,7 +69,6 @@
     settingsPage = document.getElementById('cj-settings-page');
     proPage = document.getElementById('cj-pro-page');
     textarea = document.getElementById('json-input');
-    dropZone = document.getElementById('drop-zone');
     fileInput = document.getElementById('file-input');
   }
 
@@ -89,6 +88,24 @@
     // Load file
     document.getElementById('btn-load-file').addEventListener('click', function () { fileInput.click(); });
     fileInput.addEventListener('change', handleFileSelect);
+
+    // Load sample data
+    document.getElementById('btn-load-sample').addEventListener('click', function () {
+      var sample = JSON.stringify({
+        name: 'ClearJSON',
+        version: '0.3.0',
+        free: true,
+        themes: ['dark', 'light', 'sepia', 'monokai', 'dracula'],
+        stats: { users: 1234, rating: 4.8 },
+        features: [
+          { id: 1, name: 'Syntax Highlighting', free: true },
+          { id: 2, name: 'Tree View', free: true },
+          { id: 3, name: 'JWT Decoder', pro: true }
+        ]
+      }, null, 2);
+      textarea.value = sample;
+      formatJSON(sample);
+    });
 
     // Copy
     document.getElementById('btn-copy').addEventListener('click', copyJSON);
@@ -138,25 +155,29 @@
       }
     });
 
-    // Drop zone
-    dropZone.addEventListener('click', function () { fileInput.click(); });
-    dropZone.addEventListener('dragover', function (e) { e.preventDefault(); dropZone.classList.add('cj-drag-over'); });
-    dropZone.addEventListener('dragleave', function () { dropZone.classList.remove('cj-drag-over'); });
-    dropZone.addEventListener('drop', function (e) {
+    // Drop file anywhere on landing page
+    landing.addEventListener('dragover', function (e) { e.preventDefault(); landing.style.opacity = '0.6'; });
+    landing.addEventListener('dragleave', function () { landing.style.opacity = ''; });
+    landing.addEventListener('drop', function (e) {
       e.preventDefault();
-      dropZone.classList.remove('cj-drag-over');
+      landing.style.opacity = '';
       var file = e.dataTransfer.files[0];
       if (file) readFile(file);
     });
 
-    // Paste anywhere
+    // Paste anywhere on page → auto-format
     document.addEventListener('paste', function (e) {
       if (landing.style.display === 'none') return;
-      if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+      if (e.target.tagName === 'INPUT') return;
       var text = (e.clipboardData || window.clipboardData).getData('text');
       if (text && text.trim()) {
-        textarea.value = text;
-        formatJSON(text);
+        if (e.target.tagName === 'TEXTAREA') {
+          // Pasting into textarea — auto-format after a short delay
+          setTimeout(function () { formatJSON(textarea.value.trim()); }, 50);
+        } else {
+          textarea.value = text;
+          formatJSON(text);
+        }
       }
     });
   }
@@ -437,7 +458,16 @@
   function copyJSON() {
     if (!state.parsedData) return;
     var text = JSON.stringify(state.parsedData, null, 2);
-    navigator.clipboard.writeText(text).then(function () { showToast('Copied!'); });
+    var btn = document.getElementById('btn-copy');
+    navigator.clipboard.writeText(text).then(function () {
+      var orig = btn.textContent;
+      btn.textContent = '✓ Copied';
+      btn.style.color = 'var(--cj-string)';
+      setTimeout(function () {
+        btn.textContent = orig;
+        btn.style.color = '';
+      }, 1500);
+    });
   }
 
   // ================================================================

@@ -294,7 +294,7 @@ var ClearJSON = window.ClearJSON || {};
     andromeda: {
       bg: '#1f1c2e', surface: '#2a2638', text: '#d5ced9', 'text-secondary': '#6f6a7a',
       key: '#8ab4f8', string: '#a9d483', number: '#f2a65a', boolean: '#c77dba',
-      null: '#f3746c', punctu: '#6f6a7a', link: '#74c7ec', guide: '#3d3948',
+      null: '#f3746c', punct: '#6f6a7a', link: '#74c7ec', guide: '#3d3948',
       'line-number': '#6f6a7a', hover: 'rgba(138,180,248,0.08)', selected: 'rgba(138,180,248,0.15)',
       'toolbar-bg': '#191724', 'toolbar-border': '#3d3948',
       'stats-bg': '#191724', 'stats-border': '#3d3948',

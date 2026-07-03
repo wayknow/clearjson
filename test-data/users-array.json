@@ -1,0 +1,12 @@
+[
+  {"id": 1, "name": "Alice Johnson", "email": "alice@example.com", "role": "admin", "created": "2024-01-15", "active": true, "score": 95.5, "tags": ["typescript", "react", "node"]},
+  {"id": 2, "name": "Bob Smith", "email": "bob@example.com", "role": "editor", "created": "2024-02-20", "active": true, "score": 82.0, "tags": ["python", "django"]},
+  {"id": 3, "name": "Carol Williams", "email": "carol@example.com", "role": "viewer", "created": "2024-03-10", "active": false, "score": 60.5, "tags": []},
+  {"id": 4, "name": "Dave Brown", "email": "dave@example.com", "role": "editor", "created": "2024-04-05", "active": true, "score": 73.2, "tags": ["go", "rust", "docker"]},
+  {"id": 5, "name": "Eve Davis", "email": "eve@example.com", "role": "admin", "created": "2024-05-18", "active": true, "score": 99.1, "tags": ["kubernetes", "terraform", "aws"]},
+  {"id": 6, "name": "Frank Miller", "email": "frank@example.com", "role": "viewer", "created": "2024-06-22", "active": true, "score": 45.8, "tags": ["css", "html"]},
+  {"id": 7, "name": "Grace Wilson", "email": null, "role": "editor", "created": "2024-07-30", "active": false, "score": 88.3, "tags": ["java", "spring"]},
+  {"id": 8, "name": "Hank Moore", "email": "hank@example.com", "role": "viewer", "created": "2024-08-14", "active": true, "score": 67.0, "tags": ["c++", "qt"]},
+  {"id": 9, "name": "Iris Taylor", "email": "iris@example.com", "role": "admin", "created": "2024-09-01", "active": true, "score": 91.7, "tags": ["elixir", "phoenix", "postgres"]},
+  {"id": 10, "name": "Jack Anderson", "email": "jack@example.com", "role": "editor", "created": "2024-10-12", "active": true, "score": 78.4, "tags": ["swift", "ios"]}
+]
