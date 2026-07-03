@@ -154,7 +154,7 @@
 ### 必须完成（阻塞发布）
 1. **Chrome Web Store 商店页面准备**：描述/关键词/分类已就绪（见 `docs/store-listing.md`），待截图、$5 注册
 2. **至少 2 周的实机测试**：在日常使用中发现 bug
-3. **隐私政策页面**：已创建 `docs/privacy.html`，待部署到 GitHub Pages
+3. **隐私政策页面**：已部署 `https://wayknow.tech/clearjson-privacy.html`
 
 ### 应该完成（提升转化）
 5. **JWT 自动解码**（Pro）：检测 `eyJ...` token，内联展示 header+payload
@@ -245,7 +245,6 @@ clearjson/
 │   ├── test-license.js
 │   └── test-export.js
 ├── docs/                      # 发布素材
-│   ├── privacy.html           # 隐私政策页面
 │   └── store-listing.md       # Chrome Web Store 文案素材
 ├── package.json               # npm test 脚本
 ├── features.md                # 完整功能列表

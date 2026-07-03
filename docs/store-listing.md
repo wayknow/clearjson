@@ -98,7 +98,7 @@ English
 
 - **Homepage URL**: `https://github.com/wayknow/clearjson`
 - **Support URL**: `https://github.com/wayknow/clearjson/issues`
-- **Privacy policy URL**: `https://wayknow.github.io/clearjson/privacy.html` (or wherever hosted)
+- **Privacy policy URL**: `https://wayknow.tech/clearjson-privacy.html`
 
 ---
 
