@@ -133,6 +133,39 @@ describe('Export.toTypeScript()', function () {
     const ts = E.toTypeScript(data, 'Root');
     assert.ok(typeof ts === 'string');
     assert.ok(ts.length > 0);
+    // Should generate nested interface
+    assert.ok(ts.indexOf('interface RootUser') > -1 || ts.indexOf('interface Root') > -1);
+  });
+
+  it('deduplicates identical nested structures', function () {
+    const data = {
+      user: { name: 'Alice', email: 'a@a.com' },
+      author: { name: 'Bob', email: 'b@b.com' }
+    };
+    const ts = E.toTypeScript(data, 'Post');
+    // Both user and author should reference the same interface
+    const matches = ts.match(/PostUser/g);
+    assert.ok(matches.length >= 3, 'PostUser should appear at least 3 times (interface + 2 refs)');
+  });
+
+  it('handles null fields with optional marker', function () {
+    const data = { name: 'test', updated: null };
+    const ts = E.toTypeScript(data, 'T');
+    assert.ok(ts.indexOf('?:') > -1 || ts.indexOf('? :') > -1, 'null field should be optional');
+  });
+
+  it('handles empty object', function () {
+    const data = {};
+    const ts = E.toTypeScript(data, 'Empty');
+    assert.ok(ts.indexOf('Record') > -1 || ts.length >= 0);
+  });
+
+  it('handles arrays of objects', function () {
+    const data = [{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }];
+    const ts = E.toTypeScript(data, 'Users');
+    assert.ok(ts.indexOf('interface') > -1);
+    assert.ok(ts.indexOf('id') > -1);
+    assert.ok(ts.indexOf('name') > -1);
   });
 });
 

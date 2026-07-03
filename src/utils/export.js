@@ -137,56 +137,136 @@ var ClearJSON = window.ClearJSON || {};
    */
   function toTypeScript(data, rootName) {
     rootName = rootName || 'Root';
-    var interfaces = [];
-    var seen = {};
+    var interfaces = [];          // ordered list: { name, fields, fieldOrder }
+    var structMap = {};           // signature → type name (deduplication)
+    var nameCounter = {};         // base name → count (for unique naming)
 
+    /**
+     * Generate a unique type name.
+     */
+    function makeTypeName(base) {
+      var name = capitalize(base);
+      if (!nameCounter[name]) {
+        nameCounter[name] = 1;
+        return name;
+      }
+      nameCounter[name]++;
+      return name + nameCounter[name];
+    }
+
+    /**
+     * Generate a structural signature for an object.
+     * Two objects with the same field names and types produce the same signature.
+     */
+    function structSig(keys, fieldTypes) {
+      var sortedKeys = keys.slice().sort();
+      var parts = [];
+      for (var i = 0; i < sortedKeys.length; i++) {
+        var k = sortedKeys[i];
+        parts.push(k + ':' + fieldTypes[k]);
+      }
+      return parts.join('|');
+    }
+
+    /**
+     * Recursively resolve type. Returns a TS type string.
+     * Side effect: appends new interface definitions to `interfaces`.
+     */
     function tsType(value, name) {
-      if (value === null) return 'null';
+      if (value === null || value === undefined) return 'null';
 
       if (Array.isArray(value)) {
         if (value.length === 0) return 'any[]';
-        // Sample first few items for union type
+        // Sample all items (up to 20) for union type detection
         var itemTypes = [];
-        for (var i = 0; i < Math.min(value.length, 3); i++) {
+        var limit = Math.min(value.length, 20);
+        for (var i = 0; i < limit; i++) {
           itemTypes.push(tsType(value[i], name + 'Item'));
         }
+        // Deduplicate
         var unique = [];
         for (var j = 0; j < itemTypes.length; j++) {
           if (unique.indexOf(itemTypes[j]) === -1) unique.push(itemTypes[j]);
         }
-        return (unique.length === 1 ? unique[0] : unique.join(' | ')) + '[]';
+        if (unique.length === 0) return 'any[]';
+        if (unique.length === 1) return unique[0] + '[]';
+        return '(' + unique.join(' | ') + ')[]';
       }
 
       if (typeof value === 'object') {
-        var typeName = capitalize(name);
-        if (seen[typeName]) return typeName;
-        seen[typeName] = true;
-
         var keys = Object.keys(value);
-        var fields = [];
+        if (keys.length === 0) return 'Record<string, never>';
+
+        // Build field types first (recursively)
+        var fieldTypes = {};
+        var orderedFields = [];
         for (var k = 0; k < keys.length; k++) {
           var key = keys[k];
           var val = value[key];
-          var optional = val === null || val === undefined ? '?' : '';
-          var fieldType = tsType(val, name + capitalize(key));
-          // Sanitize key for TypeScript
-          var fieldName = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(key) ? key : '"' + key + '"';
-          fields.push('  ' + fieldName + optional + ': ' + fieldType + ';');
+          var fieldName = capitalize(name) + capitalize(key);
+          var fType = tsType(val, fieldName);
+          fieldTypes[key] = fType;
+          orderedFields.push(key);
         }
 
-        interfaces.push('interface ' + typeName + ' {\n' + fields.join('\n') + '\n}');
+        // Check if this structure already exists (deduplicate)
+        var sig = structSig(keys, fieldTypes);
+        if (structMap[sig]) return structMap[sig];
+
+        // Create new type name
+        var typeName = makeTypeName(name);
+        structMap[sig] = typeName;
+
+        // Build interface fields
+        var fieldDefs = [];
+        for (var m = 0; m < orderedFields.length; m++) {
+          var fKey = orderedFields[m];
+          var fVal = value[fKey];
+          var fType = fieldTypes[fKey];
+          var isOptional = fVal === null || fVal === undefined;
+          var tsKey = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(fKey) ? fKey : '"' + fKey + '"';
+
+          if (isOptional) {
+            // If value is null, use `field?: Type` (optional)
+            if (fType === 'null') {
+              fieldDefs.push('  ' + tsKey + '?: any;');
+            } else {
+              fieldDefs.push('  ' + tsKey + '?: ' + fType + ';');
+            }
+          } else {
+            fieldDefs.push('  ' + tsKey + ': ' + fType + ';');
+          }
+        }
+
+        interfaces.push({ name: typeName, fields: fieldDefs });
         return typeName;
       }
 
       if (typeof value === 'string') return 'string';
-      if (typeof value === 'number') return Number.isInteger(value) ? 'number' : 'number';
+      if (typeof value === 'number') return 'number';
       if (typeof value === 'boolean') return 'boolean';
       return 'any';
     }
 
-    tsType(data, rootName);
+    // Handle top-level array specially
+    if (Array.isArray(data)) {
+      var itemType = tsType(data.length > 0 ? data[0] : {}, rootName);
+      // If root is array, use itemType as root and wrap
+      tsType(data, rootName);
+    } else {
+      tsType(data, rootName);
+    }
 
-    return interfaces.reverse().join('\n\n');
+    // Build output: interfaces in dependency order (dependencies first, root last)
+    var result = [];
+    // Since we recurse depth-first, interfaces are already in dependency order.
+    // Just need to reverse to put root last.
+    for (var n = interfaces.length - 1; n >= 0; n--) {
+      var iface = interfaces[n];
+      result.push('interface ' + iface.name + ' {\n' + iface.fields.join('\n') + '\n}');
+    }
+
+    return result.join('\n\n');
   }
 
   function capitalize(str) {
