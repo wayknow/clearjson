@@ -161,6 +161,7 @@
 11. ~~Copy 按钮无反馈~~ → 点击后变绿 `✓ Copied`，1.5s 恢复
 12. ~~Popup 版本号~~ → `v0.1.0` → `v0.3.0`
 13. ~~缺少示例数据~~ → 新增 "Try Sample" 按钮，一键体验
+14. ~~Pro 解锁方式繁琐~~ → 三种方式：popup Dev Mode 开关（最简单）、URL `?dev` 参数、`localhost:8765` 自动启用
 
 ### 技术债
 **当前无技术债。**
@@ -250,10 +251,11 @@ cd server && npm install   # 许可证服务器依赖
 2. "加载已解压的扩展程序" → 选择项目目录
 3. 打开任何 JSON URL（如 `https://jsonplaceholder.typicode.com/users`）自动格式化
 
-### 测试 Pro 功能（开发模式）
-```js
-localStorage.setItem('clearjson_pro_dev', '1')
-```
+### 测试 Pro 功能（三种方式，任选其一）
+
+1. **Popup 开关**（最简单）：点扩展图标 → 勾选 `Dev Mode (unlock Pro)`
+2. **URL 参数**：`viewer.html?dev`，或通过 popup 按钮打开（已自带 `?dev`）
+3. **控制台**：`localStorage.setItem('clearjson_pro_dev', '1')`
 
 ### 运行测试
 ```bash

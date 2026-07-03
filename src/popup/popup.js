@@ -9,8 +9,21 @@
   updatePageStatus();
 
   // Viewer button
+  // Dev mode toggle
+  var devToggle = document.getElementById('dev-toggle');
+  if (devToggle) {
+    devToggle.checked = localStorage.getItem('clearjson_pro_dev') === '1';
+    devToggle.addEventListener('change', function () {
+      if (this.checked) {
+        localStorage.setItem('clearjson_pro_dev', '1');
+      } else {
+        localStorage.removeItem('clearjson_pro_dev');
+      }
+    });
+  }
+
   document.getElementById('btn-viewer').addEventListener('click', function () {
-    chrome.tabs.create({ url: chrome.runtime.getURL('src/viewer/viewer.html') });
+    chrome.tabs.create({ url: chrome.runtime.getURL('src/viewer/viewer.html?dev') });
   });
 
   function updatePageStatus() {

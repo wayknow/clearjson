@@ -208,12 +208,14 @@ var ClearJSON = window.ClearJSON || {};
    * Uses cached verification if fresh, otherwise re-verifies online.
    */
   function isActive() {
-    // Dev mode: auto-enable Pro on test server or with localStorage flag
+    // Dev mode: auto-enable Pro via localStorage flag, localhost:8765, or ?dev URL param
     try {
       if (localStorage.getItem('clearjson_pro_dev') === '1') return true;
       if (typeof window !== 'undefined' && window.location &&
           window.location.hostname === 'localhost' &&
           window.location.port === '8765') return true;
+      if (typeof window !== 'undefined' && window.location &&
+          window.location.search.indexOf('dev') !== -1) return true;
     } catch (e) { /* ignore */ }
 
     // Check if a license is stored
