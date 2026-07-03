@@ -525,7 +525,8 @@ var ClearJSON = window.ClearJSON || {};
   }
 
   function cycleTheme() {
-    var themes = C.Themes.FREE_THEMES;
+    var isPro = C.License && C.License.isActive();
+    var themes = isPro ? C.Themes.FREE_THEMES.concat(C.Themes.PRO_THEMES) : C.Themes.FREE_THEMES;
     var current = state.settings.theme;
     var idx = themes.indexOf(current);
     if (idx === -1) idx = 0;
@@ -538,7 +539,12 @@ var ClearJSON = window.ClearJSON || {};
     if (app) app.className = 'cj-theme-' + next;
 
     var themeBtn = document.querySelector('.cj-tb-theme');
-    if (themeBtn) themeBtn.textContent = C.Themes.getThemeLabel(next);
+    if (themeBtn) {
+      themeBtn.textContent = C.Themes.getThemeLabel(next);
+      // Show Pro badge if on a Pro theme
+      var isProTheme = isPro && C.Themes.PRO_THEMES.indexOf(next) !== -1;
+      themeBtn.style.color = isProTheme ? 'var(--cj-accent, #cba6f7)' : '';
+    }
 
     showToast('Theme: ' + C.Themes.getThemeLabel(next));
   }
@@ -550,26 +556,56 @@ var ClearJSON = window.ClearJSON || {};
   function bindKeyboardShortcuts() {
     document.addEventListener('keydown', function (e) {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-      var key = e.key;
-      var ctrl = e.ctrlKey || e.metaKey;
+      if (e.ctrlKey || e.metaKey) return; // allow Ctrl+F, etc. to pass through
 
-      if (ctrl && key === 'f') return; // handled by search input focus
+      var shortcut = buildShortcutString(e);
+      if (!shortcut) return;
 
-      if (!ctrl) {
-        switch (key) {
-          case '[': e.preventDefault(); C.Tree.collapseAll(state.treeRoot); break;
-          case ']': e.preventDefault(); C.Tree.expandAll(state.treeRoot); break;
-          case 'd': case 'D': e.preventDefault(); cycleTheme(); break;
-          case 'r': case 'R': e.preventDefault(); toggleRawView(); break;
-          case 'Enter':
-            if (state.searchResults.length > 0) {
-              e.preventDefault();
-              navigateSearch(e.shiftKey ? -1 : 1);
-            }
-            break;
-        }
+      var shortcuts = getActiveShortcuts();
+
+      // Check each defined shortcut
+      if (shortcut === shortcuts.collapseAll) { e.preventDefault(); C.Tree.collapseAll(state.treeRoot); return; }
+      if (shortcut === shortcuts.expandAll)   { e.preventDefault(); C.Tree.expandAll(state.treeRoot); return; }
+      if (shortcut === shortcuts.cycleTheme)  { e.preventDefault(); cycleTheme(); return; }
+      if (shortcut === shortcuts.toggleRaw)   { e.preventDefault(); toggleRawView(); return; }
+      if (shortcut === shortcuts.searchNext)  {
+        if (state.searchResults.length > 0) { e.preventDefault(); navigateSearch(1); }
+        return;
+      }
+      if (shortcut === shortcuts.searchPrev)  {
+        if (state.searchResults.length > 0) { e.preventDefault(); navigateSearch(-1); }
+        return;
       }
     });
+  }
+
+  var SHORTCUT_DEFAULTS = {
+    collapseAll: '[',
+    expandAll: ']',
+    cycleTheme: 'd',
+    toggleRaw: 'r',
+    searchNext: 'Enter',
+    searchPrev: 'Shift+Enter'
+  };
+
+  function getActiveShortcuts() {
+    var custom = (state.settings && state.settings.shortcuts) || {};
+    var merged = {};
+    Object.keys(SHORTCUT_DEFAULTS).forEach(function (key) {
+      merged[key] = custom[key] || SHORTCUT_DEFAULTS[key];
+    });
+    return merged;
+  }
+
+  function buildShortcutString(e) {
+    if (['Control', 'Shift', 'Alt', 'Meta'].indexOf(e.key) !== -1) return null;
+    var parts = [];
+    if (e.shiftKey && e.key !== 'Enter') parts.push('Shift');
+    if (e.altKey) parts.push('Alt');
+    var key = e.key.length === 1 ? e.key.toUpperCase() : e.key;
+    if (e.shiftKey && e.key === 'Enter') parts.push('Shift');
+    parts.push(key);
+    return parts.join('+');
   }
 
   // ================================================================

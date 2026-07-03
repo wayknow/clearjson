@@ -26,8 +26,18 @@
     theme: 'dark',
     indentSize: 20,
     initialDepth: 2,
-    excludedURLs: []
+    excludedURLs: [],
+    shortcuts: {}
   };
+
+  var SHORTCUT_DEFS = [
+    { id: 'collapseAll', label: 'Collapse all',  defaultKey: '[', group: 'Navigation' },
+    { id: 'expandAll',   label: 'Expand all',    defaultKey: ']', group: 'Navigation' },
+    { id: 'cycleTheme',  label: 'Cycle theme',   defaultKey: 'd', group: 'Display' },
+    { id: 'toggleRaw',   label: 'Toggle raw',    defaultKey: 'r', group: 'Display' },
+    { id: 'searchNext',  label: 'Next search result',   defaultKey: 'Enter', group: 'Search' },
+    { id: 'searchPrev',  label: 'Previous search result', defaultKey: 'Shift+Enter', group: 'Search' }
+  ];
 
   // ================================================================
   //  INIT
@@ -39,6 +49,7 @@
     loadSettings(function () {
       applyTheme();
       renderThemeGrid();
+      renderShortcuts();
       renderURLList();
       checkProStatus();
       // Check hash for direct navigation
@@ -499,13 +510,93 @@
   }
 
   function cycleTheme() {
-    var themes = ClearJSON.Themes.FREE_THEMES;
+    var themes = ClearJSON.License.isActive()
+      ? ClearJSON.Themes.ALL_THEMES
+      : ClearJSON.Themes.FREE_THEMES;
     var idx = themes.indexOf(state.settings.theme);
     if (idx === -1) idx = 0;
     state.settings.theme = themes[(idx + 1) % themes.length];
     applyTheme();
     saveAllSettings();
     showToast('Theme: ' + ClearJSON.Themes.getThemeLabel(state.settings.theme));
+  }
+
+  function renderShortcuts() {
+    var table = document.getElementById('shortcuts-table');
+    var group = document.getElementById('shortcuts-group');
+    if (!table || !group) return;
+
+    var isPro = ClearJSON.License.isActive();
+    group.style.display = isPro ? 'block' : 'none';
+    if (!isPro) return;
+
+    table.innerHTML = '';
+    var shortcuts = state.settings.shortcuts || {};
+    var lastGroup = null;
+
+    SHORTCUT_DEFS.forEach(function (def) {
+      if (def.group !== lastGroup) {
+        lastGroup = def.group;
+        var hdr = document.createElement('div');
+        hdr.className = 'cj-shortcut-group-header';
+        hdr.textContent = def.group;
+        table.appendChild(hdr);
+      }
+
+      var row = document.createElement('div');
+      row.className = 'cj-shortcut-row';
+
+      var label = document.createElement('span');
+      label.className = 'cj-shortcut-label';
+      label.textContent = def.label;
+      row.appendChild(label);
+
+      var input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'cj-shortcut-input';
+      input.value = shortcuts[def.id] || def.defaultKey;
+      input.dataset.shortcut = def.id;
+      input.addEventListener('keydown', onShortcutKeyDown);
+      input.addEventListener('blur', function () {
+        if (!this.value.trim()) this.value = def.defaultKey;
+      });
+      row.appendChild(input);
+
+      var defaultVal = document.createElement('span');
+      defaultVal.className = 'cj-shortcut-default';
+      defaultVal.textContent = def.defaultKey;
+      row.appendChild(defaultVal);
+
+      var resetBtn = document.createElement('button');
+      resetBtn.className = 'cj-shortcut-reset';
+      resetBtn.textContent = 'Reset';
+      resetBtn.addEventListener('click', function () {
+        input.value = def.defaultKey;
+      });
+      row.appendChild(resetBtn);
+
+      table.appendChild(row);
+    });
+  }
+
+  function onShortcutKeyDown(e) {
+    e.preventDefault();
+    var input = e.target;
+
+    if (e.key === 'Backspace' || e.key === 'Delete') {
+      input.value = '';
+      return;
+    }
+
+    if (['Control', 'Shift', 'Alt', 'Meta'].indexOf(e.key) !== -1) return;
+
+    var parts = [];
+    if (e.ctrlKey || e.metaKey) parts.push('Ctrl');
+    if (e.shiftKey) parts.push('Shift');
+    if (e.altKey) parts.push('Alt');
+    parts.push(e.key.length === 1 ? e.key.toUpperCase() : e.key);
+
+    input.value = parts.join('+');
   }
 
   function renderURLList() {
@@ -544,6 +635,17 @@
   function saveAllSettings() {
     state.settings.indentSize = parseInt(document.getElementById('setting-indent').value) || 20;
     state.settings.initialDepth = parseInt(document.getElementById('setting-depth').value) || 2;
+
+    // Collect custom shortcuts
+    var shortcuts = {};
+    var inputs = document.querySelectorAll('.cj-shortcut-input');
+    inputs.forEach(function (input) {
+      var id = input.dataset.shortcut;
+      if (id && input.value.trim()) {
+        shortcuts[id] = input.value.trim();
+      }
+    });
+    state.settings.shortcuts = shortcuts;
 
     if (chrome && chrome.storage && chrome.storage.local) {
       chrome.storage.local.set({ clearjson: state.settings });
