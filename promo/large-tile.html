@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1400px; height: 560px; overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(135deg, #07071a 0%, #0c0c26 30%, #0f0f2e 60%, #0a0a20 100%);
+    display: flex;
+  }
+  /* Left: brand + features */
+  .left {
+    width: 580px; padding: 64px 60px;
+    display: flex; flex-direction: column; justify-content: center; gap: 28px;
+  }
+  .brand { display: flex; align-items: center; gap: 20px; }
+  .icon {
+    width: 72px; height: 72px; flex-shrink: 0;
+    background: linear-gradient(135deg, #89b4fa 0%, #74c7ec 100%);
+    border-radius: 18px; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 40px rgba(137, 180, 250, 0.4);
+    position: relative;
+  }
+  .braces {
+    font-family: 'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+    font-size: 36px; font-weight: 700; color: #1e1e2e;
+    letter-spacing: -2px; line-height: 1;
+  }
+  .brand-text { display: flex; flex-direction: column; gap: 2px; }
+  .name { font-size: 36px; font-weight: 800; color: #fff; letter-spacing: -0.8px; line-height: 1; }
+  .tag { font-size: 16px; color: #89b4fa; font-weight: 500; letter-spacing: 0.5px; }
+
+  .features { display: flex; flex-direction: column; gap: 14px; }
+  .feature {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 15px; color: #b0b0c8;
+    padding: 12px 16px; background: rgba(24, 24, 48, 0.5);
+    border: 1px solid rgba(255,255,255,0.04); border-radius: 10px;
+  }
+  .feature .check {
+    width: 22px; height: 22px; flex-shrink: 0;
+    background: rgba(137, 180, 250, 0.2); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    color: #89b4fa; font-size: 13px;
+  }
+  .feature strong { color: #e0e0f0; }
+  .badge-row { display: flex; gap: 10px; }
+  .badge {
+    font-size: 12px; font-weight: 600; padding: 6px 14px;
+    border-radius: 20px; letter-spacing: 0.3px;
+  }
+  .badge-local {
+    background: rgba(76, 175, 80, 0.15); color: #81C784; border: 1px solid rgba(76, 175, 80, 0.25);
+  }
+  .badge-privacy {
+    background: rgba(137, 180, 250, 0.15); color: #89b4fa; border: 1px solid rgba(137, 180, 250, 0.25);
+  }
+  .badge-opensource {
+    background: rgba(203, 166, 247, 0.12); color: #cba6f7; border: 1px solid rgba(203, 166, 247, 0.25);
+  }
+  .price {
+    font-size: 13px; color: #5c5c84; margin-top: 2px;
+  }
+  .price b { color: #89b4fa; font-size: 15px; }
+
+  /* Right: JSON viewer mockup */
+  .right {
+    flex: 1; position: relative;
+    background: linear-gradient(180deg, rgba(137,180,250,0.03) 0%, rgba(137,180,250,0.08) 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mockup {
+    width: 680px; height: 440px;
+    background: #12122a;
+    border: 1px solid rgba(137,180,250,0.2);
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 80px rgba(137,180,250,0.08);
+    display: flex; flex-direction: column;
+  }
+  .mockup-bar {
+    height: 44px; background: #0e0e24;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; align-items: center; gap: 8px; padding: 0 16px;
+  }
+  .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .mockup-dot.r { background: #E53935; } .mockup-dot.y { background: #FFB300; } .mockup-dot.g { background: #4CAF50; }
+  .mockup-title {
+    margin-left: 12px; font-size: 12px; color: #5c5c74;
+    background: rgba(255,255,255,0.04); padding: 4px 14px; border-radius: 6px;
+  }
+  .mockup-content {
+    flex: 1; display: flex; flex-direction: column;
+  }
+  /* Toolbar */
+  .mockup-toolbar {
+    height: 40px; background: #0e0e22;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex; align-items: center; padding: 0 16px; gap: 8px;
+  }
+  .tb-btn {
+    padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600;
+    color: #7c7c94; background: transparent;
+  }
+  .tb-search {
+    flex: 1; max-width: 200px; margin-left: auto;
+    padding: 4px 10px; border-radius: 4px; font-size: 11px;
+    color: #7c7c94; background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .tb-btn.pro { color: #89b4fa; }
+  /* JSON tree content */
+  .mockup-tree {
+    flex: 1; padding: 20px 24px;
+    font-family: 'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+    font-size: 13px; line-height: 1.9; overflow: hidden;
+  }
+  .line { white-space: nowrap; }
+  .line .brace { color: #89b4fa; }
+  .line .key { color: #cba6f7; }
+  .line .str { color: #a6e3a1; }
+  .line .num { color: #fab387; }
+  .line .bool { color: #f38ba8; }
+  .line .null { color: #6c7086; }
+  .line .toggle { color: #585b70; margin-right: 4px; }
+  .indent1 { padding-left: 20px; }
+  .indent2 { padding-left: 40px; }
+  .indent3 { padding-left: 60px; }
+</style>
+</head>
+<body>
+<div class="left">
+  <div class="brand">
+    <div class="icon">
+      <div class="braces">{ }</div>
+    </div>
+    <div class="brand-text">
+      <div class="name">ClearJSON</div>
+      <div class="tag">Privacy-First JSON Viewer</div>
+    </div>
+  </div>
+
+  <div class="badge-row">
+    <span class="badge badge-local">🔒 100% Local</span>
+    <span class="badge badge-privacy">🛡 Privacy First</span>
+    <span class="badge badge-opensource">📖 Open Source</span>
+  </div>
+
+  <div class="features">
+    <div class="feature">
+      <div class="check">✓</div>
+      <span><strong>Auto-detect &amp; format</strong> — JSON, JSON-LD, JSON:API, NDJSON</span>
+    </div>
+    <div class="feature">
+      <div class="check">✓</div>
+      <span><strong>Collapsible tree view</strong> — syntax highlighting, indent guides, line numbers</span>
+    </div>
+    <div class="feature">
+      <div class="check">✓</div>
+      <span><strong>Click to copy values</strong> — right-click for JSONPath, links auto-detected</span>
+    </div>
+    <div class="feature">
+      <div class="check">✓</div>
+      <span><strong>10 themes + search</strong> — dark/light/sepia, find keys &amp; values instantly</span>
+    </div>
+  </div>
+
+  <div class="price">Free forever &nbsp;·&nbsp; <b>Open Source</b> (MIT) — no ads, no tracking</div>
+</div>
+
+<div class="right">
+  <div class="mockup">
+    <div class="mockup-bar">
+      <div class="mockup-dot r"></div>
+      <div class="mockup-dot y"></div>
+      <div class="mockup-dot g"></div>
+      <div class="mockup-title">ClearJSON Viewer</div>
+    </div>
+    <div class="mockup-content">
+      <div class="mockup-toolbar">
+        <span class="tb-btn">Collapse</span>
+        <span class="tb-btn">Expand</span>
+        <span class="tb-search">🔍 Search keys &amp; values…</span>
+        <span class="tb-btn">Raw</span>
+        <span class="tb-btn">Copy</span>
+        <span class="tb-btn">Theme</span>
+      </div>
+      <div class="mockup-tree">
+        <div class="line"><span class="toggle">▼</span><span class="brace">{</span></div>
+        <div class="line indent1"><span class="key">"name"</span><span class="brace">:</span> <span class="str">"ClearJSON"</span><span class="brace">,</span></div>
+        <div class="line indent1"><span class="key">"version"</span><span class="brace">:</span> <span class="str">"1.0.0"</span><span class="brace">,</span></div>
+        <div class="line indent1"><span class="key">"free"</span><span class="brace">:</span> <span class="bool">true</span><span class="brace">,</span></div>
+        <div class="line indent1"><span class="toggle">▼</span><span class="key">"author"</span><span class="brace">:</span> <span class="brace">{</span></div>
+        <div class="line indent2"><span class="key">"name"</span><span class="brace">:</span> <span class="str">"ClearJSON"</span><span class="brace">,</span></div>
+        <div class="line indent2"><span class="key">"url"</span><span class="brace">:</span> <span class="str">"https://github.com/wayknow/clearjson"</span></div>
+        <div class="line indent1"><span class="brace">},</span></div>
+        <div class="line indent1"><span class="toggle">▼</span><span class="key">"stats"</span><span class="brace">:</span> <span class="brace">{</span></div>
+        <div class="line indent2"><span class="key">"users"</span><span class="brace">:</span> <span class="num">1234</span><span class="brace">,</span></div>
+        <div class="line indent2"><span class="key">"rating"</span><span class="brace">:</span> <span class="num">4.8</span></div>
+        <div class="line indent1"><span class="brace">},</span></div>
+        <div class="line indent1"><span class="toggle">▼</span><span class="key">"features"</span><span class="brace">:</span> <span class="brace">[</span></div>
+        <div class="line indent2"><span class="str">"Syntax Highlighting"</span><span class="brace">,</span></div>
+        <div class="line indent2"><span class="str">"Tree View"</span><span class="brace">,</span></div>
+        <div class="line indent2"><span class="str">"Image Preview"</span><span class="brace">,</span></div>
+        <div class="line indent2"><span class="null">null</span></div>
+        <div class="line indent1"><span class="brace">],</span></div>
+        <div class="line indent1"><span class="key">"openSource"</span><span class="brace">:</span> <span class="bool">true</span></div>
+        <div class="line"><span class="brace">}</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

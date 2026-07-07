@@ -67,15 +67,25 @@ English
 
 ## Screenshots (Required: 1280×800)
 
-| # | What to capture | Description |
-|---|-----------------|-------------|
-| 1 | A complex JSON API response (e.g., GitHub API) formatted in Dark theme | "Beautiful Dark theme with collapsible tree and syntax highlighting" |
-| 2 | Same JSON in Light theme with search bar open | "Light theme with search — find any key or value instantly" |
-| 3 | A JWT token showing inline decoded header + payload | "JWT auto-decode — inspect tokens right in the viewer (Pro)" |
-| 4 | Standalone viewer with drag-and-drop | "Standalone viewer — paste or drop any JSON file" |
-| 5 | Export menu showing CSV/TSV/YAML options | "Export to CSV, TSV, YAML, or TypeScript types (Pro)" |
+All 5 screenshots are in `screenshots/` directory. Generated via `test-data/capture-screenshots.js`.
 
-### How to take screenshots
+| # | File | Description |
+|---|------|-------------|
+| 1 | `01-dark-tree.png` | Complex JSON in Dark theme with collapsible tree and syntax highlighting |
+| 2 | `02-light-search.png` | Light theme with search — matching keys & values highlighted |
+| 3 | `03-array-data.png` | Large array of objects showing expanded tree structure |
+| 4 | `04-raw-view.png` | Raw JSON view with syntax highlighting and line numbers |
+| 5 | `05-theme-grid.png` | Settings panel with 10 free themes displayed in a grid |
+
+### How to re-generate screenshots
+
+```bash
+node test-data/capture-screenshots.js
+```
+
+Requires Chrome installed at `/Applications/Google Chrome.app`.
+
+For live screenshots (with real extension behavior):
 
 1. Load the extension in Chrome
 2. Open a JSON URL (e.g., `https://api.github.com/repos/wayknow/clearjson`)
@@ -86,11 +96,22 @@ English
 
 ## Promotional Images
 
-| Asset | Size | Notes |
-|-------|------|-------|
-| Small tile | 440×280 | Required. Extension icon + name on clean background |
-| Marquee | 920×680 | Optional. Shown in search results |
-| Promo tiles | 1400×560 | Optional. Up to 10, shown on detail page |
+All promo tiles are in `promo/` directory. HTML source files for editing, PNG renders for upload.
+
+| Asset | Size | File |
+|-------|------|------|
+| Small tile | 440×280 | `promo/small-tile.png` |
+| Large tile | 1400×560 | `promo/large-tile.png` |
+| Marquee tile | 1400×560 | `promo/marquee-tile.png` |
+
+### How to re-generate promo tiles
+
+```bash
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
+  --headless --disable-gpu --screenshot=promo/small-tile.png --window-size=440,280 \
+  "file://$(pwd)/promo/small-tile.html"
+# Repeat for large-tile.html (1400×560) and marquee-tile.html (1400×560)
+```
 
 ---
 

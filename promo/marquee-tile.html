@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1400px; height: 560px; overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(160deg, #080820 0%, #0c0c2c 25%, #0e0e34 50%, #0a0a24 100%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  /* Background glow */
+  .glow {
+    position: absolute; width: 600px; height: 600px;
+    border-radius: 50%; filter: blur(120px); opacity: 0.12;
+  }
+  .glow.l { background: #89b4fa; left: -100px; top: -100px; }
+  .glow.r { background: #cba6f7; right: -100px; bottom: -100px; }
+
+  .content {
+    position: relative; z-index: 1; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 32px;
+  }
+  .icon-big {
+    width: 100px; height: 100px;
+    background: linear-gradient(135deg, #89b4fa 0%, #74c7ec 100%);
+    border-radius: 24px; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 20px 60px rgba(137, 180, 250, 0.5), 0 0 100px rgba(137, 180, 250, 0.15);
+    position: relative;
+  }
+  .braces {
+    font-family: 'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+    font-size: 52px; font-weight: 700; color: #1e1e2e;
+    letter-spacing: -3px; line-height: 1;
+  }
+
+  h1 {
+    font-size: 52px; font-weight: 800; color: #fff;
+    letter-spacing: -1px; line-height: 1;
+  }
+  h1 span { color: #89b4fa; }
+
+  .subtitle {
+    font-size: 20px; color: #9090b0; font-weight: 400;
+    max-width: 700px; line-height: 1.5;
+  }
+  .subtitle b { color: #c0c0e0; }
+
+  .pills { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .pill {
+    font-size: 14px; font-weight: 600; padding: 10px 22px;
+    border-radius: 24px; letter-spacing: 0.3px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(24, 24, 48, 0.6);
+    color: #b0b0c8;
+  }
+  .pill.highlight {
+    background: rgba(137, 180, 250, 0.2); color: #89b4fa;
+    border-color: rgba(137, 180, 250, 0.3);
+  }
+
+  .big-cta {
+    font-size: 18px; color: #a6e3a1; font-weight: 600;
+    background: rgba(166, 227, 161, 0.1); border: 1px solid rgba(166, 227, 161, 0.2);
+    padding: 10px 28px; border-radius: 24px;
+  }
+
+  .bottom-info {
+    display: flex; gap: 16px; align-items: center;
+    font-size: 13px; color: #505070;
+  }
+  .bottom-info .sep { color: #252540; }
+</style>
+</head>
+<body>
+<div class="glow l"></div>
+<div class="glow r"></div>
+
+<div class="content">
+  <div class="icon-big">
+    <div class="braces">{ }</div>
+  </div>
+
+  <h1><span>ClearJSON</span> — JSON Viewer &amp; Formatter</h1>
+
+  <div class="subtitle">
+    <b>Auto-format</b> any JSON page · <b>Collapsible tree</b> with syntax highlighting<br>
+    <b>10 themes</b> · search · image preview · <b>100% local</b> · no tracking
+  </div>
+
+  <div class="pills">
+    <span class="pill">📄 JSON · JSON-LD · NDJSON</span>
+    <span class="pill">🌳 Collapsible Tree View</span>
+    <span class="pill highlight">🎨 10 Beautiful Themes</span>
+    <span class="pill">🔍 Search &amp; Navigate</span>
+    <span class="pill">🖼 Image URL Preview</span>
+  </div>
+
+  <div class="big-cta">Free Forever. Open Source (MIT). No Ads. No Tracking.</div>
+
+  <div class="bottom-info">
+    <span>🔒 100% Local Processing</span><span class="sep">|</span>
+    <span>📖 MIT Licensed</span><span class="sep">|</span>
+    <span>🦾 Privacy First</span>
+  </div>
+</div>
+</body>
+</html>
