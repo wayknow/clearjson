@@ -157,11 +157,10 @@ var ClearJSON = window.ClearJSON || {};
       '<div class="cj-upgrade-icon">⚠</div>' +
       '<h2>Large File Detected</h2>' +
       '<p>This JSON file is <strong>' + sizeStr + '</strong>.</p>' +
-      '<p>Free viewers may freeze or crash on files this large.</p>' +
-      '<p style="margin-bottom:16px"><strong>ClearJSON Pro</strong> handles files up to 500 MB with zero lag — virtual scrolling and streaming parser.</p>' +
+      '<p>Parsing large files may slow down or freeze your browser.</p>' +
       '<div class="cj-upgrade-actions">' +
         '<button class="cj-btn-primary" id="cj-btn-try-parse">Try Anyway</button>' +
-        '<button class="cj-btn-upgrade" id="cj-btn-upgrade">Learn About Pro</button>' +
+        '<button class="cj-btn-upgrade" id="cj-btn-learn-more">Learn More</button>' +
       '</div>';
 
     wrapper.appendChild(box);
@@ -177,11 +176,9 @@ var ClearJSON = window.ClearJSON || {};
       }
     });
 
-    document.getElementById('cj-btn-upgrade').addEventListener('click', function () {
-      // Open upgrade page
-      if (chrome && chrome.tabs) {
-        chrome.tabs.create({ url: chrome.runtime.getURL('src/viewer/viewer.html#upgrade') });
-      }
+    document.getElementById('cj-btn-learn-more').addEventListener('click', function () {
+      // Open product page with Pro info
+      window.open('https://wayknow.tech/clearjson.html', '_blank');
     });
   }
 
@@ -291,27 +288,14 @@ var ClearJSON = window.ClearJSON || {};
     searchNext.title = 'Next match';
     searchNext.addEventListener('click', function () { navigateSearch(1); });
 
-    // Regex toggle (Pro feature)
-    var regexBtn = document.createElement('button');
-    regexBtn.id = 'cj-search-regex';
-    regexBtn.className = 'cj-tb-btn';
-    regexBtn.textContent = '.*';
-    regexBtn.title = 'Regex mode (Pro)';
-    regexBtn.addEventListener('click', function () {
-      if (!isProActive()) {
-        showToast('Regex search is a Pro feature');
-        return;
-      }
-      var active = regexBtn.classList.toggle('cj-active');
-      doSearch(searchInput.value, active);
-    });
+    // Regex toggle — Pro feature, hidden in free release
+    // (uncomment when Creem payment is integrated)
 
     searchWrap.appendChild(searchIcon);
     searchWrap.appendChild(searchInput);
     searchWrap.appendChild(searchCount);
     searchWrap.appendChild(searchPrev);
     searchWrap.appendChild(searchNext);
-    if (isProActive()) searchWrap.appendChild(regexBtn);
     center.appendChild(searchWrap);
     tb.appendChild(center);
 
@@ -324,25 +308,14 @@ var ClearJSON = window.ClearJSON || {};
     var themeBtn = createBtn(themeLabel, 'theme', cycleTheme);
     right.appendChild(themeBtn);
 
-    // Pro badge
-    if (!isProActive()) {
-      var proBtn = document.createElement('button');
-      proBtn.className = 'cj-tb-btn cj-tb-pro';
-      proBtn.textContent = 'Pro';
-      proBtn.title = 'Upgrade to Pro';
-      proBtn.addEventListener('click', function () {
-        if (chrome && chrome.tabs) {
-          chrome.tabs.create({ url: chrome.runtime.getURL('src/viewer/viewer.html#upgrade') });
-        }
-      });
-      right.appendChild(proBtn);
-    }
+    // Pro badge — hidden in free release (restore when Creem is integrated)
+    // if (!isProActive()) { ... }
 
     tb.appendChild(right);
 
     // Bind search
     searchInput.addEventListener('input', function () {
-      doSearch(this.value, regexBtn.classList.contains('cj-active'));
+      doSearch(this.value, false);
     });
 
     // Ctrl+F focuses search

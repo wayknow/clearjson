@@ -9,7 +9,7 @@
   updatePageStatus();
 
   // Viewer button
-  // Dev mode toggle
+  // Dev mode toggle — hidden in free release (restore for Pro development)
   var devToggle = document.getElementById('dev-toggle');
   if (devToggle) {
     devToggle.checked = localStorage.getItem('clearjson_pro_dev') === '1';
@@ -23,7 +23,7 @@
   }
 
   document.getElementById('btn-viewer').addEventListener('click', function () {
-    chrome.tabs.create({ url: chrome.runtime.getURL('src/viewer/viewer.html?dev') });
+    chrome.tabs.create({ url: chrome.runtime.getURL('src/viewer/viewer.html') });
   });
 
   function updatePageStatus() {

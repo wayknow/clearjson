@@ -51,9 +51,7 @@
       renderThemeGrid();
       renderShortcuts();
       renderURLList();
-      checkProStatus();
       // Check hash for direct navigation
-      if (window.location.hash === '#upgrade') showProPage();
       if (window.location.hash === '#settings') showSettingsPage();
     });
   });
@@ -93,7 +91,7 @@
     document.getElementById('btn-load-sample').addEventListener('click', function () {
       var sample = JSON.stringify({
         name: 'ClearJSON',
-        version: '0.3.0',
+        version: '1.0.0',
         free: true,
         themes: ['dark', 'light', 'sepia', 'monokai', 'dracula'],
         stats: { users: 1234, rating: 4.8 },
@@ -137,10 +135,10 @@
     document.getElementById('btn-save-settings').addEventListener('click', saveAllSettings);
     document.getElementById('btn-add-url').addEventListener('click', addURLPattern);
 
-    // Pro page
-    document.getElementById('btn-activate').addEventListener('click', activateLicense);
-    var deactBtn = document.getElementById('btn-deactivate');
-    if (deactBtn) deactBtn.addEventListener('click', deactivateLicense);
+    // Pro page — hidden in free release
+    // document.getElementById('btn-activate').addEventListener('click', activateLicense);
+    // var deactBtn = document.getElementById('btn-deactivate');
+    // if (deactBtn) deactBtn.addEventListener('click', deactivateLicense);
 
     // Search
     var searchInput = document.getElementById('cj-search-input');
@@ -252,11 +250,10 @@
     box.innerHTML =
       '<div class="cj-upgrade-icon">⚠</div>' +
       '<h2>Large File — ' + sizeMB + ' MB</h2>' +
-      '<p>This file may freeze your browser with the free viewer.</p>' +
-      '<p><strong>ClearJSON Pro</strong> handles files up to 500 MB with virtual scrolling and streaming parser.</p>' +
+      '<p>This file may freeze your browser.</p>' +
+      '<p>Parsing very large JSON files requires significant memory.</p>' +
       '<div class="cj-upgrade-actions">' +
         '<button class="cj-btn-primary" id="cj-btn-try">Try Anyway</button>' +
-        '<button class="cj-btn-upgrade" id="cj-btn-go-pro">Upgrade to Pro — $29</button>' +
       '</div>';
     treeView.appendChild(box);
 
@@ -272,7 +269,6 @@
         showError(result);
       }
     });
-    document.getElementById('cj-btn-go-pro').addEventListener('click', showProPage);
   }
 
   function toggleView() {
@@ -395,25 +391,7 @@
       }}
     ];
 
-    if (ClearJSON.License.isActive()) {
-      items.push({ label: 'Export CSV', action: function () {
-        var csv = ClearJSON.Export.toCSV(state.parsedData);
-        if (csv) ClearJSON.Export.downloadFile(csv, 'data.csv', 'text/csv');
-        else showToast('CSV export requires an array of objects');
-      }});
-      items.push({ label: 'Export TypeScript Types', action: function () {
-        var ts = ClearJSON.Export.toTypeScript(state.parsedData, 'Root');
-        ClearJSON.Export.downloadFile(ts, 'types.ts', 'text/typescript');
-      }});
-      items.push({ label: 'Export YAML', action: function () {
-        var yaml = ClearJSON.Export.toYAML(state.parsedData);
-        ClearJSON.Export.downloadFile(yaml, 'data.yaml', 'text/yaml');
-      }});
-    } else {
-      items.push({ label: 'CSV / TS / YAML → (Pro)', action: function () {
-        showProPage();
-      }});
-    }
+    // Pro exports (CSV/TS/YAML) — hidden in free release (restore when Creem is integrated)
 
     // Simple dropdown via a quick menu
     showQuickMenu(items);
@@ -500,28 +478,21 @@
     if (!grid) return;
     grid.innerHTML = '';
 
-    var allThemes = ClearJSON.Themes.FREE_THEMES.concat(ClearJSON.Themes.PRO_THEMES);
-    var isPro = ClearJSON.License.isActive();
+    // Free release: only show free themes (Pro themes hidden until Creem is integrated)
+    var themes = ClearJSON.Themes.FREE_THEMES;
 
-    allThemes.forEach(function (name) {
+    themes.forEach(function (name) {
       var chip = document.createElement('div');
       chip.className = 'cj-theme-chip';
       if (name === state.settings.theme) chip.classList.add('cj-active');
 
-      var isProTheme = ClearJSON.Themes.PRO_THEMES.indexOf(name) !== -1;
-      if (isProTheme && !isPro) {
-        chip.classList.add('cj-pro-theme');
-        chip.innerHTML = ClearJSON.Themes.getThemeLabel(name) + '<span class="cj-pro-badge">PRO</span>';
-        chip.addEventListener('click', function () { showProPage(); });
-      } else {
-        chip.textContent = ClearJSON.Themes.getThemeLabel(name);
-        chip.addEventListener('click', function () {
-          state.settings.theme = name;
-          applyTheme();
-          renderThemeGrid();
-          saveAllSettings();
-        });
-      }
+      chip.textContent = ClearJSON.Themes.getThemeLabel(name);
+      chip.addEventListener('click', function () {
+        state.settings.theme = name;
+        applyTheme();
+        renderThemeGrid();
+        saveAllSettings();
+      });
       grid.appendChild(chip);
     });
   }
@@ -556,9 +527,9 @@
     var group = document.getElementById('shortcuts-group');
     if (!table || !group) return;
 
-    var isPro = ClearJSON.License.isActive();
-    group.style.display = isPro ? 'block' : 'none';
-    if (!isPro) return;
+    // Free release: custom shortcuts are a Pro feature — always hidden
+    group.style.display = 'none';
+    return;
 
     table.innerHTML = '';
     var shortcuts = state.settings.shortcuts || {};
@@ -688,59 +659,22 @@
   //  PRO LICENSE
   // ================================================================
 
+  // Pro page functions — no-ops in free release (restore when Creem is integrated)
   function showProPage() {
-    hideAll();
-    toolbar.style.display = 'none';
-    proPage.style.display = '';
-    checkProStatus();
-    window.location.hash = 'upgrade';
+    // Pro page hidden in free release
+    showToast('ClearJSON Pro coming soon');
   }
 
   function checkProStatus() {
-    var active = ClearJSON.License.isActive();
-    var section = document.getElementById('cj-license-section');
-    var activeEl = document.getElementById('cj-pro-active');
-
-    if (active) {
-      if (section) section.style.display = 'none';
-      if (activeEl) {
-        activeEl.style.display = '';
-        var info = ClearJSON.License.getInfo();
-        document.getElementById('pro-active-info').textContent = info.keyPreview || '';
-      }
-    } else {
-      if (section) section.style.display = '';
-      if (activeEl) activeEl.style.display = 'none';
-    }
+    // Pro license check hidden in free release
   }
 
   function activateLicense() {
-    var key = document.getElementById('license-key').value.trim();
-    var statusEl = document.getElementById('license-status');
-
-    if (!key) {
-      statusEl.textContent = 'Enter a license key';
-      statusEl.style.color = 'var(--cj-null)';
-      return;
-    }
-
-    if (ClearJSON.License.storeLicense(key)) {
-      statusEl.textContent = '✓ License activated! Pro features unlocked.';
-      statusEl.style.color = 'var(--cj-string)';
-      checkProStatus();
-      renderThemeGrid();
-      showToast('Pro activated!');
-    } else {
-      statusEl.textContent = 'Invalid license key';
-      statusEl.style.color = 'var(--cj-null)';
-    }
+    showToast('ClearJSON Pro coming soon');
   }
 
   function deactivateLicense() {
-    ClearJSON.License.removeLicense();
-    checkProStatus();
-    renderThemeGrid();
-    showToast('Pro deactivated');
+    showToast('ClearJSON Pro coming soon');
   }
 
   // ================================================================
@@ -769,7 +703,7 @@
   function hideAll() {
     landing.style.display = 'none';
     settingsPage.style.display = 'none';
-    proPage.style.display = 'none';
+    if (proPage) proPage.style.display = 'none';
     treeView.style.display = 'none';
     rawView.style.display = 'none';
   }

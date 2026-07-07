@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ClearJSON",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Privacy-first, open-source JSON viewer. Zero tracking. Fully local.",
   "author": "ClearJSON",
   "homepage_url": "https://github.com/clearjson/clearjson",
