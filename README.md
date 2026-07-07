@@ -124,10 +124,10 @@ node test-data/browser-test.js
 node test-data/server.js
 ```
 
-### Current Status (Phase 3 — Complete)
+### Current Status (v1.0.0 — Free Release Ready)
 
-All core + Pro features implemented. 136 unit tests + 151 automated verification checks passing.
-Preparing for Chrome Web Store submission.
+All core features implemented. Pro features gated behind license (UI hidden until Creem payment is integrated).
+136 unit tests passing. Preparing for Chrome Web Store submission.
 
 See [STATUS.md](STATUS.md) for full project state, architecture decisions, and release checklist.
 

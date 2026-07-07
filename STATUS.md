@@ -55,6 +55,15 @@
 
 **代码量：** 30 个源文件，约 7,500 行（含 CSS 900+ 行、测试 1,100+ 行）。测试基础设施新增 3 个脚本（`run-checklist.js`, `browser-test.js`, `server.js`）+ 4 个 JSON 数据集。
 
+### Phase 4 ✅（免费版 CWS 上架准备）
+- **Pro UI 入口隐藏**：popup Dev Mode、content Pro 按钮、viewer Pro 页面/许可证输入全部隐藏
+- **大文件警告脱敏**：移除 "Upgrade to Pro" 按钮，改为 "Learn More" 链接到产品页
+- **导出菜单精简**：仅显示免费选项（Copy JSON / Download JSON）
+- **主题网格**：仅显示 10 个免费主题
+- **版本号**：`manifest.json` + `package.json` → v1.0.0
+- **截图素材**：5 张 1280×800 截图（`screenshots/`）+ 3 张宣传图（`promo/`）
+- **生成脚本**：`test-data/capture-screenshots.js`（Chrome headless）
+
 ---
 
 ## 三、架构决策记录
@@ -179,24 +188,23 @@
 
 ---
 
-## 六、下一步（发布前）
+## 六、下一步
+
+### 免费版发布（v1.0.0）
+1. **Chrome Web Store 注册**：$5 已付，等待身份审核通过
+2. **截图 + 宣传图**：已就绪（`screenshots/` + `promo/`），可运行 `node test-data/capture-screenshots.js` 重新生成
+3. **打包 zip**：`clearjson-v1.0.0.zip`（55 KB），只含必要文件
+4. **隐私政策**：已部署 `https://wayknow.tech/clearjson-privacy.html` ✅
+5. **Pro UI 入口已隐藏**：免费版不展示升级入口（无支付渠道），Pro 功能代码完整保留，等 Creem 集成后恢复
 
 ### 阻塞发布
-1. **Chrome Web Store 注册 + 截图**：描述就绪，$5 已付，等待身份审核通过
-2. **至少 2 周的实机测试**：自动测试已全部通过（见 §七），仍需人工日常使用验证
-3. **隐私政策**：已部署 `https://wayknow.tech/clearjson-privacy.html` ✅
+- 至少 2 周人工实机测试
 
-### 发布前已完成的修复
-4. ~~虚拟树 ROW_HEIGHT 动态测量~~ ✅
-5. ~~`document_start` body null 边界处理~~ ✅
-6. ~~host_permissions 优化~~ ✅
-7. ~~主题首次加载闪烁~~ ✅
-8. ~~andromeda 主题 typo~~ ✅
-
-### 锦上添花
-9. JSON Schema 推断（从实例 JSON 生成 JSON Schema）
-10. Edge 浏览器兼容测试 + 上架（Chromium 兼容，基本零成本）
-11. 国际化（中文）
+### Pro 版开发（v1.1.0+）
+- 集成 Creem 支付 → 恢复 Pro 升级入口 → 提交审核更新
+- JSON Schema 推断
+- Edge 浏览器兼容 + 上架
+- 国际化（中文）
 
 ---
 
@@ -317,6 +325,11 @@ clearjson/
 │   └── test-export.js         # 30 个测试
 ├── docs/
 │   └── store-listing.md       # Chrome Web Store 文案 + 截图指南
+├── screenshots/               # CWS 5 张截图（1280×800 PNG）
+├── promo/                     # CWS 宣传图（small/large/marquee tile）
+├── test-data/
+│   ├── capture-screenshots.js # 截图生成脚本（Chrome headless）
+│   └── ...                    # JSON 测试数据 + 浏览器测试
 ├── package.json               # npm test 脚本
 ├── features.md                # 完整功能列表
 ├── PRODUCT.md                 # 企划书
