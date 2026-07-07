@@ -147,6 +147,12 @@ Our permissions are minimal:
 - `activeTab` — format JSON in the current tab
 - Host permissions — needed only to detect JSON content type; no page content is read on non-JSON pages
 
+## Links
+
+- Product page: [wayknow.tech/clearjson.html](https://wayknow.tech/clearjson.html)
+- Privacy policy: [wayknow.tech/clearjson-privacy.html](https://wayknow.tech/clearjson-privacy.html)
+- Support: support@wayknow.tech
+
 ## License
 
 MIT — see [LICENSE](LICENSE) file.
