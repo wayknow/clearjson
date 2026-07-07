@@ -18,14 +18,38 @@ const SCREENSHOTS = path.join(PROJECT, 'screenshots');
 const WIDTH = 1280;
 const HEIGHT = 800;
 
-// Ensure screenshots directory exists
 fs.mkdirSync(SCREENSHOTS, { recursive: true });
 
-// ---- Sample data for screenshots ----
-const sampleData = JSON.stringify({
+// ---- Deterministic pseudo-random (seeded LCG) ----
+let seed = 42;
+function rand() { seed = (seed * 1664525 + 1013904223) | 0; return (seed >>> 0) / 0xFFFFFFFF; }
+
+// ---- Stats helper ----
+function computeStats(data) {
+  let nodes = 0;
+  let maxDepth = 0;
+  function walk(v, depth) {
+    nodes++;
+    if (depth > maxDepth) maxDepth = depth;
+    if (v && typeof v === 'object') {
+      if (Array.isArray(v)) {
+        for (let i = 0; i < v.length; i++) walk(v[i], depth + 1);
+      } else {
+        for (const k of Object.keys(v)) walk(v[k], depth + 1);
+      }
+    }
+  }
+  walk(data, 0);
+  const json = JSON.stringify(data);
+  const sizeBytes = new Blob([json]).size;
+  return { nodes, maxDepth, sizeBytes };
+}
+
+// ---- Sample data ----
+const sampleDataObj = {
   name: "ClearJSON",
   version: "1.0.0",
-  description: "Privacy-first, open-source JSON viewer",
+  description: "A JSON viewer you can trust — open source, local-first, zero tracking",
   repository: {
     type: "git",
     url: "https://github.com/wayknow/clearjson",
@@ -39,7 +63,6 @@ const sampleData = JSON.stringify({
     verified: true
   },
   stats: {
-    totalDownloads: 15420,
     activeUsers: 3890,
     averageRating: 4.8,
     reviews: [
@@ -52,7 +75,7 @@ const sampleData = JSON.stringify({
     "Auto-detect & format JSON pages",
     "Collapsible tree view with indent guides",
     "Syntax highlighting (keys, strings, numbers, booleans, null)",
-    "10 beautiful themes (dark, light, sepia, high contrast…)",
+    "10 beautiful themes (dark, light, sepia, monokai, dracula…)",
     "Click-to-copy values, right-click for JSONPath",
     "Auto-detected links and image previews",
     "Search with result navigation",
@@ -60,26 +83,18 @@ const sampleData = JSON.stringify({
     "Line numbers in raw view",
     "Stats bar (nodes, depth, size, parse time)"
   ],
-  config: {
-    theme: "dark",
-    indentSize: 2,
-    initialExpandDepth: 2,
-    showLineNumbers: true,
-    showStatsBar: true,
-    openSource: true,
-    free: true
-  },
+  config: { theme: "dark", indentSize: 2, initialExpandDepth: 2, showLineNumbers: true, showStatsBar: true },
   tags: ["json", "viewer", "formatter", "privacy", "open-source", "chrome-extension"]
-}, null, 2);
+};
 
-// Large array data for a more impressive screenshot
-const largeData = [];
+// Large array data for an impressive structure screenshot
+const largeDataObj = [];
 for (let i = 0; i < 50; i++) {
-  largeData.push({
+  largeDataObj.push({
     id: i + 1,
-    name: `item_${i + 1}`,
+    name: ("item_" + (i + 1)),
     type: i % 3 === 0 ? "alpha" : i % 3 === 1 ? "beta" : "gamma",
-    value: Math.round(Math.random() * 10000) / 100,
+    value: Math.round(rand() * 10000) / 100,
     active: i % 5 !== 0,
     metadata: {
       created: "2026-07-0" + ((i % 9) + 1),
@@ -88,10 +103,27 @@ for (let i = 0; i < 50; i++) {
     }
   });
 }
-const largeSampleData = JSON.stringify(largeData, null, 2);
+
+const sampleData = JSON.stringify(sampleDataObj, null, 2);
+const largeSampleData = JSON.stringify(largeDataObj, null, 2);
+
+// ---- Format helpers ----
+function formatBytes(b) { if (!b || b === 0) return '0 B'; const k = 1024, s = ['B','KB','MB','GB']; const i = Math.floor(Math.log(b)/Math.log(k)); return (b/Math.pow(k,i)).toFixed(i===0?0:1)+' '+s[i]; }
+function formatNumber(n) { return n < 1000 ? String(n) : n.toLocaleString('en-US'); }
 
 // ---- Build self-contained screenshot page ----
 function buildScreenshotPage(dataJson, theme, initialState) {
+  const dataObj = JSON.parse(dataJson);
+  const stats = computeStats(dataObj);
+
+  // Count search matches in data
+  let searchMatches = 0;
+  if (initialState === 'search') {
+    const re = /rating/gi;
+    const matches = dataJson.match(re);
+    searchMatches = matches ? matches.length : 0;
+  }
+
   const escapedData = dataJson.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/<\/script>/g, '<\\/script>');
   return `<!DOCTYPE html>
 <html lang="en">
@@ -116,7 +148,7 @@ function buildScreenshotPage(dataJson, theme, initialState) {
       <div class="cj-search-wrap">
         <span class="cj-search-icon">🔍</span>
         <input type="text" class="cj-search-input" placeholder="Search keys & values…" spellcheck="false" value="${initialState === 'search' ? 'rating' : ''}">
-        <span class="cj-search-count">${initialState === 'search' ? '3 matches' : ''}</span>
+        <span class="cj-search-count">${initialState === 'search' ? searchMatches + ' matches' : ''}</span>
         <button class="cj-tb-btn cj-search-nav">▲</button>
         <button class="cj-tb-btn cj-search-nav">▼</button>
       </div>
@@ -125,7 +157,7 @@ function buildScreenshotPage(dataJson, theme, initialState) {
       <button class="cj-tb-btn" title="Toggle raw/tree view">${initialState === 'raw' ? 'Tree' : 'Raw'}</button>
       <button class="cj-tb-btn" title="Copy">Copy</button>
       <button class="cj-tb-btn" id="btn-export">Export</button>
-      <button class="cj-tb-btn" title="Cycle theme">${theme === 'dark' ? 'Catppuccin Dark' : 'Catppuccin Light'}</button>
+      <button class="cj-tb-btn" title="Cycle theme">${theme === 'dark' ? 'Dark' : 'Light'}</button>
       <button class="cj-tb-btn">⚙</button>
     </div>
   </div>
@@ -133,13 +165,13 @@ function buildScreenshotPage(dataJson, theme, initialState) {
     ${initialState === 'raw' ? '<pre id="cj-raw-view" class="cj-raw-view"></pre>' : ''}
   </div>
   <div id="cj-stats-bar" class="cj-stats-bar" style="display: flex;">
-    <span class="cj-stat-item"><span class="cj-stat-label">Nodes</span> <span class="cj-stat-value">245</span></span>
+    <span class="cj-stat-item"><span class="cj-stat-label">Nodes</span> <span class="cj-stat-value">${formatNumber(stats.nodes)}</span></span>
     <span class="cj-stat-sep"></span>
-    <span class="cj-stat-item"><span class="cj-stat-label">Depth</span> <span class="cj-stat-value">5</span></span>
+    <span class="cj-stat-item"><span class="cj-stat-label">Depth</span> <span class="cj-stat-value">${stats.maxDepth}</span></span>
     <span class="cj-stat-sep"></span>
-    <span class="cj-stat-item"><span class="cj-stat-label">Size</span> <span class="cj-stat-value">3.2 KB</span></span>
+    <span class="cj-stat-item"><span class="cj-stat-label">Size</span> <span class="cj-stat-value">${formatBytes(stats.sizeBytes)}</span></span>
     <span class="cj-stat-sep"></span>
-    <span class="cj-stat-item"><span class="cj-stat-label">Parse</span> <span class="cj-stat-value">1.2 ms</span></span>
+    <span class="cj-stat-item"><span class="cj-stat-label">Parse</span> <span class="cj-stat-value">&lt;1 ms</span></span>
   </div>
 </div>
 
@@ -156,7 +188,6 @@ function buildScreenshotPage(dataJson, theme, initialState) {
 <script>
 (function() {
   var data = JSON.parse(RENDER_TEXT);
-  var result = ClearJSON.Parser.parse(RENDER_TEXT);
   var rendered = ClearJSON.Tree.render(data, { initialDepth: 2, indent: 20 });
   var container = document.getElementById('cj-tree-container');
   ${initialState === 'raw'
@@ -173,12 +204,15 @@ function buildScreenshotPage(dataJson, theme, initialState) {
   setTimeout(function() {
     var nodes = document.querySelectorAll('.cj-value, .cj-key');
     var count = 0;
+    var re = /rating/i;
     for (var i = 0; i < nodes.length; i++) {
-      if (nodes[i].textContent.indexOf('rating') !== -1) {
+      if (re.test(nodes[i].textContent)) {
+        re.lastIndex = 0;
         nodes[i].classList.add('cj-search-match');
         if (count === 0) nodes[i].classList.add('cj-search-current');
         count++;
       }
+      re.lastIndex = 0;
     }
   }, 200);
   ` : ''}
@@ -188,79 +222,30 @@ function buildScreenshotPage(dataJson, theme, initialState) {
 </html>`;
 }
 
-// ---- Capture screenshots ----
-const screenshots = [
-  {
-    name: '01-dark-tree',
-    desc: 'Complex JSON in Dark theme with collapsible tree and syntax highlighting',
-    data: sampleData,
-    theme: 'dark',
-    state: 'tree'
-  },
-  {
-    name: '02-light-search',
-    desc: 'Light theme with search results highlighted',
-    data: sampleData,
-    theme: 'light',
-    state: 'search'
-  },
-  {
-    name: '03-array-data',
-    desc: 'Large array data with expanded nodes showing structure',
-    data: largeSampleData,
-    theme: 'dark',
-    state: 'tree'
-  },
-  {
-    name: '04-raw-view',
-    desc: 'Raw view with syntax highlighting and line numbers',
-    data: sampleData,
-    theme: 'dark',
-    state: 'raw'
-  },
-  {
-    name: '05-theme-grid',
-    desc: 'Settings panel showing available free themes',
-    data: sampleData,
-    theme: 'dark',
-    state: 'settings'
-  }
+// ---- Settings page (hardcoded for visual quality) ----
+// Uses actual 10 free theme keys and their real CSS variable bg/text colors
+const FREE_THEMES_INFO = [
+  { key: 'dark',              label: 'Dark',             bg: '#1e1e2e', text: '#cdd6f4' },
+  { key: 'light',             label: 'Light',            bg: '#eff1f5', text: '#4c4f69' },
+  { key: 'sepia',             label: 'Sepia',            bg: '#f5f0e8', text: '#5c4b3b' },
+  { key: 'monokai',           label: 'Monokai',          bg: '#272822', text: '#f8f8f2' },
+  { key: 'dracula',           label: 'Dracula',          bg: '#282a36', text: '#f8f8f2' },
+  { key: 'nord',              label: 'Nord',             bg: '#2e3440', text: '#d8dee9' },
+  { key: 'onedark',           label: 'One Dark',         bg: '#282c34', text: '#abb2bf' },
+  { key: 'solarized-light',   label: 'Solarized Light',  bg: '#fdf6e3', text: '#657b83' },
+  { key: 'github',            label: 'GitHub',           bg: '#0d1117', text: '#c9d1d9' },
+  { key: 'high-contrast',     label: 'High Contrast',    bg: '#000000', text: '#ffffff' }
 ];
 
-console.log('Generating screenshots…\n');
-
-for (const shot of screenshots) {
-  const htmlPath = path.join(SCREENSHOTS, `_${shot.name}.html`);
-  const pngPath = path.join(SCREENSHOTS, `${shot.name}.png`);
-
-  let html;
-  if (shot.state === 'settings') {
-    html = buildSettingsPage(shot.theme);
-  } else {
-    html = buildScreenshotPage(shot.data, shot.theme, shot.state);
-  }
-
-  fs.writeFileSync(htmlPath, html);
-
-  try {
-    execSync(
-      `"${CHROME}" --headless --disable-gpu --screenshot="${pngPath}" --window-size=${WIDTH},${HEIGHT} "file://${htmlPath}"`,
-      { stdio: 'pipe', timeout: 15000 }
-    );
-    const size = fs.statSync(pngPath).size;
-    console.log(`  ✓ ${shot.name}.png (${(size / 1024).toFixed(0)} KB) — ${shot.desc}`);
-  } catch (err) {
-    console.error(`  ✗ ${shot.name}.png FAILED:`, err.message);
-  }
-
-  // Clean up temp HTML
-  fs.unlinkSync(htmlPath);
-}
-
-console.log('\nDone! Screenshots saved to screenshots/');
-
-// ---- Settings page screenshot ----
 function buildSettingsPage(theme) {
+  const themeChips = FREE_THEMES_INFO.map((t, i) => {
+    const active = t.key === theme ? ' active' : '';
+    return `        <div class="cj-theme-chip${active}">
+          <div class="theme-swatch" style="background: linear-gradient(135deg, ${t.bg} 50%, ${t.text} 50%);"></div>
+          ${t.label}
+        </div>`;
+  }).join('\n');
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -313,46 +298,7 @@ function buildSettingsPage(theme) {
     <div class="cj-settings-group">
       <label>Theme (10 Free Themes)</label>
       <div class="cj-theme-grid">
-        <div class="cj-theme-chip active">
-          <div class="theme-swatch" style="background: linear-gradient(135deg, #1e1e2e 50%, #cdd6f4 50%);"></div>
-          Catppuccin Dark
-        </div>
-        <div class="cj-theme-chip">
-          <div class="theme-swatch" style="background: linear-gradient(135deg, #eff1f5 50%, #4c4f69 50%);"></div>
-          Catppuccin Light
-        </div>
-        <div class="cj-theme-chip">
-          <div class="theme-swatch" style="background: linear-gradient(135deg, #282828 50%, #ebdbb2 50%);"></div>
-          Gruvbox Dark
-        </div>
-        <div class="cj-theme-chip">
-          <div class="theme-swatch" style="background: linear-gradient(135deg, #fbf1c7 50%, #3c3836 50%);"></div>
-          Gruvbox Light
-        </div>
-        <div class="cj-theme-chip">
-          <div class="theme-swatch" style="background: linear-gradient(135deg, #f5f0e8 50%, #1a1a2e 50%);"></div>
-          Sepia
-        </div>
-        <div class="cj-theme-chip">
-          <div class="theme-swatch" style="background: linear-gradient(135deg, #0d1117 50%, #c9d1d9 50%);"></div>
-          GitHub Dark
-        </div>
-        <div class="cj-theme-chip">
-          <div class="theme-swatch" style="background: linear-gradient(135deg, #fff 50%, #24292f 50%);"></div>
-          GitHub Light
-        </div>
-        <div class="cj-theme-chip">
-          <div class="theme-swatch" style="background: linear-gradient(135deg, #000 50%, #fff 50%);"></div>
-          High Contrast
-        </div>
-        <div class="cj-theme-chip">
-          <div class="theme-swatch" style="background: linear-gradient(135deg, #1a1b26 50%, #a9b1d6 50%);"></div>
-          Tokyo Night
-        </div>
-        <div class="cj-theme-chip">
-          <div class="theme-swatch" style="background: linear-gradient(135deg, #002b36 50%, #839496 50%);"></div>
-          Solarized Dark
-        </div>
+${themeChips}
       </div>
     </div>
     <div class="cj-settings-group">
@@ -377,3 +323,74 @@ function buildSettingsPage(theme) {
 </body>
 </html>`;
 }
+
+// ---- Capture screenshots ----
+const screenshots = [
+  {
+    name: '01-dark-tree',
+    desc: 'Complex JSON in Dark theme with collapsible tree and syntax highlighting',
+    data: sampleData,
+    theme: 'dark',
+    state: 'tree'
+  },
+  {
+    name: '02-light-search',
+    desc: 'Light theme with search results highlighted',
+    data: sampleData,
+    theme: 'light',
+    state: 'search'
+  },
+  {
+    name: '03-array-data',
+    desc: 'Large array of objects with expanded tree structure',
+    data: largeSampleData,
+    theme: 'dark',
+    state: 'tree'
+  },
+  {
+    name: '04-raw-view',
+    desc: 'Raw JSON view with syntax highlighting and line numbers',
+    data: sampleData,
+    theme: 'dark',
+    state: 'raw'
+  },
+  {
+    name: '05-theme-grid',
+    desc: 'Settings panel showing 10 free themes in a grid',
+    data: sampleData,
+    theme: 'dark',
+    state: 'settings'
+  }
+];
+
+console.log('Generating screenshots…\n');
+
+for (const shot of screenshots) {
+  const htmlPath = path.join(SCREENSHOTS, `_${shot.name}.html`);
+  const pngPath = path.join(SCREENSHOTS, `${shot.name}.png`);
+
+  let html;
+  if (shot.state === 'settings') {
+    html = buildSettingsPage(shot.theme);
+  } else {
+    html = buildScreenshotPage(shot.data, shot.theme, shot.state);
+  }
+
+  fs.writeFileSync(htmlPath, html);
+
+  try {
+    execSync(
+      `"${CHROME}" --headless --disable-gpu --screenshot="${pngPath}" --window-size=${WIDTH},${HEIGHT} "file://${htmlPath}"`,
+      { stdio: 'pipe', timeout: 15000 }
+    );
+    const size = fs.statSync(pngPath).size;
+    console.log(`  ✓ ${shot.name}.png (${(size / 1024).toFixed(0)} KB) — ${shot.desc}`);
+  } catch (err) {
+    console.error(`  ✗ ${shot.name}.png FAILED:`, err.message);
+  }
+
+  // Clean up temp HTML
+  fs.unlinkSync(htmlPath);
+}
+
+console.log('\nDone! Screenshots saved to screenshots/');
