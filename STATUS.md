@@ -1,14 +1,14 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-07-07 | 当前版本：v1.0.0（免费版发布准备——Pro UI 入口已隐藏）
+> 最后更新：2026-07-10 | 当前版本：v1.0.0（已上架 CWS）
 
 ---
 
 ## 一、项目概述
 
-隐私优先、开源的浏览器 JSON 查看器（Chrome 扩展）。MIT 协议。
+隐私优先的浏览器 JSON 查看器（Chrome 扩展）。
 
-- **仓库**：https://github.com/wayknow/clearjson
+- 仓库：https://github.com/wayknow/clearjson
 - **产品页**：https://wayknow.tech/clearjson.html
 - **隐私政策**：https://wayknow.tech/clearjson-privacy.html
 - **定位**：替代被卖后注入广告的 JSON Formatter（曾 200 万用户）
@@ -105,7 +105,7 @@
 ### 大文件虚拟滚动策略
 - 不是所有免费竞品都不做，Lens 和 Fractured JSON 免费支持
 - 但技术门槛真实存在：需要 Web Worker + 流式解析 + 虚拟 DOM
-- ClearJSON 卖的不是"唯一"，是"最好 + 开源 + $29 终身 vs 订阅"
+- ClearJSON 卖的不是"唯一"，是"最好 + $29 终身 vs 订阅"
 - 实现：Worker 构建 flat node array → 主线程虚拟树只渲染可见行
 
 ### 许可证系统设计
@@ -143,7 +143,7 @@
 
 ### 3. 免费竞品的后续动作
 - 如果 Lens 或 Fractured JSON 把大文件支持做得更好，ClearJSON 的 Pro 需要加新功能应对
-- 当前最大的风险：某个免费竞品开始认真做商业化，同时提供大文件 + 开源 + 免费
+- 当前最大的风险：某个免费竞品开始认真做商业化，同时提供大文件 + 免费
 
 ### 4. 多语言支持
 - 当前全英文
@@ -191,14 +191,19 @@
 ## 六、下一步
 
 ### 免费版发布（v1.0.0）
-1. **Chrome Web Store 注册**：$5 已付，等待身份审核通过
-2. **截图 + 宣传图**：已就绪（`screenshots/` + `promo/`），可运行 `node test-data/capture-screenshots.js` 重新生成
-3. **打包 zip**：`clearjson-v1.0.0.zip`（55 KB），只含必要文件
-4. **隐私政策**：已部署 `https://wayknow.tech/clearjson-privacy.html` ✅
-5. **Pro UI 入口已隐藏**：免费版不展示升级入口（无支付渠道），Pro 功能代码完整保留，等 Creem 集成后恢复
+1. ~~**Chrome Web Store 注册**：$5 已付~~ ✅ 开发者身份已审核通过
+2. **截图 + 宣传图**：已就绪（`screenshots/` + `promo/`）
+3. ~~**打包 zip**：`clearjson-v1.0.0.zip`（55 KB）~~ ✅
+4. ~~**隐私政策**：已部署 `https://wayknow.tech/clearjson-privacy.html`~~ ✅
+5. ~~**Pro UI 入口已隐藏**~~ ✅
+6. ~~**CWS 提交**~~ ✅ 2026-07-07 已提交审核
+7. ~~**审核中**~~ ✅ 已通过并上架
+8. **CWS 链接**：https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk
+9. ~~**产品页更新**~~ ✅ `wayknow.tech/clearjson.html` 已更新 CWS 链接、移除 open source 声明
 
-### 阻塞发布
-- 至少 2 周人工实机测试
+### v1.0.0 发布完成 ✅
+- CWS 链接：https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk
+- 产品页已同步更新（`wayknow.tech/clearjson.html`）
 
 ### Pro 版开发（v1.1.0+）
 - 集成 Creem 支付 → 恢复 Pro 升级入口 → 提交审核更新
@@ -384,8 +389,8 @@ var ClearJSON = window.ClearJSON || {};
 ### 竞品分析
 | 竞品 | 优势 | 劣势 |
 |------|------|------|
-| JSONVault Pro | 功能最全（JWT/Schema/500MB） | 订阅制，不开源 |
-| TreeJSON | 免费开源，YAML/XML/CSV | 只读，无大文件 |
+| JSONVault Pro | 功能最全（JWT/Schema/500MB） | 订阅制 |
+| TreeJSON | 免费，YAML/XML/CSV | 只读，无大文件 |
 | JSON Alexander | Wes Bos 出品，社区信任 | 功能基础 |
 | arnav-kr | 60 免费主题 | 无 Diff/JSONPath/大文件 |
 | Just JSON | 21KB 极轻量，有 Diff | 功能最少 |
@@ -411,7 +416,7 @@ var ClearJSON = window.ClearJSON || {};
 
 1. **借势**：Hacker News 旧工具背叛用户的热帖
 2. **Product Hunt**：周二/周三发布
-3. **GitHub 开源**：Star 数积累 → 自然流量
+3. **GitHub**：Star 数积累 → 自然流量
 4. **交叉推广**：与 SnapMark 互相导流
 5. **中文市场**：CSDN、知乎、V2EX
 
@@ -424,5 +429,4 @@ var ClearJSON = window.ClearJSON || {};
 - 隐私政策：https://wayknow.tech/clearjson-privacy.html
 - 网站代码：`~/xiaoxiao/work/wayknow`
 - Chrome Web Store：待发布
-- 许可证：MIT
 - 许可证服务器 API：`https://api.wayknow.tech/clearjson/`
