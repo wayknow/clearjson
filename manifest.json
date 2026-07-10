@@ -2,9 +2,9 @@
   "manifest_version": 3,
   "name": "ClearJSON",
   "version": "1.0.0",
-  "description": "Privacy-first, open-source JSON viewer. Zero tracking. Fully local.",
+  "description": "Privacy-first JSON viewer. Zero tracking. Fully local.",
   "author": "ClearJSON",
-  "homepage_url": "https://github.com/clearjson/clearjson",
+  "homepage_url": "https://github.com/wayknow/clearjson",
   "minimum_chrome_version": "110",
 
   "icons": {

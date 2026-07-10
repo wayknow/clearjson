@@ -1,6 +1,6 @@
 # ClearJSON — 隐私优先的浏览器 JSON 查看器
 
-> Chrome 扩展（MV3），MIT 开源。Phase 3 完成，准备上架 Chrome Web Store。
+> Chrome 扩展（MV3）。v1.0.0 免费版已上架 Chrome Web Store。
 
 ## 项目概览
 

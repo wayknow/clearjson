@@ -1,8 +1,6 @@
 # ClearJSON
 
-> Privacy-first, open-source browser JSON viewer. Zero tracking. Fully local.
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+> Privacy-first browser JSON viewer. Zero tracking. Fully local.
 
 ClearJSON is a Chrome extension that automatically detects and formats JSON responses in your browser. Built in response to the [JSON Formatter controversy](https://news.ycombinator.com/item?id=47721946) — we will never inject ads, track you, or sell your data.
 
@@ -22,7 +20,6 @@ ClearJSON is a Chrome extension that automatically detects and formats JSON resp
 - ✅ Standalone viewer (paste JSON, drag-and-drop, file load)
 - ✅ URL exclusion list (regex patterns)
 - ✅ 100% local processing — zero network requests
-- ✅ MIT licensed, open source
 
 ### Pro ($29 lifetime)
 - 💰 Large file virtual scrolling (100MB+ without freezing)
@@ -35,7 +32,7 @@ ClearJSON is a Chrome extension that automatically detects and formats JSON resp
 ## Install
 
 ### Chrome Web Store
-*Coming soon*
+**[Install ClearJSON Free](https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk)**
 
 ### Load Unpacked (Development)
 1. Clone this repo
@@ -153,10 +150,6 @@ Our permissions are minimal:
 - Privacy policy: [wayknow.tech/clearjson-privacy.html](https://wayknow.tech/clearjson-privacy.html)
 - Support: support@wayknow.tech
 
-## License
-
-MIT — see [LICENSE](LICENSE) file.
-
 ## Why "ClearJSON"?
 
-After the original JSON Formatter (2M+ users, 10 years open source) was sold and started injecting ads and tracking users, developers needed a trustworthy alternative. ClearJSON is built to be that alternative — open source from day one, with a sustainable Pro model that respects users instead of exploiting them.
+After the original JSON Formatter (2M+ users, 10 years open source) was sold and started injecting ads and tracking users, developers needed a trustworthy alternative. ClearJSON is built to be that alternative with a sustainable Pro model that respects users instead of exploiting them.

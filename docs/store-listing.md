@@ -1,8 +1,10 @@
 # Chrome Web Store — Listing Assets
 
+> ✅ v1.0.0 已上架：https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk
+
 ## Short Description (≤132 chars)
 
-> Privacy-first, open-source JSON viewer. Auto-formats JSON with syntax highlighting, collapsible trees, and search. Zero tracking. Fully local.
+> Privacy-first JSON viewer. Auto-formats JSON with syntax highlighting, collapsible trees, and search. Zero tracking. Fully local.
 
 ## Detailed Description
 
@@ -11,7 +13,6 @@ ClearJSON is the trustworthy JSON viewer you've been looking for — built in re
 ### ✨ Why ClearJSON?
 
 - **100% Local**: All processing happens on your device. Zero network requests for free users.
-- **Open Source (MIT)**: Every line of code is public and auditable. No hidden surprises.
 - **Privacy First**: No analytics, no tracking, no accounts, no ads. Ever.
 - **Lightning Fast**: Optimized for both tiny API responses and 100MB+ data dumps.
 
