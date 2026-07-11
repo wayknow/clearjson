@@ -223,12 +223,20 @@
 - **CWS 打包**：`clearjson-v1.1.0.zip`（28 文件，与 v1.0.0 同文件集，含更新后的 Pro 代码；`.gitignore` 忽略，不入库）。已包内自检：版本 1.1.0、Creem 按钮在、无 `?dev` 后门、无 server/tests/test-data。**待提交 CWS 更新**。
 - **商店文案**：`docs/store-listing.md` 已对齐 v1.1.0 — 加"如何升级"步骤、修正支付方式（Creem 外部支付，CWS 自家支付 2021 已停用）、标注提交表单需声明"含付费功能"。
 
-#### v1.1.0 收尾待办（需真实密钥/账号，交由用户）
-1. **测激活**：`curl -X POST .../api/license/generate -H "Authorization: Bearer <ADMIN_API_KEY>" -d '{"email":"...","count":1}'` → 贴 key 激活
-2. **测发信**：`CREEM_WEBHOOK_SECRET=xxx node server/test-webhook.js you@example.com`
+#### 端到端验证已通过（2026-07-11，Creem 测试模式，未花真钱）
+- **完整闭环跑通**：Creem 测试付款（测试卡 4242）→ `checkout.completed` webhook → Worker 生成 `CLJ-WJYP-BN38-WPYN` → 存 D1 → Resend 发信 → 扩展粘贴激活 → **Pro 解锁**。
+- **服务端改动**：`verifyCreemSignature()` 支持双密钥（`CREEM_WEBHOOK_SECRET` 生产 + `CREEM_WEBHOOK_SECRET_TEST` 测试），使测试模式 webhook 与生产并存、无需切密钥。**已部署**（Worker 版本 89acffcc），测试密钥已设入 Worker secret。
+- **修复的 bug**：license 输入框 `maxlength` 之前误设 17，会截断 18 位的 `CLJ-XXXX-XXXX-XXXX` → 改为 24。
+- **发现的坑（需在 Creem 后台处理）**：Creem 产品开了"原生 License keys"，导致每个买家收到**两个 key**（Creem 收据里的 `L0ZH8-...` 5×5 格式 + 我们 Resend 的 `CLJ-...`），极易贴错。**需去 Creem 后台关闭产品的原生 license 功能**（测试 + 生产 `prod_5Aha8...` 都关），只保留我们的 `CLJ-...` 体系。
+- **开源残留清理**：`popup.html`（tagline "Open source" → "100% local"，页脚错误 URL `clearjson/clearjson` + "(MIT)" → `wayknow.tech`）、`package.json` description 去 "open-source"。竞品描述（README:155 指原 JSON Formatter）、内部企划（PRODUCT.md）、测试 mock 数据保留。
+
+#### v1.1.0 收尾待办
+1. ~~测激活链路~~ ✅ 端到端验证通过（见上）
+2. **Creem 后台关闭产品原生 License keys**（测试 + 生产）— 否则买家收到两个 key
 3. **push + 部署 wayknow**（线上产品页 Buy 按钮才生效）
-4. **提交 CWS v1.1.0**：上传 `clearjson-v1.1.0.zip` + 更新商店描述（`docs/store-listing.md`）+ 声明含付费功能
-5. 上线可选：真购买 $29 + 退款，验线上按钮全链路
+4. **提交 CWS v1.1.0**：上传 `clearjson-v1.1.0.zip`（含 maxlength 修复 + 开源清理）+ 更新商店描述 + 声明含付费功能
+5. **确认 `manifest.homepage_url`**（`github.com/wayknow/clearjson`）指向的仓库是否公开——会显示在 CWS 列表，私有则应改为产品页
+6. 上线可选：真购买 $29 + 退款，验线上按钮全链路
 
 ---
 
