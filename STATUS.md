@@ -219,6 +219,16 @@
 - **license key 占位符**：旧格式 `CLEARJSON-XXXX-XXXX-XXXX`(30) → 新格式 `CLJ-XXXX-XXXX-XXXX`(maxlength 17)，对齐 `license.js` KEY_REGEX。
 - **版本号**：manifest/package/popup 显示/viewer sample → v1.1.0。
 - **验证**：`npm test` 136 全绿；`run-checklist.js` 130/0（顺手修了一处 `版本号 === '0.3.0'` 的陈旧断言 → 改为 semver `>=` 比较）；Puppeteer 21 项交互全绿；额外 headless 端到端验证 viewer Pro 页（Pro 页渲染 / Buy→Creem / 激活→"Pro is active" / 停用回退 / 零 JS 错误）+ dev 后门行为（`?dev` 已失效、localhost/localStorage 仍有效）。
+- **webhook 测试工具**：`server/test-webhook.js` — 用 `CREEM_WEBHOOK_SECRET` 自算 HMAC 签名 POST `/api/webhook/creem`，免支付/免测试卡验证"生成 key + Resend 发信"服务端逻辑（签名与服务端 WebCrypto 逐字节自证一致）。
+- **CWS 打包**：`clearjson-v1.1.0.zip`（28 文件，与 v1.0.0 同文件集，含更新后的 Pro 代码；`.gitignore` 忽略，不入库）。已包内自检：版本 1.1.0、Creem 按钮在、无 `?dev` 后门、无 server/tests/test-data。**待提交 CWS 更新**。
+- **商店文案**：`docs/store-listing.md` 已对齐 v1.1.0 — 加"如何升级"步骤、修正支付方式（Creem 外部支付，CWS 自家支付 2021 已停用）、标注提交表单需声明"含付费功能"。
+
+#### v1.1.0 收尾待办（需真实密钥/账号，交由用户）
+1. **测激活**：`curl -X POST .../api/license/generate -H "Authorization: Bearer <ADMIN_API_KEY>" -d '{"email":"...","count":1}'` → 贴 key 激活
+2. **测发信**：`CREEM_WEBHOOK_SECRET=xxx node server/test-webhook.js you@example.com`
+3. **push + 部署 wayknow**（线上产品页 Buy 按钮才生效）
+4. **提交 CWS v1.1.0**：上传 `clearjson-v1.1.0.zip` + 更新商店描述（`docs/store-listing.md`）+ 声明含付费功能
+5. 上线可选：真购买 $29 + 退款，验线上按钮全链路
 
 ---
 

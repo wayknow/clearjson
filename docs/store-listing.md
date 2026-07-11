@@ -1,6 +1,7 @@
 # Chrome Web Store — Listing Assets
 
-> ✅ v1.0.0 已上架：https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk
+> ✅ v1.0.0（免费版）已上架：https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk
+> 🆕 v1.1.0 加入 Pro 内购（$29 终身，Creem 外部支付）— 已打包 `clearjson-v1.1.0.zip`，待提交更新
 
 ## Short Description (≤132 chars)
 
@@ -42,6 +43,12 @@ ClearJSON is the trustworthy JSON viewer you've been looking for — built in re
 
 $29 gets you ClearJSON Pro for life. No recurring fees, no accounts required.
 A license covers up to 3 devices.
+
+### 🔓 How to Upgrade
+
+1. Click **Buy Now — $29** inside the extension (Pro badge in the toolbar → Pro page) or on the [product page](https://wayknow.tech/clearjson.html).
+2. Complete checkout via Creem — your license key (`CLJ-XXXX-XXXX-XXXX`) is emailed instantly.
+3. Paste the key in **Settings → Pro → Activate**. Works offline after first activation.
 
 ### 📖 Permissions Explained
 
@@ -126,6 +133,9 @@ All promo tiles are in `promo/` directory. HTML source files for editing, PNG re
 
 ## Pricing
 
-- Free tier with core features
-- Pro: $29 USD one-time (lifetime)
-- Configured via Chrome Web Store Payments API or external payment (Creem)
+- Free tier with core features (fully functional, no time limit)
+- Pro: $29 USD one-time (lifetime), covers up to 3 devices
+- **Payment via Creem (external checkout).** Chrome Web Store's own payments API was discontinued in 2021, so Pro is sold through Creem rather than in-store billing. Buy link: `https://www.creem.io/payment/prod_5Aha8NpKKi8AUd2sLaPRgM`
+- Flow: purchase → license key emailed → activate in extension (Settings → Pro → paste key)
+
+> ⚠️ CWS submission form: declare that the item **contains paid features** and set the "In-app purchases / paid features" disclosure. Since billing is external (Creem), there are no Google-managed IAP SKUs to configure — the disclosure + an accurate description are what's required.
