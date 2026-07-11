@@ -220,8 +220,8 @@
 - **版本号**：manifest/package/popup 显示/viewer sample → v1.1.0。
 - **验证**：`npm test` 136 全绿；`run-checklist.js` 130/0（顺手修了一处 `版本号 === '0.3.0'` 的陈旧断言 → 改为 semver `>=` 比较）；Puppeteer 21 项交互全绿；额外 headless 端到端验证 viewer Pro 页（Pro 页渲染 / Buy→Creem / 激活→"Pro is active" / 停用回退 / 零 JS 错误）+ dev 后门行为（`?dev` 已失效、localhost/localStorage 仍有效）。
 - **webhook 测试工具**：`server/test-webhook.js` — 用 `CREEM_WEBHOOK_SECRET` 自算 HMAC 签名 POST `/api/webhook/creem`，免支付/免测试卡验证"生成 key + Resend 发信"服务端逻辑（签名与服务端 WebCrypto 逐字节自证一致）。
-- **CWS 打包**：`clearjson-v1.1.0.zip`（28 文件，与 v1.0.0 同文件集，含更新后的 Pro 代码；`.gitignore` 忽略，不入库）。已包内自检：版本 1.1.0、Creem 按钮在、无 `?dev` 后门、无 server/tests/test-data。**待提交 CWS 更新**。
-- **商店文案**：`docs/store-listing.md` 已对齐 v1.1.0 — 加"如何升级"步骤、修正支付方式（Creem 外部支付，CWS 自家支付 2021 已停用）、标注提交表单需声明"含付费功能"。
+- **CWS 打包**：`clearjson-v1.1.0.zip`（28 文件，与 v1.0.0 同文件集，含更新后的 Pro 代码；`.gitignore` 忽略，不入库）。已包内自检：版本 1.1.0、Creem 按钮在、无 `?dev` 后门、无 server/tests/test-data。**2026-07-11 已提交 CWS 审核**。
+- **商店文案**：`docs/store-listing.md` 已对齐 v1.1.0 — 加"如何升级"步骤、修正支付方式（Creem 外部支付，CWS 自家支付 2021 已停用）。提交前修正：删掉了不存在的 "fuzzy match" 声称，改为 "match highlighting"。
 
 #### 端到端验证已通过（2026-07-11，Creem 测试模式，未花真钱）
 - **完整闭环跑通**：Creem 测试付款（测试卡 4242）→ `checkout.completed` webhook → Worker 生成 `CLJ-WJYP-BN38-WPYN` → 存 D1 → Resend 发信 → 扩展粘贴激活 → **Pro 解锁**。
@@ -233,8 +233,8 @@
 #### v1.1.0 收尾待办
 1. ~~测激活链路~~ ✅ 端到端验证通过（见上）
 2. ~~**测试产品**关闭原生 License keys~~ ✅ 已删产品的许可证密钥功能，第二笔测试付款验证只发一个 `CLJ-` key（`CLJ-Q46R-EQMG-4ZDE` / order `ord_7dDZh8O9...`）。**生产产品 `prod_5Aha8...` 上线前仍需确认/关闭**。
-3. **push + 部署 wayknow**（线上产品页 Buy 按钮才生效）
-4. **提交 CWS v1.1.0**：上传 `clearjson-v1.1.0.zip`（含 maxlength 修复 + 开源清理）+ 更新商店描述 + 声明含付费功能
+3. ~~**push + 部署 wayknow**~~ ✅ 已部署（含退款政策移除、产品页 Creem 链接）
+4. ~~**提交 CWS v1.1.0**~~ ✅ 2026-07-11 已提交审核。包内自检通过：版本 1.1.0、Creem 按钮在、无 `?dev` 后门。商店描述修正：去掉了不存在的 "fuzzy match"。
 5. **确认 `manifest.homepage_url`**（`github.com/wayknow/clearjson`）指向的仓库是否公开——会显示在 CWS 列表，私有则应改为产品页
 6. 上线可选：真购买 $29 + 退款，验线上按钮全链路
 
