@@ -4,7 +4,7 @@
   "version": "1.1.0",
   "description": "Privacy-first JSON viewer. Zero tracking. Fully local.",
   "author": "ClearJSON",
-  "homepage_url": "https://github.com/wayknow/clearjson",
+  "homepage_url": "https://wayknow.tech/clearjson.html",
   "minimum_chrome_version": "110",
 
   "icons": {

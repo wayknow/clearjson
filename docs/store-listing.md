@@ -125,7 +125,7 @@ All promo tiles are in `promo/` directory. HTML source files for editing, PNG re
 
 ## Additional Fields
 
-- **Homepage URL**: `https://github.com/wayknow/clearjson`
+- **Homepage URL**: `https://wayknow.tech/clearjson.html`
 - **Support URL**: `https://github.com/wayknow/clearjson/issues`
 - **Privacy policy URL**: `https://wayknow.tech/clearjson-privacy.html`
 
