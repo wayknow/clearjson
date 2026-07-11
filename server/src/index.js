@@ -326,11 +326,30 @@ async function handleGenerate(request, env) {
 
 // ============ Creem Webhook ============
 
+async function computeHmacHex(secret, rawBody) {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', key, encoder.encode(rawBody));
+  return Array.from(new Uint8Array(sig))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
 async function verifyCreemSignature(request, rawBody, env) {
   const signature = request.headers.get('creem-signature') || '';
-  const webhookSecret = env.CREEM_WEBHOOK_SECRET;
 
-  if (!webhookSecret) {
+  // Accept both the live secret and the (optional) test-mode secret, so
+  // Creem test-mode webhooks validate alongside production without swapping
+  // secrets. Test mode uses a separate signing secret from live.
+  const secrets = [env.CREEM_WEBHOOK_SECRET, env.CREEM_WEBHOOK_SECRET_TEST].filter(Boolean);
+
+  if (secrets.length === 0) {
     // No secret configured — skip verification (development)
     return true;
   }
@@ -340,20 +359,11 @@ async function verifyCreemSignature(request, rawBody, env) {
   }
 
   try {
-    const encoder = new TextEncoder();
-    const key = await crypto.subtle.importKey(
-      'raw',
-      encoder.encode(webhookSecret),
-      { name: 'HMAC', hash: 'SHA-256' },
-      false,
-      ['sign']
-    );
-    const sig = await crypto.subtle.sign('HMAC', key, encoder.encode(rawBody));
-    const expected = Array.from(new Uint8Array(sig))
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
-
-    return expected === signature;
+    for (const secret of secrets) {
+      const expected = await computeHmacHex(secret, rawBody);
+      if (expected === signature) return true;
+    }
+    return false;
   } catch (err) {
     console.error('Signature verification error:', err.message);
     return false;

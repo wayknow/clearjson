@@ -10,9 +10,11 @@ database_name = "clearjson-license-db"
 database_id = "66d28ea7-b5f7-45ed-a55c-ade5ea26197f"
 
 # Secrets (set via `npx wrangler secret put <KEY>`):
-#   ADMIN_API_KEY         — Admin API key for generate/list endpoints
-#   RESEND_API_KEY        — Resend API key for sending license key emails
-#   CREEM_WEBHOOK_SECRET  — Creem webhook signing secret
+#   ADMIN_API_KEY             — Admin API key for generate/list endpoints
+#   RESEND_API_KEY            — Resend API key for sending license key emails
+#   CREEM_WEBHOOK_SECRET      — Creem LIVE webhook signing secret
+#   CREEM_WEBHOOK_SECRET_TEST — (optional) Creem TEST-mode webhook signing secret.
+#                               When set, test-mode webhooks validate alongside live.
 
 # Custom domain routing:
 #   Cloudflare Dashboard → Workers & Pages → clearjson-license → Triggers
