@@ -83,7 +83,7 @@ All 5 screenshots are in `screenshots/` directory. Generated via `test-data/capt
 | 2 | `02-light-search.png` | Light theme with search — matching keys & values highlighted |
 | 3 | `03-array-data.png` | Large array of objects showing expanded tree structure |
 | 4 | `04-raw-view.png` | Raw JSON view with syntax highlighting and line numbers |
-| 5 | `05-theme-grid.png` | Settings panel with 10 free themes displayed in a grid |
+| 5 | `05-theme-grid.png` | Settings panel showing all 30 themes (10 free + 20 Pro) in a grid |
 
 ### How to re-generate screenshots
 

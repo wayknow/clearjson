@@ -48,8 +48,8 @@ function computeStats(data) {
 // ---- Sample data ----
 const sampleDataObj = {
   name: "ClearJSON",
-  version: "1.0.0",
-  description: "A JSON viewer you can trust — open source, local-first, zero tracking",
+  version: "1.1.0",
+  description: "A JSON viewer you can trust — local-first, zero tracking",
   repository: {
     type: "git",
     url: "https://github.com/wayknow/clearjson",
@@ -75,7 +75,7 @@ const sampleDataObj = {
     "Auto-detect & format JSON pages",
     "Collapsible tree view with indent guides",
     "Syntax highlighting (keys, strings, numbers, booleans, null)",
-    "10 beautiful themes (dark, light, sepia, monokai, dracula…)",
+    "10 beautiful themes (dark, light, sepia, monokai, dracula…) — 30 with Pro",
     "Click-to-copy values, right-click for JSONPath",
     "Auto-detected links and image previews",
     "Search with result navigation",
@@ -84,7 +84,7 @@ const sampleDataObj = {
     "Stats bar (nodes, depth, size, parse time)"
   ],
   config: { theme: "dark", indentSize: 2, initialExpandDepth: 2, showLineNumbers: true, showStatsBar: true },
-  tags: ["json", "viewer", "formatter", "privacy", "open-source", "chrome-extension"]
+  tags: ["json", "viewer", "formatter", "privacy", "chrome-extension"]
 };
 
 // Large array data for an impressive structure screenshot
@@ -223,25 +223,50 @@ function buildScreenshotPage(dataJson, theme, initialState) {
 }
 
 // ---- Settings page (hardcoded for visual quality) ----
-// Uses actual 10 free theme keys and their real CSS variable bg/text colors
-const FREE_THEMES_INFO = [
-  { key: 'dark',              label: 'Dark',             bg: '#1e1e2e', text: '#cdd6f4' },
-  { key: 'light',             label: 'Light',            bg: '#eff1f5', text: '#4c4f69' },
-  { key: 'sepia',             label: 'Sepia',            bg: '#f5f0e8', text: '#5c4b3b' },
-  { key: 'monokai',           label: 'Monokai',          bg: '#272822', text: '#f8f8f2' },
-  { key: 'dracula',           label: 'Dracula',          bg: '#282a36', text: '#f8f8f2' },
-  { key: 'nord',              label: 'Nord',             bg: '#2e3440', text: '#d8dee9' },
-  { key: 'onedark',           label: 'One Dark',         bg: '#282c34', text: '#abb2bf' },
-  { key: 'solarized-light',   label: 'Solarized Light',  bg: '#fdf6e3', text: '#657b83' },
-  { key: 'github',            label: 'GitHub',           bg: '#0d1117', text: '#c9d1d9' },
-  { key: 'high-contrast',     label: 'High Contrast',    bg: '#000000', text: '#ffffff' }
+// All 30 themes with real CSS-variable bg + accent (key) colors from themes.js.
+// 10 free + 20 Pro (Pro chips get a badge), matching the live renderThemeGrid().
+const ALL_THEMES_INFO = [
+  // Free (10)
+  { key: 'dark',            label: 'Dark',            bg: '#1e1e2e', accent: '#89b4fa', pro: false },
+  { key: 'light',           label: 'Light',           bg: '#ffffff', accent: '#1d4ed8', pro: false },
+  { key: 'sepia',           label: 'Sepia',           bg: '#fdf6e3', accent: '#268bd2', pro: false },
+  { key: 'monokai',         label: 'Monokai',         bg: '#272822', accent: '#66d9ef', pro: false },
+  { key: 'dracula',         label: 'Dracula',         bg: '#282a36', accent: '#8be9fd', pro: false },
+  { key: 'nord',            label: 'Nord',            bg: '#2e3440', accent: '#81a1c1', pro: false },
+  { key: 'onedark',         label: 'One Dark',        bg: '#282c34', accent: '#61afef', pro: false },
+  { key: 'solarized-light', label: 'Solarized Light', bg: '#fdf6e3', accent: '#268bd2', pro: false },
+  { key: 'github',          label: 'GitHub',          bg: '#ffffff', accent: '#0550ae', pro: false },
+  { key: 'high-contrast',   label: 'High Contrast',   bg: '#000000', accent: '#5cadff', pro: false },
+  // Pro (20)
+  { key: 'catppuccin',      label: 'Catppuccin',      bg: '#1e1e2e', accent: '#89b4fa', pro: true },
+  { key: 'tokyo-night',     label: 'Tokyo Night',     bg: '#1a1b26', accent: '#7aa2f7', pro: true },
+  { key: 'gruvbox-dark',    label: 'Gruvbox Dark',    bg: '#282828', accent: '#83a598', pro: true },
+  { key: 'gruvbox-light',   label: 'Gruvbox Light',   bg: '#fbf1c7', accent: '#076678', pro: true },
+  { key: 'everforest',      label: 'Everforest',      bg: '#2d353b', accent: '#7fbbb3', pro: true },
+  { key: 'kanagawa',        label: 'Kanagawa',        bg: '#1f1f28', accent: '#7e9cd8', pro: true },
+  { key: 'rose-pine',       label: 'Rosé Pine',       bg: '#191724', accent: '#9ccfd8', pro: true },
+  { key: 'rose-pine-dawn',  label: 'Rosé Pine Dawn',  bg: '#faf4ed', accent: '#286983', pro: true },
+  { key: 'cyberpunk',       label: 'Cyberpunk',       bg: '#0d0221', accent: '#ff00ff', pro: true },
+  { key: 'oceanic-next',    label: 'Oceanic Next',    bg: '#1b2b34', accent: '#6699cc', pro: true },
+  { key: 'palenight',       label: 'Palenight',       bg: '#292d3e', accent: '#82aaff', pro: true },
+  { key: 'ayu-dark',        label: 'Ayu Dark',        bg: '#0a0e14', accent: '#59c2ff', pro: true },
+  { key: 'ayu-light',       label: 'Ayu Light',       bg: '#fafafa', accent: '#399ee6', pro: true },
+  { key: 'andromeda',       label: 'Andromeda',       bg: '#1f1c2e', accent: '#8ab4f8', pro: true },
+  { key: 'night-owl',       label: 'Night Owl',       bg: '#011627', accent: '#82aaff', pro: true },
+  { key: 'synthwave',       label: 'Synthwave',       bg: '#1a0033', accent: '#ff66cc', pro: true },
+  { key: 'retro',           label: 'Retro',           bg: '#2d2d2d', accent: '#99cc99', pro: true },
+  { key: 'forest',          label: 'Forest',          bg: '#1b2d1b', accent: '#7eb87e', pro: true },
+  { key: 'arctic',          label: 'Arctic',          bg: '#eef2f7', accent: '#3b7dd8', pro: true },
+  { key: 'sunset',          label: 'Sunset',          bg: '#2d1b2e', accent: '#e8956c', pro: true }
 ];
 
 function buildSettingsPage(theme) {
-  const themeChips = FREE_THEMES_INFO.map((t, i) => {
+  const themeChips = ALL_THEMES_INFO.map((t) => {
     const active = t.key === theme ? ' active' : '';
-    return `        <div class="cj-theme-chip${active}">
-          <div class="theme-swatch" style="background: linear-gradient(135deg, ${t.bg} 50%, ${t.text} 50%);"></div>
+    const badge = t.pro ? '<span class="cj-pro-badge">PRO</span>' : '';
+    return `        <div class="cj-theme-chip${active}${t.pro ? ' pro' : ''}">
+          ${badge}
+          <div class="theme-swatch" style="background: linear-gradient(135deg, ${t.bg} 60%, ${t.accent} 60%);"></div>
           ${t.label}
         </div>`;
   }).join('\n');
@@ -255,21 +280,24 @@ function buildSettingsPage(theme) {
 <link rel="stylesheet" href="file://${PROJECT}/src/content/content.css">
 <style>
   body { margin: 0; padding: 0; background: #1e1e2e; }
-  .cj-settings-page { max-width: 640px; margin: 40px auto; padding: 32px; }
-  .cj-settings-page h2 { font-size: 22px; margin-bottom: 24px; color: #cdd6f4; }
-  .cj-settings-group { margin-bottom: 24px; }
+  .cj-settings-page { max-width: 960px; margin: 28px auto; padding: 28px 32px; }
+  .cj-settings-page h2 { font-size: 22px; margin-bottom: 20px; color: #cdd6f4; }
+  .cj-settings-group { margin-bottom: 20px; }
   .cj-settings-group label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #6c7086; margin-bottom: 8px; }
+  .cj-settings-group label .free-count { color: #a6e3a1; }
+  .cj-settings-group label .pro-count { color: #f9e2af; }
   .cj-settings-group select {
     width: 100%; padding: 10px 14px; font-family: inherit; font-size: 14px;
     color: #cdd6f4; background: #181825; border: 1px solid #45475a; border-radius: 8px;
   }
   .cj-theme-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+    gap: 8px;
   }
   .cj-theme-chip {
-    padding: 10px 14px; font-family: inherit; font-size: 13px; text-align: center;
+    position: relative;
+    padding: 8px 10px 9px; font-family: inherit; font-size: 12px; text-align: center;
     color: #bac2de; background: #181825;
     border: 2px solid #45475a; border-radius: 10px;
   }
@@ -277,8 +305,16 @@ function buildSettingsPage(theme) {
     border-color: #89b4fa; color: #89b4fa; font-weight: 600;
     background: rgba(137, 180, 250, 0.08);
   }
+  .cj-theme-chip.pro { opacity: 0.92; }
+  .cj-theme-chip .cj-pro-badge {
+    position: absolute; top: 5px; right: 5px;
+    font-size: 8px; font-weight: 700; letter-spacing: 0.5px;
+    color: #1e1e2e; background: #f9e2af;
+    padding: 1px 4px; border-radius: 4px;
+  }
   .theme-swatch {
-    width: 100%; height: 20px; border-radius: 4px; margin-bottom: 6px;
+    width: 100%; height: 18px; border-radius: 4px; margin-bottom: 6px;
+    border: 1px solid rgba(255,255,255,0.08);
   }
 </style>
 </head>
@@ -296,7 +332,7 @@ function buildSettingsPage(theme) {
   <div class="cj-settings-page">
     <h2>Settings</h2>
     <div class="cj-settings-group">
-      <label>Theme (10 Free Themes)</label>
+      <label>Theme — 30 total (<span class="free-count">10 Free</span> · <span class="pro-count">20 Pro</span>)</label>
       <div class="cj-theme-grid">
 ${themeChips}
       </div>
@@ -307,15 +343,6 @@ ${themeChips}
         <option>2 spaces (compact)</option>
         <option selected>4 spaces (standard)</option>
         <option>8 spaces (wide)</option>
-      </select>
-    </div>
-    <div class="cj-settings-group">
-      <label>Initial Expand Depth</label>
-      <select>
-        <option>1 level</option>
-        <option selected>2 levels</option>
-        <option>3 levels</option>
-        <option>All</option>
       </select>
     </div>
   </div>
@@ -356,41 +383,49 @@ const screenshots = [
   },
   {
     name: '05-theme-grid',
-    desc: 'Settings panel showing 10 free themes in a grid',
+    desc: 'Settings panel showing all 30 themes (10 free + 20 Pro) in a grid',
     data: sampleData,
     theme: 'dark',
     state: 'settings'
   }
 ];
 
-console.log('Generating screenshots…\n');
+function generateAll() {
+  console.log('Generating screenshots…\n');
 
-for (const shot of screenshots) {
-  const htmlPath = path.join(SCREENSHOTS, `_${shot.name}.html`);
-  const pngPath = path.join(SCREENSHOTS, `${shot.name}.png`);
+  for (const shot of screenshots) {
+    const htmlPath = path.join(SCREENSHOTS, `_${shot.name}.html`);
+    const pngPath = path.join(SCREENSHOTS, `${shot.name}.png`);
 
-  let html;
-  if (shot.state === 'settings') {
-    html = buildSettingsPage(shot.theme);
-  } else {
-    html = buildScreenshotPage(shot.data, shot.theme, shot.state);
+    let html;
+    if (shot.state === 'settings') {
+      html = buildSettingsPage(shot.theme);
+    } else {
+      html = buildScreenshotPage(shot.data, shot.theme, shot.state);
+    }
+
+    fs.writeFileSync(htmlPath, html);
+
+    try {
+      execSync(
+        `"${CHROME}" --headless --disable-gpu --screenshot="${pngPath}" --window-size=${WIDTH},${HEIGHT} "file://${htmlPath}"`,
+        { stdio: 'pipe', timeout: 15000 }
+      );
+      const size = fs.statSync(pngPath).size;
+      console.log(`  ✓ ${shot.name}.png (${(size / 1024).toFixed(0)} KB) — ${shot.desc}`);
+    } catch (err) {
+      console.error(`  ✗ ${shot.name}.png FAILED:`, err.message);
+    }
+
+    // Clean up temp HTML
+    fs.unlinkSync(htmlPath);
   }
 
-  fs.writeFileSync(htmlPath, html);
-
-  try {
-    execSync(
-      `"${CHROME}" --headless --disable-gpu --screenshot="${pngPath}" --window-size=${WIDTH},${HEIGHT} "file://${htmlPath}"`,
-      { stdio: 'pipe', timeout: 15000 }
-    );
-    const size = fs.statSync(pngPath).size;
-    console.log(`  ✓ ${shot.name}.png (${(size / 1024).toFixed(0)} KB) — ${shot.desc}`);
-  } catch (err) {
-    console.error(`  ✗ ${shot.name}.png FAILED:`, err.message);
-  }
-
-  // Clean up temp HTML
-  fs.unlinkSync(htmlPath);
+  console.log('\nDone! Screenshots saved to screenshots/');
 }
 
-console.log('\nDone! Screenshots saved to screenshots/');
+if (require.main === module) {
+  generateAll();
+}
+
+module.exports = { buildScreenshotPage, buildSettingsPage, ALL_THEMES_INFO };
