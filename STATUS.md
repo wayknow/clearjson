@@ -232,7 +232,7 @@
 
 #### v1.1.0 收尾待办
 1. ~~测激活链路~~ ✅ 端到端验证通过（见上）
-2. **Creem 后台关闭产品原生 License keys**（测试 + 生产）— 否则买家收到两个 key
+2. ~~**测试产品**关闭原生 License keys~~ ✅ 已删产品的许可证密钥功能，第二笔测试付款验证只发一个 `CLJ-` key（`CLJ-Q46R-EQMG-4ZDE` / order `ord_7dDZh8O9...`）。**生产产品 `prod_5Aha8...` 上线前仍需确认/关闭**。
 3. **push + 部署 wayknow**（线上产品页 Buy 按钮才生效）
 4. **提交 CWS v1.1.0**：上传 `clearjson-v1.1.0.zip`（含 maxlength 修复 + 开源清理）+ 更新商店描述 + 声明含付费功能
 5. **确认 `manifest.homepage_url`**（`github.com/wayknow/clearjson`）指向的仓库是否公开——会显示在 CWS 列表，私有则应改为产品页
