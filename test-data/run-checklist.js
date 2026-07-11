@@ -55,7 +55,15 @@ fs.readdirSync(dataDir).filter(f => f.endsWith('.json')).forEach(f => {
 section('零、测试环境');
 
 check('manifest.json 存在且有效 MV3', manifest && manifest.manifest_version === 3);
-check('manifest 版本号 >= 0.3.0', manifest && manifest.version === '0.3.0');
+check('manifest 版本号 >= 0.3.0', manifest && (function () {
+  var min = [0, 3, 0];
+  var v = String(manifest.version).split('.').map(Number);
+  for (var i = 0; i < 3; i++) {
+    if ((v[i] || 0) > min[i]) return true;
+    if ((v[i] || 0) < min[i]) return false;
+  }
+  return true;
+})());
 check('permissions 含 storage', manifest && manifest.permissions.includes('storage'));
 check('permissions 含 activeTab', manifest && manifest.permissions.includes('activeTab'));
 check('host_permissions 不含 *://*/*（审核友好）', manifest && !manifest.host_permissions.includes('*://*/*'));

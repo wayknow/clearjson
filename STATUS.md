@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-07-10 | 当前版本：v1.0.0（已上架 CWS）
+> 最后更新：2026-07-11 | 当前版本：v1.0.0（已上架 CWS）；v1.1.0 Pro 版开发中（未上架）
 
 ---
 
@@ -209,8 +209,16 @@
 1. ~~**许可证服务器升级**~~ ✅ — 部署到 Cloudflare Workers，Resend 邮件已验证
 2. ~~**Creem 产品**~~ ✅ — ClearJSON Pro $29，`prod_5Aha8NpKKi8AUd2sLaPRgM`
 3. ~~**Worker 密钥**~~ ✅ — RESEND_API_KEY、CREEM_WEBHOOK_SECRET 已配置
-4. **扩展端** ⏳ — 恢复 Pro UI 入口 + 接入 Creem 支付链接
-5. **产品页** ⏳ — `clearjson.html` "Coming Soon" → Creem 支付链接
+4. ~~**扩展端**~~ ✅ — 恢复 Pro UI 入口（Pro 页/许可证输入/Pro 主题网格/导出/正则搜索/快捷键/大文件升级）+ Pro 页新增 **Buy Now — $29** 按钮硬编码 Creem 结账链接 `https://www.creem.io/payment/prod_5Aha8NpKKi8AUd2sLaPRgM`
+5. **产品页** ⏳ — `clearjson.html` "Coming Soon" → Creem 支付链接（在 `wayknow` 仓库，本仓库外）
+
+#### 扩展端恢复要点（2026-07-11）
+- 恢复原则：反向还原 Phase 4 隐藏提交 `5a76d32`（原始代码在父提交 `5a76d32^`），仅 5 个 UI 文件受影响；`themes.js/export.js/license.js` 与全部 CSS 完好未动。
+- **安全加固**：删除 `license.js` `isActive()` 里的 `?dev` URL 白嫖后门（打开 `viewer.html?dev` 即解锁 Pro），并顺带修掉旧 `indexOf('dev')` 的误判（`?foo=devices` 等含 "dev" 子串的普通 URL 会误解锁）。保留 `localhost:8765` + 手动 `localStorage['clearjson_pro_dev']='1'` 两条本地开发绕过。
+- **后门保持隐藏**：popup 的 `Dev Mode (unlock Pro)` 勾选框、打开 viewer 自动追加 `?dev` —— 均按决策不恢复。
+- **license key 占位符**：旧格式 `CLEARJSON-XXXX-XXXX-XXXX`(30) → 新格式 `CLJ-XXXX-XXXX-XXXX`(maxlength 17)，对齐 `license.js` KEY_REGEX。
+- **版本号**：manifest/package/popup 显示/viewer sample → v1.1.0。
+- **验证**：`npm test` 136 全绿；`run-checklist.js` 130/0（顺手修了一处 `版本号 === '0.3.0'` 的陈旧断言 → 改为 semver `>=` 比较）；Puppeteer 21 项交互全绿；额外 headless 端到端验证 viewer Pro 页（Pro 页渲染 / Buy→Creem / 激活→"Pro is active" / 停用回退 / 零 JS 错误）+ dev 后门行为（`?dev` 已失效、localhost/localStorage 仍有效）。
 
 ---
 
