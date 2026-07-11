@@ -4,7 +4,8 @@
  * Endpoints:
  *   POST /api/license/verify       — Public: validate a license key + device binding
  *   POST /api/license/generate     — Admin: generate license key(s)
- *   POST /api/webhook/creem        — Creem payment webhook → auto-generate key
+ *   POST /api/webhook/creem        — Creem payment webhook → auto-generate key + email
+ *   GET  /api/checkout/pro         — Public: return Creem payment URL
  *   GET  /api/admin/licenses       — Admin: list licenses (with optional ?email= filter)
  */
 
@@ -26,6 +27,10 @@ const rateLimitMap = new Map();
 const KEY_PREFIX = 'CLJ';
 const KEY_SEGMENT_LEN = 4;
 const KEY_SEGMENTS = 3;
+const MAX_DEVICES = 3;
+
+// Creem product ID — set in Cloudflare Worker env var CREEM_PRODUCT_ID
+const CREEM_CHECKOUT_URL = 'https://www.creem.io/payment/prod_5Aha8NpKKi8AUd2sLaPRgM';
 
 // ============ Helpers ============
 
@@ -64,7 +69,11 @@ async function sha256(text) {
     .join('');
 }
 
-// Simple rate limiter
+function deviceFingerprint(deviceId, userAgent) {
+  const ua = (userAgent || '').slice(0, 80);
+  return `${deviceId || 'unknown'}|${ua}`;
+}
+
 function checkRateLimit(ip) {
   const now = Date.now();
   let entry = rateLimitMap.get(ip);
@@ -73,7 +82,6 @@ function checkRateLimit(ip) {
     rateLimitMap.set(ip, entry);
   }
   entry.count++;
-  // Cleanup old entries periodically
   if (rateLimitMap.size > 10000) {
     const cutoff = now - RATE_LIMIT_WINDOW_MS;
     for (const [key, val] of rateLimitMap) {
@@ -91,32 +99,97 @@ async function authenticate(request, env) {
   if (!token) return false;
   const tokenHash = await sha256(token);
 
-  // Check against stored tokens in D1
   const result = await env.DB.prepare(
     'SELECT id FROM api_tokens WHERE token_hash = ?'
   ).bind(tokenHash).first();
 
   if (result) {
-    // Update last_used_at
     await env.DB.prepare(
       'UPDATE api_tokens SET last_used_at = datetime("now") WHERE id = ?'
     ).bind(result.id).run();
     return true;
   }
 
-  // Also check against ADMIN_API_KEY secret for initial setup
   if (env.ADMIN_API_KEY && token === env.ADMIN_API_KEY) return true;
 
   return false;
 }
 
-// ============ Endpoints ============
+// ============ Email (Resend) ============
 
 /**
- * POST /api/license/verify
- * Body: { license_key, device_id, device_name? }
- * Response: { valid, tier, email?, activations?, max_devices?, error? }
+ * Send license key to customer via Resend (100 free emails/day).
+ * Requires RESEND_API_KEY set as Cloudflare Worker secret.
  */
+async function sendLicenseEmail(toEmail, licenseKey, env) {
+  const apiKey = env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.error('RESEND_API_KEY not configured — skipping email');
+    return 'skipped: no api key';
+  }
+
+  const htmlBody = `<!DOCTYPE html>
+<html><body style="font-family: system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
+  <h2 style="color: #6366F1;">Thank you for upgrading to ClearJSON Pro!</h2>
+  <p>Your lifetime license key is ready:</p>
+  <div style="background: #eef2ff; border: 2px solid #6366F1; border-radius: 8px; padding: 16px; text-align: center; margin: 24px 0;">
+    <code style="font-size: 22px; font-weight: bold; letter-spacing: 2px;">${licenseKey}</code>
+  </div>
+  <p><strong>How to activate:</strong></p>
+  <ol>
+    <li>Click the ClearJSON icon in your Chrome toolbar</li>
+    <li>Go to <strong>Settings</strong></li>
+    <li>Enter the license key and click <strong>Activate</strong></li>
+  </ol>
+  <p>This key covers <strong>3 devices</strong> with lifetime access. No subscription, no recurring charges.</p>
+  <p style="color: #888; font-size: 13px; margin-top: 32px;">Need help? Reply to this email or contact <a href="mailto:support@wayknow.tech">support@wayknow.tech</a>.</p>
+</body></html>`;
+
+  const textBody = `Thank you for upgrading to ClearJSON Pro!
+
+Your lifetime license key: ${licenseKey}
+
+How to activate:
+1. Click the ClearJSON icon in your Chrome toolbar
+2. Go to Settings
+3. Enter the license key and click Activate
+
+This key covers 3 devices with lifetime access.
+
+Need help? Contact support@wayknow.tech`;
+
+  try {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        from: 'ClearJSON <noreply@wayknow.tech>',
+        to: [toEmail],
+        subject: 'Your ClearJSON Pro License Key',
+        html: htmlBody,
+        text: textBody,
+      }),
+    });
+
+    const resBody = await response.text();
+    if (response.ok) {
+      console.log(`Email sent OK: ${licenseKey} -> ${toEmail}`);
+      return `sent: ${response.status}`;
+    } else {
+      console.error(`Email failed (${response.status}): ${resBody.slice(0, 500)}`);
+      return `failed: ${response.status} ${resBody.slice(0, 200)}`;
+    }
+  } catch (err) {
+    console.error('Email send error:', err.message);
+    return `error: ${err.message}`;
+  }
+}
+
+// ============ Endpoints ============
+
 async function handleVerify(request, env) {
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   if (!checkRateLimit(ip)) {
@@ -138,13 +211,11 @@ async function handleVerify(request, env) {
     return json({ valid: false, error: 'missing_device_id' }, 400);
   }
 
-  // --- Validate format ---
   const keyRegex = new RegExp(`^${KEY_PREFIX}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$`);
   if (!keyRegex.test(license_key)) {
     return json({ valid: false, error: 'invalid_format' });
   }
 
-  // --- Look up license ---
   const license = await env.DB.prepare(
     'SELECT license_key, email, status, tier, max_devices, created_at, expires_at FROM licenses WHERE license_key = ?'
   ).bind(license_key).first();
@@ -160,7 +231,6 @@ async function handleVerify(request, env) {
   if (license.expires_at) {
     const expires = new Date(license.expires_at + 'Z');
     if (expires < new Date()) {
-      // Auto-expire
       await env.DB.prepare(
         'UPDATE licenses SET status = ? WHERE license_key = ?'
       ).bind('expired', license_key).run();
@@ -168,18 +238,15 @@ async function handleVerify(request, env) {
     }
   }
 
-  // --- Check / upsert device activation ---
   const existingActivation = await env.DB.prepare(
     'SELECT id, device_id FROM activations WHERE license_key = ? AND device_id = ?'
   ).bind(license_key, device_id).first();
 
   if (existingActivation) {
-    // Already activated on this device — update last_seen_at
     await env.DB.prepare(
       'UPDATE activations SET last_seen_at = datetime("now"), device_name = ? WHERE id = ?'
     ).bind(device_name || '', existingActivation.id).run();
   } else {
-    // New device — check activation limit
     const activationCount = await env.DB.prepare(
       'SELECT COUNT(*) as count FROM activations WHERE license_key = ?'
     ).bind(license_key).first();
@@ -193,13 +260,11 @@ async function handleVerify(request, env) {
       });
     }
 
-    // Activate new device
     await env.DB.prepare(
       'INSERT INTO activations (license_key, device_id, device_name) VALUES (?, ?, ?)'
     ).bind(license_key, device_id, device_name || '').run();
   }
 
-  // --- Count current activations ---
   const currentActivations = await env.DB.prepare(
     'SELECT COUNT(*) as count FROM activations WHERE license_key = ?'
   ).bind(license_key).first();
@@ -215,12 +280,6 @@ async function handleVerify(request, env) {
   });
 }
 
-/**
- * POST /api/license/generate
- * Auth: Bearer <token>
- * Body: { email, count? (default 1, max 10) }
- * Response: { keys: [...] }
- */
 async function handleGenerate(request, env) {
   if (!(await authenticate(request, env))) {
     return json({ error: 'unauthorized' }, 401);
@@ -243,7 +302,6 @@ async function handleGenerate(request, env) {
 
   for (let i = 0; i < keyCount; i++) {
     let key, attempts = 0;
-    // Retry on collision (extremely unlikely but guard it)
     do {
       key = generateLicenseKey();
       attempts++;
@@ -258,7 +316,7 @@ async function handleGenerate(request, env) {
 
     await env.DB.prepare(
       'INSERT INTO licenses (license_key, email, tier, max_devices) VALUES (?, ?, ?, ?)'
-    ).bind(key, email, 'pro', 3).run();
+    ).bind(key, email, 'pro', MAX_DEVICES).run();
 
     keys.push(key);
   }
@@ -266,51 +324,73 @@ async function handleGenerate(request, env) {
   return json({ keys, email, count: keys.length }, 201);
 }
 
-/**
- * POST /api/webhook/creem
- * Receives payment notification from Creem, auto-generates license key.
- *
- * Creem webhook payload (simplified):
- * {
- *   "event": "order.completed",
- *   "data": {
- *     "id": "order_xxx",
- *     "customer": { "email": "user@example.com", "id": "cust_xxx" },
- *     "product": { "id": "prod_xxx" }
- *   }
- * }
- *
- * Headers: creem-signature: t=<timestamp>,s=<signature>
- * Verification: HMAC-SHA256(creem_webhook_secret, body)
- */
+// ============ Creem Webhook ============
+
+async function verifyCreemSignature(request, rawBody, env) {
+  const signature = request.headers.get('creem-signature') || '';
+  const webhookSecret = env.CREEM_WEBHOOK_SECRET;
+
+  if (!webhookSecret) {
+    // No secret configured — skip verification (development)
+    return true;
+  }
+
+  if (!signature) {
+    return false;
+  }
+
+  try {
+    const encoder = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+      'raw',
+      encoder.encode(webhookSecret),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    );
+    const sig = await crypto.subtle.sign('HMAC', key, encoder.encode(rawBody));
+    const expected = Array.from(new Uint8Array(sig))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+
+    return expected === signature;
+  } catch (err) {
+    console.error('Signature verification error:', err.message);
+    return false;
+  }
+}
+
 async function handleCreemWebhook(request, env) {
-  // TODO: Add Creem webhook signature verification before production.
-  // const signature = request.headers.get('creem-signature');
-  // const body = await request.text();
-  // ... HMAC-SHA256 verify using env.CREEM_WEBHOOK_SECRET ...
+  const rawBody = await request.text();
+
+  // Verify HMAC-SHA256 signature
+  const sigValid = await verifyCreemSignature(request, rawBody, env);
+  if (!sigValid) {
+    const sigHeader = request.headers.get('creem-signature') || '';
+    console.error(`Webhook signature mismatch. Header: ${sigHeader.slice(0, 16)}..., Secret configured: ${!!env.CREEM_WEBHOOK_SECRET}`);
+    return json({ error: 'invalid_signature' }, 401);
+  }
 
   let body;
   try {
-    body = await request.json();
+    body = JSON.parse(rawBody);
   } catch {
     return json({ error: 'invalid_json' }, 400);
   }
 
-  const event = body.event;
-  const data = body.data || {};
+  const eventType = body.eventType;
+  const obj = body.object || {};
 
-  // Only handle completed orders
-  if (event !== 'order.completed') {
-    return json({ received: true, action: 'ignored', event });
+  if (eventType !== 'checkout.completed') {
+    return json({ received: true, action: 'ignored', event: eventType });
   }
 
-  const email = data.customer?.email;
+  const email = obj.customer?.email;
   if (!email) {
     return json({ error: 'missing_customer_email' }, 400);
   }
 
-  // Check if we already issued a license for this order (idempotency)
-  const orderId = data.id;
+  const orderId = obj.order?.id;
   if (orderId) {
     const existing = await env.DB.prepare(
       'SELECT license_key FROM licenses WHERE creem_order_id = ?'
@@ -320,17 +400,16 @@ async function handleCreemWebhook(request, env) {
     }
   }
 
-  // Generate license key
   const key = generateLicenseKey();
   await env.DB.prepare(
     `INSERT INTO licenses (license_key, email, tier, max_devices, creem_customer_id, creem_order_id)
-     VALUES (?, ?, 'pro', 3, ?, ?)`
-  ).bind(key, email, data.customer?.id || null, orderId || null).run();
+     VALUES (?, ?, 'pro', ?, ?, ?)`
+  ).bind(key, email, MAX_DEVICES, obj.customer?.id || null, orderId || null).run();
 
-  // TODO: Send email to customer with their license key
-  // Options: Resend, SendGrid, Mailchannels (free on Cloudflare), etc.
+  console.log(`License issued: ${key} -> ${email} (order: ${orderId || 'N/A'})`);
 
-  console.log(`License issued: ${key} → ${email} (order: ${orderId || 'N/A'})`);
+  // Send license key via email
+  await sendLicenseEmail(email, key, env);
 
   return json({
     received: true,
@@ -340,12 +419,16 @@ async function handleCreemWebhook(request, env) {
   }, 201);
 }
 
-/**
- * GET /api/admin/licenses
- * Auth: Bearer <token>
- * Query: ?email= (optional filter), ?limit=50 (default), ?offset=0
- * Response: { licenses: [...], total, limit, offset }
- */
+function handleCheckoutPro(env) {
+  return json({
+    product: 'ClearJSON Pro',
+    price: '$29.00',
+    url: CREEM_CHECKOUT_URL,
+  });
+}
+
+// ============ Admin ============
+
 async function handleAdminList(request, env) {
   if (!(await authenticate(request, env))) {
     return json({ error: 'unauthorized' }, 401);
@@ -391,18 +474,15 @@ export default {
     let path = url.pathname;
     const method = request.method.toUpperCase();
 
-    // CORS preflight
-    if (method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: CORS_HEADERS });
-    }
-
-    // Strip path prefix if present (for custom domain routing: api.wayknow.tech/clearjson/*)
     if (path.startsWith('/clearjson')) {
       path = path.replace('/clearjson', '') || '/';
     }
 
+    if (method === 'OPTIONS') {
+      return new Response(null, { status: 204, headers: CORS_HEADERS });
+    }
+
     try {
-      // Route matching
       if (method === 'POST' && path === '/api/license/verify') {
         return await handleVerify(request, env);
       }
@@ -412,16 +492,17 @@ export default {
       if (method === 'POST' && path === '/api/webhook/creem') {
         return await handleCreemWebhook(request, env);
       }
+      if (method === 'GET' && path === '/api/checkout/pro') {
+        return handleCheckoutPro(env);
+      }
       if (method === 'GET' && path === '/api/admin/licenses') {
         return await handleAdminList(request, env);
       }
 
-      // Health check
       if (method === 'GET' && (path === '/' || path === '/api/health')) {
         return json({ status: 'ok', version: '1.0.0', service: 'clearjson-license', timestamp: new Date().toISOString() });
       }
 
-      // 404
       return json({ error: 'not_found' }, 404);
     } catch (err) {
       console.error('Unhandled error:', err.message);

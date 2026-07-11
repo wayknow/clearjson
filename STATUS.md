@@ -206,10 +206,11 @@
 - 产品页已同步更新（`wayknow.tech/clearjson.html`）
 
 ### Pro 版开发（v1.1.0+）
-- 集成 Creem 支付 → 恢复 Pro 升级入口 → 提交审核更新
-- JSON Schema 推断
-- Edge 浏览器兼容 + 上架
-- 国际化（中文）
+1. ~~**许可证服务器升级**~~ ✅ — 部署到 Cloudflare Workers，Resend 邮件已验证
+2. ~~**Creem 产品**~~ ✅ — ClearJSON Pro $29，`prod_5Aha8NpKKi8AUd2sLaPRgM`
+3. ~~**Worker 密钥**~~ ✅ — RESEND_API_KEY、CREEM_WEBHOOK_SECRET 已配置
+4. **扩展端** ⏳ — 恢复 Pro UI 入口 + 接入 Creem 支付链接
+5. **产品页** ⏳ — `clearjson.html` "Coming Soon" → Creem 支付链接
 
 ---
 
