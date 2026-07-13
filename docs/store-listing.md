@@ -1,7 +1,7 @@
 # Chrome Web Store — Listing Assets
 
-> ✅ v1.0.0（免费版）已上架：https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk
-> 🆕 v1.1.0 加入 Pro 内购（$29 终身，Creem 外部支付）— 已打包 `clearjson-v1.1.0.zip`，待提交更新
+> ✅ v1.1.0（含 Pro 内购）已上架：https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk
+> $29 终身，Creem 外部支付 — 2026-07-13 审核通过
 
 ## Short Description (≤132 chars)
 
@@ -34,7 +34,7 @@ ClearJSON is the trustworthy JSON viewer you've been looking for — built in re
 
 - **Large file virtual scrolling** — 100MB+ JSON without freezing
 - **JWT auto-decode** — detect tokens and inline display header + payload
-- **Advanced search** — regex, fuzzy match, result navigation
+- **Advanced search** — regex, result navigation, match highlighting
 - **Multi-format export** — CSV, TSV, YAML, TypeScript types
 - **30 premium themes** — Monokai, Dracula, Nord, One Dark, Solarized, and more
 - **Custom keyboard shortcuts**

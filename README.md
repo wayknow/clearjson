@@ -23,7 +23,7 @@ ClearJSON is a Chrome extension that automatically detects and formats JSON resp
 
 ### Pro ($29 lifetime)
 - 💰 Large file virtual scrolling (100MB+ without freezing)
-- 💰 Advanced search (regex, fuzzy match, result navigation)
+- 💰 Advanced search (regex, match highlighting, result navigation)
 - 💰 JWT auto-decode (header + payload inline, expiry detection)
 - 💰 Multi-format export (CSV, TSV, YAML, TypeScript types with recursive inference)
 - 💰 30 premium themes (Catppuccin, Tokyo Night, Gruvbox, Nord, Dracula, Monokai…)
@@ -121,9 +121,9 @@ node test-data/browser-test.js
 node test-data/server.js
 ```
 
-### Current Status (v1.0.0 — Free Release Ready)
+### Current Status (v1.1.0 — Pro Release Live on CWS)
 
-All core features implemented. Pro features gated behind license (UI hidden until Creem payment is integrated).
+All features implemented. Pro available via Creem ($29 lifetime).
 136 unit tests passing. Preparing for Chrome Web Store submission.
 
 See [STATUS.md](STATUS.md) for full project state, architecture decisions, and release checklist.

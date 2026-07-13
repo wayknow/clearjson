@@ -1,6 +1,6 @@
 # ClearJSON — 产品功能列表
 
-> 最后更新：2026-07-10 | v1.0.0 已上架 Chrome Web Store
+> 最后更新：2026-07-13 | v1.1.0 已上架 Chrome Web Store（含 Pro 内购）
 
 ---
 
