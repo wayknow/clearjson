@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-07-13 | 当前版本：v1.1.0（已上架 CWS）| Product Hunt 已预发布
+> 最后更新：2026-07-14 | 当前版本：v1.1.0（已上架 CWS）| Product Hunt 已发布，5 comments 全部回复
 
 ---
 
