@@ -32,7 +32,9 @@ var ClearJSON = window.ClearJSON || {};
     rawMode: false,
     rawTextCache: null,
     searchResults: [],
-    searchIndex: -1
+    searchIndex: -1,
+    virtualTree: null,   // set when large file uses VirtualTree
+    largeFileStats: null  // { nodes, maxDepth, sizeBytes }
   };
 
   var _initPollCount = 0;
@@ -104,10 +106,14 @@ var ClearJSON = window.ClearJSON || {};
       var rawText = getJSONText();
       if (!rawText) return;
 
-      // Check file size — if very large, show a warning (Pro gate)
+      // Check file size — large files use streaming parser + virtual tree (Pro only)
       var sizeBytes = new Blob([rawText]).size;
-      if (sizeBytes > 2 * 1024 * 1024 && !isProActive()) {
-        showLargeFileWarning(rawText, sizeBytes);
+      if (sizeBytes > 2 * 1024 * 1024) {
+        if (!isProActive()) {
+          showLargeFileWarning(rawText, sizeBytes);
+          return;
+        }
+        renderWithVirtualTree(rawText, sizeBytes);
         return;
       }
 
@@ -185,6 +191,86 @@ var ClearJSON = window.ClearJSON || {};
     });
   }
 
+  // Helper: expand/collapse work with both tree types
+  function expandAll() {
+    if (state.virtualTree) { state.virtualTree.expandAll(); }
+    else if (state.treeRoot) { C.Tree.expandAll(state.treeRoot); }
+  }
+
+  function collapseAll() {
+    if (state.virtualTree) { state.virtualTree.collapseAll(); }
+    else if (state.treeRoot) { C.Tree.collapseAll(state.treeRoot); }
+  }
+
+  // Render large file with streaming parser + virtual tree (Pro only)
+  function renderWithVirtualTree(rawText, sizeBytes) {
+    var theme = (C.Themes.THEMES[state.settings.theme] || C.Themes.THEMES['dark']);
+    var themeBg = theme.bg || '#1e1e2e';
+
+    document.head.innerHTML = '';
+    document.body.innerHTML = '';
+    document.title = 'ClearJSON — Viewer';
+
+    document.body.style.backgroundColor = themeBg;
+    injectThemeVars();
+
+    // Loading indicator
+    var loadingEl = document.createElement('div');
+    loadingEl.id = 'cj-loading';
+    loadingEl.innerHTML = '<div style="padding:40px;text-align:center;font-size:16px;color:var(--cj-text-secondary)">Streaming parse…</div>';
+    document.body.appendChild(loadingEl);
+
+    C.StreamParser.parseLarge(rawText, function (progress) {
+      if (loadingEl) {
+        loadingEl.innerHTML = '<div style="padding:40px;text-align:center;font-size:16px;color:var(--cj-text-secondary)">Streaming parse… ' + Math.round(progress.percent) + '%</div>';
+      }
+    }).then(function (result) {
+      if (loadingEl) { loadingEl.remove(); loadingEl = null; }
+      if (!result.ok) { showError(result); return; }
+
+      var nodes = result.nodes;
+      var maxDepth = 0;
+      for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i].depth > maxDepth) maxDepth = nodes[i].depth;
+      }
+
+      state.parsedData = null;
+      state.treeRoot = null;
+      state.pathMap = null;
+      state.rawTextCache = rawText;
+      state.largeFileStats = { nodes: nodes.length, maxDepth: maxDepth, sizeBytes: sizeBytes };
+
+      var wrapper = document.createElement('div');
+      wrapper.id = 'clearjson-app';
+      wrapper.className = 'cj-theme-' + state.settings.theme;
+
+      wrapper.appendChild(buildToolbar());
+
+      var treeContainer = document.createElement('div');
+      treeContainer.id = 'cj-tree-container';
+      treeContainer.className = 'cj-tree-container cj-vtree-scroll';
+
+      state.virtualTree = C.VirtualTree.create(treeContainer, nodes, {
+        initialDepth: state.settings.initialDepth
+      });
+
+      state.virtualTree.render();
+      wrapper.appendChild(treeContainer);
+
+      if (state.settings.showStatsBar) {
+        wrapper.appendChild(buildStatsBar(
+          { nodes: nodes.length, maxDepth: maxDepth },
+          rawText
+        ));
+      }
+
+      document.body.appendChild(wrapper);
+    }).catch(function (err) {
+      if (loadingEl) { loadingEl.remove(); loadingEl = null; }
+      showError({ ok: false, error: err.message || 'Streaming parse failed' });
+    });
+  }
+
   // ================================================================
   //  VIEWER CONSTRUCTION
   // ================================================================
@@ -254,8 +340,8 @@ var ClearJSON = window.ClearJSON || {};
     // Left
     var left = document.createElement('div');
     left.className = 'cj-tb-left';
-    left.appendChild(createBtn('▹▹ Collapse', 'collapse', function () { C.Tree.collapseAll(state.treeRoot); }));
-    left.appendChild(createBtn('◁◁ Expand', 'expand', function () { C.Tree.expandAll(state.treeRoot); }));
+    left.appendChild(createBtn('▹▹ Collapse', 'collapse', collapseAll));
+    left.appendChild(createBtn('◁◁ Expand', 'expand', expandAll));
     tb.appendChild(left);
 
     // Center: search
@@ -524,21 +610,25 @@ var ClearJSON = window.ClearJSON || {};
       var pre = document.createElement('pre');
       pre.id = 'cj-raw-view';
       pre.className = 'cj-raw-view';
-      var formatted = JSON.stringify(state.parsedData, null, 2);
-      pre.innerHTML = C.Tokenizer.toHTML(formatted, state.settings.showLineNumbers);
+      var rawJSON = state.parsedData ? JSON.stringify(state.parsedData, null, 2) : (state.rawTextCache || '');
+      pre.innerHTML = C.Tokenizer.toHTML(rawJSON, state.settings.showLineNumbers);
       container.appendChild(pre);
       document.querySelector('.cj-tb-raw').textContent = 'Tree';
       state.rawMode = true;
     } else {
       container.innerHTML = '';
-      container.appendChild(state.treeRoot);
+      if (state.virtualTree) {
+        state.virtualTree.render();
+      } else if (state.treeRoot) {
+        container.appendChild(state.treeRoot);
+      }
       document.querySelector('.cj-tb-raw').textContent = 'Raw';
       state.rawMode = false;
     }
   }
 
   function copyFullJSON() {
-    var text = JSON.stringify(state.parsedData, null, 2);
+    var text = state.parsedData ? JSON.stringify(state.parsedData, null, 2) : (state.rawTextCache || '');
     navigator.clipboard.writeText(text).then(function () {
       showToast('Copied!');
     }).catch(function () {
@@ -586,8 +676,8 @@ var ClearJSON = window.ClearJSON || {};
       var shortcuts = getActiveShortcuts();
 
       // Check each defined shortcut
-      if (shortcut === shortcuts.collapseAll) { e.preventDefault(); C.Tree.collapseAll(state.treeRoot); return; }
-      if (shortcut === shortcuts.expandAll)   { e.preventDefault(); C.Tree.expandAll(state.treeRoot); return; }
+      if (shortcut === shortcuts.collapseAll) { e.preventDefault(); collapseAll(); return; }
+      if (shortcut === shortcuts.expandAll)   { e.preventDefault(); expandAll(); return; }
       if (shortcut === shortcuts.cycleTheme)  { e.preventDefault(); cycleTheme(); return; }
       if (shortcut === shortcuts.toggleRaw)   { e.preventDefault(); toggleRawView(); return; }
       if (shortcut === shortcuts.searchNext)  {

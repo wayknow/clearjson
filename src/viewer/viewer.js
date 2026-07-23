@@ -14,6 +14,7 @@
   var state = {
     parsedData: null,
     treeRoot: null,
+    virtualTree: null,
     rawText: '',
     theme: 'dark',
     rawMode: false,
@@ -118,10 +119,12 @@
 
     // Export
     document.getElementById('btn-expand').addEventListener('click', function () {
-      if (treeView.firstChild) ClearJSON.Tree.expandAll(treeView.firstChild);
+      if (state.virtualTree) { state.virtualTree.expandAll(); }
+      else if (state.treeRoot) ClearJSON.Tree.expandAll(state.treeRoot);
     });
     document.getElementById('btn-collapse').addEventListener('click', function () {
-      if (treeView.firstChild) ClearJSON.Tree.collapseAll(treeView.firstChild);
+      if (state.virtualTree) { state.virtualTree.collapseAll(); }
+      else if (state.treeRoot) ClearJSON.Tree.collapseAll(state.treeRoot);
     });
     document.getElementById('btn-export').addEventListener('click', showExportMenu);
 
@@ -187,9 +190,15 @@
   // ================================================================
 
   function formatJSON(text) {
-    // Check if Pro is needed for large files
-    if (text.length > 2 * 1024 * 1024 && !ClearJSON.License.isActive()) {
-      showLargeFileGate(text);
+    var sizeBytes = new Blob([text]).size;
+
+    // Large files (>2MB) need Pro + streaming parser + virtual tree
+    if (sizeBytes > 2 * 1024 * 1024) {
+      if (!ClearJSON.License.isActive()) {
+        showLargeFileGate(text);
+        return;
+      }
+      formatLargeJSON(text, sizeBytes);
       return;
     }
 
@@ -197,10 +206,48 @@
     if (!result.ok) { showError(result); return; }
 
     state.parsedData = result.data;
+    state.virtualTree = null;
     state.rawText = text;
     state.rawMode = false;
 
     showResult(result);
+  }
+
+  function formatLargeJSON(text, sizeBytes) {
+    hideAll();
+    landing.style.display = 'none';
+    toolbar.style.display = 'flex';
+    treeView.style.display = '';
+    rawView.style.display = 'none';
+    document.getElementById('btn-back').style.display = '';
+
+    treeView.innerHTML = '<div style="padding:40px;text-align:center;color:var(--cj-text-secondary)">Streaming parse…</div>';
+
+    ClearJSON.StreamParser.parseLarge(text, function (progress) {
+      treeView.innerHTML = '<div style="padding:40px;text-align:center;color:var(--cj-text-secondary)">Streaming parse… ' + Math.round(progress.percent) + '%</div>';
+    }).then(function (result) {
+      if (!result.ok) { showError(result); return; }
+
+      var nodes = result.nodes;
+      var maxDepth = 0;
+      for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i].depth > maxDepth) maxDepth = nodes[i].depth;
+      }
+
+      state.parsedData = null;
+      state.rawText = text;
+      state.rawMode = false;
+      state.virtualTree = ClearJSON.VirtualTree.create(treeView, nodes, {
+        initialDepth: state.settings.initialDepth
+      });
+
+      treeView.innerHTML = '';
+      state.virtualTree.render();
+
+      updateStats({ nodes: nodes.length, maxDepth: maxDepth, sizeBytes: sizeBytes }, text);
+    }).catch(function (err) {
+      showError({ ok: false, error: err.message || 'Streaming parse failed' });
+    });
   }
 
   function showResult(result) {
@@ -227,6 +274,7 @@
   function showLanding() {
     state.parsedData = null;
     state.treeRoot = null;
+    state.virtualTree = null;
     state.rawText = '';
     state.rawMode = false;
     hideAll();
@@ -276,12 +324,12 @@
   }
 
   function toggleView() {
-    if (!state.parsedData) return;
+    if (!state.parsedData && !state.rawText) return;
     state.rawMode = !state.rawMode;
 
     if (state.rawMode) {
       treeView.style.display = 'none';
-      var formatted = JSON.stringify(state.parsedData, null, 2);
+      var formatted = state.parsedData ? JSON.stringify(state.parsedData, null, 2) : state.rawText;
       rawView.innerHTML = ClearJSON.Tokenizer.toHTML(formatted, true);
       rawView.style.display = '';
       document.getElementById('btn-raw').textContent = 'Tree';
