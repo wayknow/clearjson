@@ -210,7 +210,7 @@
 2. ~~**Creem 产品**~~ ✅ — ClearJSON Pro $29，`prod_5Aha8NpKKi8AUd2sLaPRgM`
 3. ~~**Worker 密钥**~~ ✅ — RESEND_API_KEY、CREEM_WEBHOOK_SECRET 已配置
 4. ~~**扩展端**~~ ✅ — 恢复 Pro UI 入口（Pro 页/许可证输入/Pro 主题网格/导出/正则搜索/快捷键/大文件升级）+ Pro 页新增 **Buy Now — $29** 按钮硬编码 Creem 结账链接 `https://www.creem.io/payment/prod_5Aha8NpKKi8AUd2sLaPRgM`
-5. **产品页** ⏳ — `clearjson.html` "Coming Soon" → Creem 支付链接（在 `wayknow` 仓库，本仓库外）
+5. ~~**产品页**~~ ✅ — `clearjson.html` 已更新 "Buy Now — $29" 直链 Creem 结账
 
 #### 扩展端恢复要点（2026-07-11）
 - 恢复原则：反向还原 Phase 4 隐藏提交 `5a76d32`（原始代码在父提交 `5a76d32^`），仅 5 个 UI 文件受影响；`themes.js/export.js/license.js` 与全部 CSS 完好未动。
