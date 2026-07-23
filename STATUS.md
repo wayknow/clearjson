@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-07-14 | 当前版本：v1.1.0（已上架 CWS）| Product Hunt 已发布，5 comments 全部回复
+> 最后更新：2026-07-23 | 当前版本：v1.1.1（大文件修复，待提交 CWS）| Product Hunt 5 comments 已回复，28 展示/15 安装
 
 ---
 
@@ -237,6 +237,19 @@
 4. ~~**提交 CWS v1.1.0**~~ ✅ 2026-07-11 提交，2026-07-13 审核通过。包内自检通过：版本 1.1.0、Creem 按钮在、无 `?dev` 后门。商店描述修正：去掉了不存在的 "fuzzy match"。
 5. ~~**确认 `manifest.homepage_url`**~~ ✅ 已改为产品页 `wayknow.tech/clearjson.html`，CWS 已更新
 6. ~~上线可选：真购买 $29 + 退款，验线上按钮全链路~~ ✅ 测试环境已验证完整闭环（Creem 测试卡 → webhook → Resend 发信），无需真买
+
+### v1.1.1 修复（2026-07-23）
+- **大文件处理修复**：content.js 和 viewer.js 在 >2MB + Pro 时接入 `StreamParser.parseLarge()` + `VirtualTree`。此前只做了 Pro 门控，实际渲染仍用普通树，大文件照样卡死。工具栏（展开/折叠/Raw/复制/快捷键）全部兼容两种树
+- **图标修复**：icon.svg 改为与 PNG 一致的设计（两条蓝色竖线，深色渐变背景，去除不存在的彩色圆点）；新增 icon240.png 用于 Product Hunt
+- **退款政策移除**：ClearJSON 和 SnapMark 的 14 天退款政策页面及所有引用已下掉，与竞品对齐
+- **CWS 商店描述**：去掉了不存在的 "fuzzy match"，改为 "match highlighting"
+- **首页 logo**：wayknow 网站 `/assets/clearjson-logo.svg` + `.png` 与扩展图标统一
+- `clearjson-v1.1.0.zip` 已重新打包，待提交 CWS 更新
+
+### Product Hunt
+- 7/14 发布，5 comments 已回复
+- 28 展示 → 15 安装（53% 转化），全部来自美国（PH 流量）
+- 下一步：CWS 关键词优化 + Hacker News + 中文社区推广
 
 ---
 
