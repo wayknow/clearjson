@@ -2,59 +2,75 @@
 
 > ✅ v1.1.0（含 Pro 内购）已上架：https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk
 > $29 终身，Creem 外部支付 — 2026-07-13 审核通过
+> 🔄 v1.1.1 审核中（2026-07-23 提交）— 审核期间无法编辑清单，审核通过后立即替换以下优化版
 
-## Short Description (≤132 chars)
+## Title (优化版，待审核通过后替换)
 
-> Privacy-first JSON viewer. Auto-formats JSON with syntax highlighting, collapsible trees, and search. Zero tracking. Fully local.
+ClearJSON: Privacy-First JSON Viewer & Formatter
 
-## Detailed Description
+## Short Description (优化版，≤132 chars)
 
-ClearJSON is the trustworthy JSON viewer you've been looking for — built in response to popular JSON formatters going rogue with ads and tracking.
+JSON viewer & formatter with syntax highlighting, collapsible tree, and 10 themes. 100% local, no tracking. Pro adds large file virtual scrolling, JWT decode, regex search, and multi-format export.
 
-### ✨ Why ClearJSON?
+## Detailed Description (优化版，待审核通过后替换)
 
-- **100% Local**: All processing happens on your device. Zero network requests for free users.
-- **Privacy First**: No analytics, no tracking, no accounts, no ads. Ever.
-- **Lightning Fast**: Optimized for both tiny API responses and 100MB+ data dumps.
+ClearJSON is the trustworthy JSON viewer you've been looking for — built after popular JSON formatters went rogue with ads and tracking. All processing happens on your device. Period.
 
-### 🔧 Free Features (Forever)
+━━━━━━━━━━━━━━━━━━━━━━
+✨ Why Switch to ClearJSON?
+━━━━━━━━━━━━━━━━━━━━━━
 
-- Auto-detect & format JSON, JSON-LD, JSON:API, and NDJSON
-- Collapsible tree view with indent guides
-- Syntax highlighting (strings, numbers, booleans, null, keys)
-- 10 beautiful themes with system-follow (dark/light/sepia)
-- Click-to-copy values, right-click for JSONPath
-- Auto-detected links (clickable) and image previews (hover)
-- Line numbers in raw view
-- Stats bar (node count, depth, file size, parse time)
-- Keyboard shortcuts (`[` collapse, `]` expand, `D` theme, `R` raw, `/` search)
-- Standalone viewer — paste or drag-and-drop any JSON
+• 100% Local — Every byte stays on your machine. Zero network requests.
+• Privacy First — No analytics, no tracking, no accounts, no ads. Not now, not ever.
+• Lightning Fast — Handles everything from tiny API responses to 100MB+ data dumps with virtual scrolling (Pro).
+• One-Time Purchase — $29 lifetime. No subscriptions. Covers 3 devices.
 
-### 💰 Pro Features ($29 Lifetime)
+━━━━━━━━━━━━━━━━━━━━━━
+🆓 Free Features (Forever)
+━━━━━━━━━━━━━━━━━━━━━━
 
-- **Large file virtual scrolling** — 100MB+ JSON without freezing
-- **JWT auto-decode** — detect tokens and inline display header + payload
-- **Advanced search** — regex, result navigation, match highlighting
-- **Multi-format export** — CSV, TSV, YAML, TypeScript types
-- **30 premium themes** — Monokai, Dracula, Nord, One Dark, Solarized, and more
-- **Custom keyboard shortcuts**
+• Auto-detect & format JSON, JSON-LD, JSON:API, NDJSON, and JSONP
+• Collapsible tree view with indent guides and element counts
+• Syntax highlighting — strings, numbers, booleans, null, keys, punctuation
+• 10 built-in themes with automatic dark/light system-follow
+• Click-to-copy values • Right-click for JSONPath or subtree
+• Auto-detected clickable links • Hover-to-preview images (PNG/JPG/GIF/SVG/WebP)
+• Line numbers in raw view
+• Status bar — node count, max depth, file size, parse time
+• Keyboard shortcuts: [ collapse, ] expand, D theme, R raw, / search
+• Standalone viewer — paste, drag-and-drop, or load any JSON file
+• URL exclusion list (regex) — skip sites with built-in JSON rendering
 
-### 📦 One-Time Purchase. No Subscriptions.
+━━━━━━━━━━━━━━━━━━━━━━
+💰 Pro ($29 Lifetime — No Subscription)
+━━━━━━━━━━━━━━━━━━━━━━
 
-$29 gets you ClearJSON Pro for life. No recurring fees, no accounts required.
-A license covers up to 3 devices.
+• Large file virtual scrolling — 100MB+ JSON without freezing (Web Worker + streaming parser)
+• JWT auto-decode — detect eyJ... tokens, inline display header + payload, highlight expiry
+• Advanced search — regex with match navigation and full-document highlighting
+• Multi-format export — CSV, TSV, YAML, TypeScript type definitions (recursive inference)
+• 30 premium themes — Monokai, Dracula, Nord, One Dark, Solarized, Catppuccin, GitHub, Tokyo Night, Gruvbox, and more
+• Custom keyboard shortcuts — remap all 6 shortcuts to your preference
 
-### 🔓 How to Upgrade
+━━━━━━━━━━━━━━━━━━━━━━
+🔓 How to Upgrade
+━━━━━━━━━━━━━━━━━━━━━━
 
-1. Click **Buy Now — $29** inside the extension (Pro badge in the toolbar → Pro page) or on the [product page](https://wayknow.tech/clearjson.html).
-2. Complete checkout via Creem — your license key (`CLJ-XXXX-XXXX-XXXX`) is emailed instantly.
-3. Paste the key in **Settings → Pro → Activate**. Works offline after first activation.
+1. Click the Pro badge in the toolbar (or visit wayknow.tech/clearjson.html)
+2. Complete checkout via Creem — your license key (CLJ-XXXX-XXXX-XXXX) arrives by email instantly
+3. Paste the key in Settings → Pro → Activate. Works offline after first activation.
 
-### 📖 Permissions Explained
+━━━━━━━━━━━━━━━━━━━━━━
+🛡️ Permissions Explained
+━━━━━━━━━━━━━━━━━━━━━━
 
-- `storage` — Save your theme and settings
-- `activeTab` — Format JSON in the current tab
-- Host permissions — Only used to detect JSON content type; page content is never read otherwise
+• storage — Save your theme, settings, and license
+• activeTab — Format JSON in the current tab only when you interact with the extension
+• Host permission (file://) — Format local JSON files you open in Chrome
+• Content scripts on JSON URLs — Detect and format JSON pages; page content is never read or transmitted
+
+ClearJSON does not, and will never, make a network request for free users.
+The Pro license verification is the ONLY network call, and only when activating or checking a key.
 
 ---
 
