@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-07-23 | 当前版本：v1.1.1（大文件修复，待提交 CWS）| Product Hunt 5 comments 已回复，28 展示/15 安装
+> 最后更新：2026-07-23 | 当前版本：v1.1.1（已提交 CWS，审核中）| Product Hunt 5 comments 已回复，28 展示/15 安装
 
 ---
 
@@ -244,7 +244,7 @@
 - **退款政策移除**：ClearJSON 和 SnapMark 的 14 天退款政策页面及所有引用已下掉，与竞品对齐
 - **CWS 商店描述**：去掉了不存在的 "fuzzy match"，改为 "match highlighting"
 - **首页 logo**：wayknow 网站 `/assets/clearjson-logo.svg` + `.png` 与扩展图标统一
-- `clearjson-v1.1.0.zip` 已重新打包，待提交 CWS 更新
+- `clearjson-v1.1.1.zip` 已重新打包，2026-07-23 提交 CWS 审核
 
 ### Product Hunt
 - 7/14 发布，5 comments 已回复
