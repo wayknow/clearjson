@@ -17,18 +17,7 @@
     border: 1px solid rgba(137, 180, 250, 0.25);
     border-radius: 20px;
   }
-  .icon-wrap {
-    position: relative; width: 80px; height: 80px; flex-shrink: 0;
-    background: linear-gradient(135deg, #89b4fa 0%, #74c7ec 100%);
-    border-radius: 20px;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 8px 32px rgba(137, 180, 250, 0.35);
-  }
-  .braces {
-    font-family: 'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
-    font-size: 40px; font-weight: 700; color: #1e1e2e;
-    letter-spacing: -2px; line-height: 1;
-  }
+  .icon-wrap { position: relative; width: 80px; height: 80px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
   .text-block { display: flex; flex-direction: column; gap: 4px; }
   .name {
     font-size: 28px; font-weight: 700; color: #fff;
@@ -49,7 +38,17 @@
 <body>
 <div class="card">
   <div class="icon-wrap">
-    <div class="braces">{ }</div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e1e2e"/>
+      <stop offset="100%" stop-color="#282840"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="24" fill="url(#bg)"/>
+  <rect x="33" y="26" width="12" height="77" rx="2" fill="#89b4fa"/>
+  <rect x="84" y="26" width="12" height="77" rx="2" fill="#89b4fa"/>
+</svg>
   </div>
   <div class="text-block">
     <div class="name">ClearJSON</div>
