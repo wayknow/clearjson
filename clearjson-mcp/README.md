@@ -66,6 +66,27 @@ Search for keys, values, or paths inside a JSON structure. Returns matching node
     $.config.notify.email  →  true
 ```
 
+### `query_json`
+Query JSON with JSONPath. Supports dot notation, recursive descent (`$..author`), array slicing (`$[0:5]`), wildcards (`$..*`), and filter expressions (`$..book[?(@.price < 10)]`).
+
+```
+→ path: "$.store.book[*].title"
+← Matches: 2
+    $.store.book[0].title  →  "SICP"
+    $.store.book[1].title  →  "CLRS"
+```
+
+### `diff_json`
+Deep compare two JSON structures. Detects added keys, removed keys, changed values, and type changes with JSONPath locations.
+
+```
+→ json_a: {"name":"Alice","age":30}
+→ json_b: {"name":"Alice","age":31,"city":"NYC"}
+← Found 2 differences:
+    + $.city: "NYC"
+    ~ $.age: 30 → 31
+```
+
 ### `convert_json`
 Convert JSON to CSV, TSV, YAML, or TypeScript type definitions. CSV/TSV require a top-level array of objects.
 

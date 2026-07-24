@@ -21,6 +21,8 @@ import { minifyJsonSchema, minifyJson } from './tools/format.js';
 import { validateJsonSchema, validateJson } from './tools/validate.js';
 import { searchJsonSchema, searchJson } from './tools/search.js';
 import { convertJsonSchema, convertJson } from './tools/convert.js';
+import { queryJsonSchema, queryJson } from './tools/query.js';
+import { diffJsonSchema, diffJson } from './tools/diff.js';
 
 // ─── Tool registry ─────────────────────────────────
 
@@ -29,6 +31,8 @@ const tools = [
   { schema: minifyJsonSchema, handler: minifyJson },
   { schema: validateJsonSchema, handler: validateJson },
   { schema: searchJsonSchema, handler: searchJson },
+  { schema: queryJsonSchema, handler: queryJson },
+  { schema: diffJsonSchema, handler: diffJson },
   { schema: convertJsonSchema, handler: convertJson },
 ];
 
