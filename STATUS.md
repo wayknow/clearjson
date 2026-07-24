@@ -258,7 +258,7 @@
 - JSONPath 和 Diff 虽然 Chrome 扩展阶段砍掉了，但 MCP 场景 agent 高频需求且纯函数成本低
 - 零后端，纯本地运行。用户接入：`npx -y clearjson-mcp`
 - 41 个单元测试全过
-- ~~待发布 npm~~ ✅ `v1.0.0` 已发布：[npmjs.com/package/clearjson-mcp](https://www.npmjs.com/package/clearjson-mcp)
+- ~~待发布 npm~~ ✅ `v1.0.1` 已发布：[npmjs.com/package/clearjson-mcp](https://www.npmjs.com/package/clearjson-mcp)
 - 待注册 MCP 目录（mcp.so、smithery.ai、glama.ai/mcp）
 - 下一步：CWS 关键词优化 + Hacker News + 中文社区推广
 
