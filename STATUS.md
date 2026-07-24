@@ -263,7 +263,8 @@
 - 零后端，纯本地运行。用户接入：`npx -y clearjson-mcp`
 - 49 个单元测试全过
 - ~~待发布 npm~~ ✅ `v1.1.0` 已发布（含 Pro 许可证系统）：[npmjs.com/package/clearjson-mcp](https://www.npmjs.com/package/clearjson-mcp)
-- 待注册 MCP 目录（mcp.so、smithery.ai、glama.ai/mcp）
+- MCP 目录注册：mcp.so ✅ | awesome-mcp-servers PR 已提 ✅ | smithery.ai（不支持 stdio）
+- 产品页（clearjson.html）已加 MCP Server 区块 ✅
 - 下一步：CWS 关键词优化 + Hacker News + 中文社区推广
 
 ---
