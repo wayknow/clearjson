@@ -4,7 +4,10 @@
   "description": "ClearJSON MCP Server — the only large-file-safe JSON MCP. Format, validate, search, and convert JSON of any size.",
   "license": "MIT",
   "author": "wayknow",
-  "repository": "github:wayknow/clearjson",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wayknow/clearjson.git"
+  },
   "homepage": "https://wayknow.tech/clearjson.html",
   "keywords": ["json", "mcp", "json-formatter", "json-viewer", "claude-code", "mcp-server"],
   "main": "src/index.js",
