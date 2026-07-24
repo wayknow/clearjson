@@ -53,7 +53,12 @@ var ClearJSON = window.ClearJSON || {};
     var pre = body.querySelector('pre');
     if (pre) {
       var text = pre.textContent || '';
-      if (text.length > 0 && C.Parser.looksLikeJSON(text)) return true;
+      if (text.length > 0 && C.Parser.looksLikeJSON(text)) {
+        // Only trust <pre> content if it dominates the page.
+        // Otherwise it's just a code snippet (e.g. a JSON block in a README).
+        var bodyText = (body.textContent || '').trim();
+        if (text.length >= bodyText.length * 0.8) return true;
+      }
     }
 
     var children = body.children;

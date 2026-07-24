@@ -245,6 +245,7 @@
 - **CWS 商店描述**：去掉了不存在的 "fuzzy match"，改为 "match highlighting"
 - **首页 logo**：wayknow 网站 `/assets/clearjson-logo.svg` + `.png` 与扩展图标统一
 - `clearjson-v1.1.1.zip` 已重新打包，2026-07-23 提交 CWS 审核
+- **content script 误判修复**（2026-07-24）：`detectJSON()` 在 Content-Type 非 JSON 时，`<pre>` 内容需占页面正文 ≥80% 才触发格式化，避免 GitHub README 等含 JSON 代码块的普通网页被误接管
 
 ### Product Hunt
 - 7/14 发布，5 comments 已回复
