@@ -1,6 +1,6 @@
 {
   "name": "clearjson-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ClearJSON MCP Server — the only large-file-safe JSON MCP. Format, validate, search, and convert JSON of any size.",
   "license": "MIT",
   "author": "wayknow",

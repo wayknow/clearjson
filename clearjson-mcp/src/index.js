@@ -39,7 +39,7 @@ const tools = [
 // ─── Server setup ──────────────────────────────────
 
 const server = new Server(
-  { name: 'clearjson-mcp', version: '1.0.0' },
+  { name: 'clearjson-mcp', version: '1.0.1' },
   { capabilities: { tools: {} } }
 );
 

@@ -35,13 +35,28 @@ export function parse(text) {
     let column = 1;
 
     if (e instanceof SyntaxError) {
-      const match = e.message.match(/position\s+(\d+)/i);
-      if (match) {
-        const pos = parseInt(match[1], 10);
+      // Try legacy format: "Unexpected token X at position N"
+      const posMatch = e.message.match(/position\s+(\d+)/i);
+      if (posMatch) {
+        const pos = parseInt(posMatch[1], 10);
         const before = trimmed.substring(0, pos);
         line = (before.match(/\n/g) || []).length + 1;
         const lastNewline = before.lastIndexOf('\n');
         column = lastNewline === -1 ? pos + 1 : pos - lastNewline;
+      } else {
+        // Node v26+ format: 'Unexpected token "X", "...snippet..." is not valid JSON'
+        // or with truncation: 'Unexpected token "X", ..."...snippet..." is not valid JSON'
+        const snippetMatch = e.message.match(/, (?:\.\.\.)?"(.+)" is not valid JSON$/s);
+        if (snippetMatch) {
+          const snippet = snippetMatch[1];
+          const idx = trimmed.indexOf(snippet);
+          if (idx !== -1) {
+            const before = trimmed.substring(0, idx);
+            line = (before.match(/\n/g) || []).length + 1;
+            const lastNewline = before.lastIndexOf('\n');
+            column = lastNewline === -1 ? idx + 1 : idx - lastNewline;
+          }
+        }
       }
     }
 
