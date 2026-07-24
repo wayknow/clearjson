@@ -23,32 +23,42 @@ import { searchJsonSchema, searchJson } from './tools/search.js';
 import { convertJsonSchema, convertJson } from './tools/convert.js';
 import { queryJsonSchema, queryJson } from './tools/query.js';
 import { diffJsonSchema, diffJson } from './tools/diff.js';
+import { activateLicenseSchema, activateLicense, licenseStatusSchema, licenseStatus, deactivateLicenseSchema, deactivateLicense } from './tools/license.js';
+import { isActive, hasFeature } from './core/license.js';
 
 // ─── Tool registry ─────────────────────────────────
 
+const PRO_TOOLS = ['query_json', 'diff_json', 'convert_json'];
+
 const tools = [
-  { schema: formatJsonSchema, handler: formatJson },
-  { schema: minifyJsonSchema, handler: minifyJson },
-  { schema: validateJsonSchema, handler: validateJson },
-  { schema: searchJsonSchema, handler: searchJson },
-  { schema: queryJsonSchema, handler: queryJson },
-  { schema: diffJsonSchema, handler: diffJson },
-  { schema: convertJsonSchema, handler: convertJson },
+  // Free — always available
+  { schema: formatJsonSchema, handler: formatJson, pro: false },
+  { schema: minifyJsonSchema, handler: minifyJson, pro: false },
+  { schema: validateJsonSchema, handler: validateJson, pro: false },
+  { schema: searchJsonSchema, handler: searchJson, pro: false },
+  // Pro — require license
+  { schema: queryJsonSchema, handler: queryJson, pro: true },
+  { schema: diffJsonSchema, handler: diffJson, pro: true },
+  { schema: convertJsonSchema, handler: convertJson, pro: true },
+  // License management
+  { schema: activateLicenseSchema, handler: activateLicense, pro: false },
+  { schema: licenseStatusSchema, handler: licenseStatus, pro: false },
+  { schema: deactivateLicenseSchema, handler: deactivateLicense, pro: false },
 ];
 
 // ─── Server setup ──────────────────────────────────
 
 const server = new Server(
-  { name: 'clearjson-mcp', version: '1.0.1' },
+  { name: 'clearjson-mcp', version: '1.1.0' },
   { capabilities: { tools: {} } }
 );
 
-// List tools
+// List tools (always show all tools — even Pro ones — so agent knows they exist)
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return { tools: tools.map(t => t.schema) };
 });
 
-// Call tool
+// Call tool (gate Pro tools behind license)
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
   const tool = tools.find(t => t.schema.name === name);
@@ -56,6 +66,19 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   if (!tool) {
     return {
       content: [{ type: 'text', text: `Unknown tool: ${name}` }],
+      isError: true,
+    };
+  }
+
+  // Gate Pro tools
+  if (tool.pro && !isActive()) {
+    return {
+      content: [{
+        type: 'text',
+        text: `🔒 ${name} requires a Pro license.\n\n` +
+          `Activate: use activate_license with your key (format: CLJ-XXXX-XXXX-XXXX)\n` +
+          `Get a key: $29 lifetime at wayknow.tech/clearjson.html`
+      }],
       isError: true,
     };
   }

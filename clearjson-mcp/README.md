@@ -98,9 +98,28 @@ Convert JSON to CSV, TSV, YAML, or TypeScript type definitions. CSV/TSV require 
     }
 ```
 
+## Pro License
+
+`query_json`, `diff_json`, and `convert_json` require a Pro license. `format_json`, `minify_json`, `validate_json`, and `search_json` are free forever.
+
+```bash
+# Activate your license (one-time, persists across restarts)
+activate_license CLJ-XXXX-XXXX-XXXX
+
+# Check status
+license_status
+
+# Remove license from this machine
+deactivate_license
+```
+
+Get a license: **$29 lifetime** at [wayknow.tech/clearjson.html](https://wayknow.tech/clearjson.html). One key covers up to 3 devices. Same license works for both the MCP server and the Chrome extension.
+
+For development, set `CLEARJSON_PRO_DEV=1` to bypass the license check.
+
 ## Design
 
-- **Zero backend** — Runs locally in the MCP client's process. No servers, no accounts, no telemetry.
+- **Zero backend** — Runs locally in the MCP client's process. No servers, no accounts, no telemetry. License verification is the only network call.
 - **Pure functions** — Core logic is extracted from the ClearJSON browser extension and made Node.js-compatible. No DOM, no browser APIs.
 - **Large-file safe** — Uses the same parser architecture as ClearJSON Pro (streaming-capable). 100MB+ input is parsed without blocking.
 
