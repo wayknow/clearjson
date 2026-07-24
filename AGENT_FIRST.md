@@ -1,7 +1,7 @@
 # ClearJSON Agent-First 路线
 
 > 给 ClearJSON 加一条 agent 可调用的通道。同一个功能、同一个核心、两个入口——人通过 UI，agent 通过 CLI/MCP。
-> 最后更新：2026-07-22
+> 最后更新：2026-07-24 | 已实现：v1.1.0 npm 发布
 
 ---
 
@@ -155,9 +155,10 @@ clearjson-mcp/
 
 ## 八、时间线
 
-| 阶段 | 内容 | 预计 |
-|------|------|------|
-| 1 | 从 ClearJSON 抽取核心逻辑为独立 npm 包 | 1 天 |
-| 2 | 封装 MCP server（5 个工具） | 1 天 |
-| 3 | 发布到 npm + 注册 MCP 目录 | 0.5 天 |
-| 4 | 更新 clearjson.html + GitHub README | 0.5 天 |
+| 阶段 | 内容 | 预计 | 实际 |
+|------|------|------|------|
+| 1 | 从 ClearJSON 抽取核心逻辑为独立 npm 包 | 1 天 | ✅ 2026-07-24 |
+| 2 | 封装 MCP server（7 个功能 + 3 个许可证工具） | 1 天 | ✅ 2026-07-24 |
+| 3 | 发布到 npm + 添加 Pro 许可证系统 | 0.5 天 | ✅ v1.1.0 |
+| 4 | 更新 clearjson.html + GitHub README | 0.5 天 | ⏳ |
+| 5 | 注册 MCP 目录（mcp.so、smithery.ai） | 0.5 天 | ⏳ |

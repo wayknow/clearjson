@@ -1,7 +1,8 @@
 # ClearJSON — 企划书
 
-> 隐私优先、开源的浏览器 JSON 查看器。
+> 隐私优先的浏览器 JSON 查看器 + MCP 服务器。
 > 200 万用户被背叛后，需要一个值得信任的替代品。
+> 最后更新：2026-07-24 | 状态：Chrome 扩展 + MCP 均已上线
 
 ---
 
@@ -116,23 +117,28 @@ Hacker News 曝光后，200 万用户开始寻找替代品。
 ✅ 支持 localhost 和 file:// URL
 ```
 
-### 5.2 Pro 版 — $29 终身买断
+### 5.2 Pro 版 — $29 终身买断（扩展）
 
 ```
 💰 大文件优化：虚拟滚动，100MB JSON 不卡
-💰 JSONPath 查询（输入 $.store.book[0].title 直接定位）
-💰 JSON Diff 对比（粘贴两段 JSON，高亮差异）
-💰 导出为 CSV / TSV
-💰 30 种主题（含 Monokai、Dracula、Nord、One Dark、Solarized）
-💰 自定义快捷键
-💰 大数字/大字符串截断显示优化
+💰 JWT 自动解码（Header + Payload 内联展示）
+💰 高级搜索（正则表达式，匹配导航，全文档高亮）
+💰 多格式导出（CSV / TSV / YAML / TypeScript 递归类型推断）
+💰 30 种主题（含 Monokai、Dracula、Nord、One Dark、Solarized、Catppuccin…）
+💰 自定义快捷键（6 个全可定制）
 ```
 
-### 5.3 Pro 订阅 — $2/月 或 $20/年
+### 5.3 MCP Server（npm: clearjson-mcp）
+
+同一份 Pro license 覆盖扩展和 MCP 两个入口：
 
 ```
-= Pro 全部功能 + 每月新主题更新
+免费工具：format_json / minify_json / validate_json / search_json
+Pro 工具（需 license）：query_json / diff_json / convert_json
+许可证管理：activate_license / license_status / deactivate_license
 ```
+
+JSONPath 和 Diff 在 Chrome 扩展阶段被砍（浏览器已有免费竞品），但 MCP 场景 agent 高频需求，纯函数成本极低，补回来了。详见 [AGENT_FIRST.md](AGENT_FIRST.md)。
 
 ### 5.4 不做的
 
@@ -287,10 +293,18 @@ SnapMark          ClearJSON
 
 ---
 
-## 十一、下一步
+## 十一、实际进展（vs 企划）
 
-1. 创建 GitHub 仓库，fork 原 JSON Formatter 的最后一版干净代码（v0.8，MIT 协议）
-2. 在此基础上重构：去追踪、加功能、做商业化
-3. 与 SnapMark 并行开发（每天 4 小时，两个项目各 2 小时）
-4. 先出 MVP（检测 JSON → 格式化 → 树形视图），1-2 周
-5. 再加 Pro 功能（大文件、JSONPath、Diff），再 1-2 周
+| 企划 | 实际 |
+|------|------|
+| JSONPath / Diff 在扩展 Pro 里 | ❌ 砍掉——浏览器市场已有免费竞品做得好 |
+| 订阅制（$2/月） | ❌ 砍掉——纯客户端无持续成本，终身买断就够了 |
+| JSONPath / Diff 在 MCP 里 | ✅ 补回来了——agent 场景高频需求，纯函数成本低 |
+| AI 集成 | ❌ 不做——隐私矛盾 + API 成本不可控 |
+| MCP Server | ✅ 新增——企划时没想到，但 agent-first 思路是自然的延伸 |
+| 扩展 Pro 功能 | ✅ 全部实现（大文件/JWT/搜索/导出/主题/快捷键） |
+| Chrome Web Store 上架 | ✅ v1.0.0 已上架，v1.1.1 审核中 |
+| npm 发布 | ✅ clearjson-mcp v1.1.0 |
+| Product Hunt | ✅ 7/14 发布，28 展示 → 15 安装 |
+
+当前待办：MCP 目录收录、CWS 关键词优化、中文社区推广。

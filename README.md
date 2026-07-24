@@ -1,8 +1,25 @@
 # ClearJSON
 
-> Privacy-first browser JSON viewer. Zero tracking. Fully local.
+> Privacy-first browser JSON viewer. Zero tracking. Fully local. Plus an MCP server for AI agents.
 
 ClearJSON is a Chrome extension that automatically detects and formats JSON responses in your browser. Built in response to the [JSON Formatter controversy](https://news.ycombinator.com/item?id=47721946) — we will never inject ads, track you, or sell your data.
+
+## MCP Server (New!)
+
+For AI agents (Claude Code, etc.): `npx -y clearjson-mcp`
+
+```json
+{
+  "mcpServers": {
+    "clearjson": {
+      "command": "npx",
+      "args": ["-y", "clearjson-mcp"]
+    }
+  }
+}
+```
+
+**10 tools** — format, validate, search, JSONPath query, deep diff, convert (CSV/TSV/YAML/TypeScript), plus license management. The only large-file-safe JSON MCP server. See [AGENT_FIRST.md](AGENT_FIRST.md) for the full rationale.
 
 ## Features
 
@@ -49,6 +66,14 @@ clearjson/
 │   ├── src/index.js           # API: verify/generate/webhook/admin
 │   ├── schema.sql             # D1 database schema
 │   └── wrangler.toml          # Worker config
+├── clearjson-mcp/             # MCP server (npm: clearjson-mcp)
+│   ├── package.json
+│   ├── src/
+│   │   ├── index.js           # MCP entry point (stdio transport)
+│   │   ├── core/              # Core logic (parser, exporter, license)
+│   │   └── tools/             # 7 JSON tools + 3 license tools
+│   ├── tests/                 # 49 MCP unit tests
+│   └── README.md
 ├── src/
 │   ├── content/
 │   │   ├── content.js         # Content script (JSON detection + viewer injection)
@@ -64,18 +89,11 @@ clearjson/
 │       ├── parser.js          # JSON detection + parsing
 │       ├── tokenizer.js       # Syntax highlighting tokenizer
 │       ├── themes.js          # 30 theme definitions
-│       ├── license.js         # Pro license system (online verify + offline fallback)
+│       ├── license.js         # Pro license system
 │       ├── export.js          # CSV/TSV/YAML/TypeScript export
 │       ├── stream-parser.js   # Web Worker streaming parser
 │       ├── virtual-tree.js    # Virtual scrolling tree view
 │       └── tree.js            # Standard tree view renderer
-├── tests/                     # Test suite (Node built-in test runner)
-│   ├── helpers/setup.js
-│   ├── test-parser.js
-│   ├── test-tokenizer.js
-│   ├── test-jwt.js
-│   ├── test-license.js
-│   └── test-export.js
 ├── tests/                     # 136 unit tests (Node built-in runner)
 │   ├── helpers/setup.js
 │   ├── test-parser.js
@@ -109,7 +127,8 @@ clearjson/
 # 3. Edit files and click refresh on the extension card
 
 # Run unit tests (zero dependencies, Node 18+):
-npm test                    # 136 tests
+npm test                    # 136 tests (Chrome extension)
+cd clearjson-mcp && npm test   # 49 tests (MCP server)
 
 # Run static analysis checklist (130 checks):
 node test-data/run-checklist.js
@@ -121,10 +140,10 @@ node test-data/browser-test.js
 node test-data/server.js
 ```
 
-### Current Status (v1.1.0 — Pro Release Live on CWS)
+### Current Status (v1.1.1 — live on CWS)
 
 All features implemented. Pro available via Creem ($29 lifetime).
-136 unit tests passing. Preparing for Chrome Web Store submission.
+136 unit tests passing. MCP server v1.1.0 published to npm.
 
 See [STATUS.md](STATUS.md) for full project state, architecture decisions, and release checklist.
 

@@ -174,9 +174,9 @@ Creem 支付成功后自动调用，生成 License Key 并存入数据库。
 
 ## 扩展端集成
 
-ClearJSON 扩展需要在 `license.js` 中添加在线验证，替代当前的本地 checksum。
+ClearJSON 扩展和 MCP Server 都需要在线验证。扩展在 `license.js` 中，MCP 在 `clearjson-mcp/src/core/license.js` 中。
 
-扩展每次启动时调用一次 `POST /api/license/verify`，成功后缓存结果到 `localStorage` + `chrome.storage.local`。缓存有效期 7 天，服务器不可达时降级为本地格式校验。
+每次启动时调用一次 `POST /api/license/verify`，成功后缓存结果到本地存储。缓存有效期 7 天，服务器不可达时降级为本地格式校验。
 
 ## License Key 格式
 

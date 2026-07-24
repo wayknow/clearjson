@@ -1,6 +1,6 @@
 # ClearJSON — 产品功能列表
 
-> 最后更新：2026-07-13 | v1.1.0 已上架 Chrome Web Store（含 Pro 内购）
+> 最后更新：2026-07-24 | v1.1.0 已上架 CWS，MCP v1.1.0 已发布 npm
 
 ---
 
@@ -187,8 +187,8 @@
 |------|------|
 | AI 集成 | 隐私承诺矛盾 + API 成本不可控 |
 | 云端同步 | 养不起后端，Chrome 自带 `storage.sync` |
-| JSON Diff 对比 | Just JSON、JsonKing 免费做了，无差异化 |
-| JSONPath 查询 | JSON Query Tool 免费做得很好，不值得重造 |
+| JSON Diff 对比（浏览器） | Just JSON、JsonKing 免费做了，无差异化 |
+| JSONPath 查询（浏览器） | JSON Query Tool 免费做得很好，不值得重造 |
 | JSON Schema 校验 | 场景窄、实现重、JSONVault Pro 已有 |
 | 高级编辑模式 | 没人真在浏览器里编辑 JSON |
 | 收集团队/企业版 | 暂不考虑，先服务个人开发者 |
@@ -196,6 +196,29 @@
 | 注册账号 | 永远不做 |
 | 追踪/统计 | 永远不做 |
 | 订阅制 | 不做——纯客户端工具没有持续服务成本，终身买断就够了 |
+
+> **注：** JSONPath 和 Diff 在浏览器扩展中不做，但在 MCP Server 中已实现（`query_json` + `diff_json`）。MCP 场景下 agent 不会"装另一个 server"，且纯函数成本极低。详见 [AGENT_FIRST.md](AGENT_FIRST.md)。
+
+---
+
+## 十五、MCP Server（clearjson-mcp）
+
+npm: `npx -y clearjson-mcp` | v1.1.0 | 49 个测试
+
+| 工具 | 层级 | 功能 |
+|------|:--:|------|
+| `format_json` | 🆓 | 格式化/美化 + 统计信息 |
+| `minify_json` | 🆓 | 压缩/最小化 |
+| `validate_json` | 🆓 | 验证 + 错误定位（行列号+上下文） |
+| `search_json` | 🆓 | key/value/path 搜索 + JSONPath 结果 |
+| `query_json` | 💰 | 完整 JSONPath（dot/递归/切片/通配/过滤器） |
+| `diff_json` | 💰 | 深度比对（added/removed/changed/type_change） |
+| `convert_json` | 💰 | CSV/TSV/YAML/TypeScript 转换 |
+| `activate_license` | — | 激活 Pro 许可证（CLJ-XXXX-XXXX-XXXX） |
+| `license_status` | — | 查看激活状态/设备数/在线状态 |
+| `deactivate_license` | — | 停用并释放设备槽位 |
+
+> 💰 Pro 工具需 $29 终身许可证，与 Chrome 扩展共享同一 key。
 
 ---
 
@@ -207,8 +230,7 @@
 | **Phase 2** 🟡 P1 | 图片预览、10 种主题、搜索、大文件虚拟滚动、许可证系统（在线验证） | 2-3 周 | ✅ 可发布到 CWS |
 | **Phase 3** 🟢 P2 | JWT 解码、30 主题解锁、自定义快捷键、TypeScript 递归推断、测试套件 | 2-3 周 | ✅ 功能完整版 |
 | **Phase 4** ⚪ P3 | 自动化测试基础设施、JSON Schema 推断、Edge/Firefox、国际化 | 发布前 | ✅ 测试就绪，其他视市场反馈 |
-
----
+| **Phase 5** 🆕 | MCP Server（7 功能 + 3 许可证工具）、npm 发布、Pro 捆绑 | 1 天 | ✅ v1.1.0 |
 
 ## Pro 功能一图流
 

@@ -7,8 +7,10 @@
 - **技术栈**：Vanilla JS + IIFE 模块模式，零框架依赖，CSS 变量驱动主题
 - **测试**：`npm test`（136 个单元测试，Node 原生 test runner，零外部依赖）
 - **当前状态**：无技术债，所有核心 + Pro 功能已实现
+- **MCP Server**：`clearjson-mcp/` — 7 个 JSON 工具 + 3 个许可证管理工具，已发布 npm v1.1.0（`npx -y clearjson-mcp`）
 - **详细状态**：[STATUS.md](STATUS.md)
 - **功能列表**：[features.md](features.md)
+- **Agent-First 路线**：[AGENT_FIRST.md](AGENT_FIRST.md)
 
 ## 关键架构
 
