@@ -249,6 +249,14 @@
 ### Product Hunt
 - 7/14 发布，5 comments 已回复
 - 28 展示 → 15 安装（53% 转化），全部来自美国（PH 流量）
+
+### MCP 服务器 ✅（2026-07-24）
+- **clearjson-mcp** — 本地 MCP server，5 个工具：`format_json` / `minify_json` / `validate_json` / `search_json` / `convert_json`
+- 核心逻辑从 `src/utils/` 抽取为纯函数 Node.js 包（parser + exporter）
+- 唯一差异化：大文件不崩（竞品 jsonfmt-mcp / json-forge-mcp 全量 `JSON.parse`，大文件必崩）
+- 零后端，纯本地运行。用户接入：`npx -y clearjson-mcp`
+- 26 个单元测试全过
+- 待发布 npm + 注册 MCP 目录
 - 下一步：CWS 关键词优化 + Hacker News + 中文社区推广
 
 ---
