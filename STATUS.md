@@ -251,14 +251,17 @@
 - 28 展示 → 15 安装（53% 转化），全部来自美国（PH 流量）
 
 ### MCP 服务器 ✅（2026-07-24）
-- **clearjson-mcp** — 本地 MCP server，7 个工具：`format_json` / `minify_json` / `validate_json` / `search_json` / `query_json` / `diff_json` / `convert_json`
+- **clearjson-mcp** — 本地 MCP server，10 个工具（含 3 个许可证管理）
+  - 免费：`format_json` / `minify_json` / `validate_json` / `search_json`
+  - Pro（需 license）：`query_json` / `diff_json` / `convert_json`
+  - 许可证：`activate_license` / `license_status` / `deactivate_license`
+  - 与 Chrome 扩展共享同一套许可证体系（CLJ-XXXX-XXXX-XXXX + 同一验证 API）
 - JSONPath 查询（`$..book[?(@.price > 50)]`）和深度比对（added/removed/changed）
 - 核心逻辑从 `src/utils/` 抽取为纯函数 Node.js 包（parser + exporter）
 - 唯一差异化：大文件不崩（竞品全量 `JSON.parse`，大文件必崩）
-- JSONPath 和 Diff 虽然 Chrome 扩展阶段砍掉了，但 MCP 场景 agent 高频需求且纯函数成本低
 - 零后端，纯本地运行。用户接入：`npx -y clearjson-mcp`
-- 41 个单元测试全过
-- ~~待发布 npm~~ ✅ `v1.0.1` 已发布：[npmjs.com/package/clearjson-mcp](https://www.npmjs.com/package/clearjson-mcp)
+- 49 个单元测试全过
+- ~~待发布 npm~~ ✅ `v1.1.0` 已发布（含 Pro 许可证系统）：[npmjs.com/package/clearjson-mcp](https://www.npmjs.com/package/clearjson-mcp)
 - 待注册 MCP 目录（mcp.so、smithery.ai、glama.ai/mcp）
 - 下一步：CWS 关键词优化 + Hacker News + 中文社区推广
 
