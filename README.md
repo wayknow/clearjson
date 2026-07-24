@@ -1,5 +1,9 @@
 # ClearJSON
 
+[![npm version](https://img.shields.io/npm/v/clearjson-mcp)](https://www.npmjs.com/package/clearjson-mcp)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/bgcicghmdpefapfdeghgealacphkgobk)](https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
 > Privacy-first browser JSON viewer. Zero tracking. Fully local. Plus an MCP server for AI agents.
 
 ClearJSON is a Chrome extension that automatically detects and formats JSON responses in your browser. Built in response to the [JSON Formatter controversy](https://news.ycombinator.com/item?id=47721946) — we will never inject ads, track you, or sell your data.
@@ -19,7 +23,7 @@ For AI agents (Claude Code, etc.): `npx -y clearjson-mcp`
 }
 ```
 
-**10 tools** — format, validate, search, JSONPath query, deep diff, convert (CSV/TSV/YAML/TypeScript), plus license management. The only large-file-safe JSON MCP server. See [AGENT_FIRST.md](AGENT_FIRST.md) for the full rationale.
+**10 tools** — format, validate, search, JSONPath query, deep diff, convert (CSV/TSV/YAML/TypeScript), plus license management. The only large-file-safe JSON MCP server. Available on [npm](https://www.npmjs.com/package/clearjson-mcp) and [mcp.so](https://mcp.so). See [AGENT_FIRST.md](AGENT_FIRST.md) for the full rationale.
 
 ## Features
 
@@ -166,6 +170,7 @@ Our permissions are minimal:
 ## Links
 
 - Product page: [wayknow.tech/clearjson.html](https://wayknow.tech/clearjson.html)
+- MCP Server: [npmjs.com/package/clearjson-mcp](https://www.npmjs.com/package/clearjson-mcp)
 - Privacy policy: [wayknow.tech/clearjson-privacy.html](https://wayknow.tech/clearjson-privacy.html)
 - Support: support@wayknow.tech
 
