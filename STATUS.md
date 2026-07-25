@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-07-24 | 当前版本：v1.1.1（CWS 审核中）| Edge v1.1.2（审核中）| Product Hunt 5 comments 已回复，28 展示/15 安装
+> 最后更新：2026-07-26 | 当前版本：v1.1.1（CWS 已上架 ✅）| Edge v1.1.2（审核中）| Glama 已收录 ✅ | Product Hunt 28 展示/15 安装
 
 ---
 
@@ -244,14 +244,19 @@
 - **退款政策移除**：ClearJSON 和 SnapMark 的 14 天退款政策页面及所有引用已下掉，与竞品对齐
 - **CWS 商店描述**：去掉了不存在的 "fuzzy match"，改为 "match highlighting"
 - **首页 logo**：wayknow 网站 `/assets/clearjson-logo.svg` + `.png` 与扩展图标统一
-- `clearjson-v1.1.1.zip` 已重新打包，2026-07-23 提交 CWS 审核
-- **content script 误判修复**（2026-07-24）：`detectJSON()` 在 Content-Type 非 JSON 时，`<pre>` 内容需占页面正文 ≥80% 才触发格式化，避免 GitHub README 等含 JSON 代码块的普通网页被误接管
-- **GitHub repo 公开**：设 public，开源 MIT，方便 MCP 目录收录和社区协作
-- **MCP 分发**：README 加 badge（npm/CWS/license）+ npm/mcp.so 链接
-- **产品页**：`clearjson.html` 新增 MCP Server 区块（10 工具 + npx 一键安装）
+- `clearjson-v1.1.1.zip` 已提交 CWS 审核，2026-07-25 审核通过 ✅
+
+### v1.1.2 修复（2026-07-24，未正式发布）
+- **content script 误判修复**：`detectJSON()` 在 Content-Type 非 JSON 时，`<pre>` 内容需占页面正文 ≥80% 才触发格式化，避免 GitHub README 等含 JSON 代码块的普通网页被误接管
 - **Promo 图片修复**：3 张 promo tile 的 `{}` 旧 logo 替换为当前两条蓝色竖线设计
-- **Edge Add-ons**：重新打包（含 detectJSON 修复），已提交审核
-- **Glama + Dockerfile**：根目录 + clearjson-mcp/ 各一个 Dockerfile，待 Glama 审核通过后加 badge 到 awesome-mcp-servers PR
+
+### 分发 & 推广推进（2026-07-24）
+- **GitHub repo 公开**：设 public，开源 MIT，方便 MCP 目录收录和社区协作
+- **README**：新增 badge（npm/CWS/license）+ npm/mcp.so 链接
+- **产品页**：`clearjson.html` 新增 MCP Server 区块（10 工具 + npx 一键安装）
+- **MCP 目录**：mcp.so ✅ | Glama 已收录 ✅ | awesome-mcp-servers PR 待加 badge
+- **Edge Add-ons**：已提交审核 ✅（Store ID: 0RDCKFRQ308M）
+- **Dockerfile**：根目录 + clearjson-mcp/ 各一个，用于 Glama 安全检查
 
 ### Product Hunt
 - 7/14 发布，5 comments 已回复
