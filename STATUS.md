@@ -254,7 +254,7 @@
 - **GitHub repo 公开**：设 public，开源 MIT，方便 MCP 目录收录和社区协作
 - **README**：新增 badge（npm/CWS/license）+ npm/mcp.so 链接
 - **产品页**：`clearjson.html` 新增 MCP Server 区块（10 工具 + npx 一键安装）
-- **MCP 目录**：mcp.so ✅ | Glama 已收录 ✅ | awesome-mcp-servers PR 已加 badge ✅
+- **MCP 目录**：mcp.so ✅ | Glama 已收录 ✅（build 成功，v0.1.0 已发布）| awesome-mcp-servers PR 已加 badge，等 Glama score
 - **Edge Add-ons**：已提交审核 ✅（Store ID: 0RDCKFRQ308M）
 - **Dockerfile**：根目录 + clearjson-mcp/ 各一个，用于 Glama 安全检查
 
