@@ -458,6 +458,7 @@ var ClearJSON = window.ClearJSON || {};
 | 竞品 | 优势 | 劣势 |
 |------|------|------|
 | JSONVault Pro | 功能最全（JWT/Schema/500MB） | 订阅制 |
+| JSON Pretty Pro | Time Machine、Table View、color chips | 免费不可持续，无大文件，无 MCP |
 | TreeJSON | 免费，YAML/XML/CSV | 只读，无大文件 |
 | JSON Alexander | Wes Bos 出品，社区信任 | 功能基础 |
 | arnav-kr | 60 免费主题 | 无 Diff/JSONPath/大文件 |
