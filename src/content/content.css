@@ -59,15 +59,15 @@
 }
 
 .cj-tb-btn {
-  padding: 4px 10px;
+  padding: 4px 12px;
   font-family: inherit;
   font-size: 12px;
   color: var(--cj-text-secondary);
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: opacity 0.15s ease, background 0.15s ease;
   white-space: nowrap;
 }
 
@@ -79,6 +79,12 @@
 
 .cj-tb-btn:active {
   background: var(--cj-selected);
+  opacity: 0.8;
+}
+
+.cj-tb-btn:focus-visible {
+  outline: 2px solid var(--cj-key);
+  outline-offset: 1px;
 }
 
 /* ================================================================
@@ -137,6 +143,12 @@
 
 .cj-toggle:not(.cj-empty):hover {
   color: var(--cj-text);
+}
+
+.cj-toggle:not(.cj-empty):focus-visible {
+  outline: 2px solid var(--cj-key);
+  outline-offset: 1px;
+  border-radius: 2px;
 }
 
 .cj-toggle.cj-empty {
@@ -383,7 +395,7 @@
   background: var(--cj-surface);
   border: 1px solid var(--cj-guide);
   border-radius: 6px;
-  padding: 2px 4px;
+  padding: 4px;
   min-width: 200px;
   max-width: 400px;
 }
@@ -407,6 +419,12 @@
   min-width: 100px;
 }
 
+.cj-search-input:focus-visible {
+  outline: 2px solid var(--cj-key);
+  outline-offset: -2px;
+  border-radius: 3px;
+}
+
 .cj-search-input::placeholder {
   color: var(--cj-text-secondary);
   opacity: 0.6;
@@ -422,9 +440,9 @@
   user-select: none;
 }
 
-.cj-search-nav {
-  font-size: 8px !important;
-  padding: 2px 6px !important;
+.cj-search-wrap .cj-tb-btn.cj-search-nav {
+  font-size: 8px;
+  padding: 2px 6px;
   line-height: 1;
 }
 
@@ -527,6 +545,10 @@
   margin-bottom: 6px;
 }
 
+.cj-upgrade-box p.cj-upgrade-highlight {
+  margin-bottom: 16px;
+}
+
 .cj-upgrade-actions {
   display: flex;
   gap: 8px;
@@ -552,6 +574,15 @@
   opacity: 0.85;
 }
 
+.cj-btn-primary:active {
+  opacity: 0.7;
+}
+
+.cj-btn-primary:focus-visible {
+  outline: 2px solid var(--cj-key);
+  outline-offset: 2px;
+}
+
 .cj-btn-upgrade {
   padding: 10px 20px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -562,22 +593,36 @@
   border: 1px solid var(--cj-key);
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: opacity 0.15s, background 0.15s;
 }
 
 .cj-btn-upgrade:hover {
   background: var(--cj-hover);
 }
 
-/* Pro badge button in toolbar */
-.cj-tb-pro {
-  color: var(--cj-key) !important;
-  border-color: var(--cj-key) !important;
-  font-weight: 600 !important;
+.cj-btn-upgrade:active {
+  opacity: 0.8;
 }
 
-.cj-tb-pro:hover {
-  background: var(--cj-selected) !important;
+.cj-btn-upgrade:focus-visible {
+  outline: 2px solid var(--cj-key);
+  outline-offset: 2px;
+}
+
+/* Pro badge button in toolbar */
+.cj-toolbar .cj-tb-btn.cj-tb-pro {
+  color: var(--cj-key);
+  border-color: var(--cj-key);
+  font-weight: 600;
+}
+
+.cj-toolbar .cj-tb-btn.cj-tb-pro:hover {
+  background: var(--cj-selected);
+}
+
+/* Theme button when a Pro-only theme is active */
+.cj-tb-btn.cj-theme-pro-active {
+  color: #cba6f7;
 }
 
 /* ================================================================
@@ -598,12 +643,24 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   z-index: 9999;
   opacity: 1;
-  transition: opacity 0.3s ease;
   pointer-events: none;
+  animation: cj-toast-in 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes cj-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 .cj-toast-out {
   opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 /* ================================================================
@@ -687,6 +744,13 @@
   justify-content: center;
   padding: 60px;
   text-align: center;
+  color: var(--cj-text-secondary);
+}
+
+.cj-streaming-status {
+  padding: 40px;
+  text-align: center;
+  font-size: 16px;
   color: var(--cj-text-secondary);
 }
 
@@ -819,4 +883,26 @@
 
 .cj-jwt-raw {
   cursor: default;
+}
+
+/* ================================================================
+   UTILITY CLASSES
+   ================================================================ */
+
+.cj-hidden {
+  display: none !important;
+}
+
+/* ================================================================
+   REDUCED MOTION
+   ================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -169,7 +169,7 @@ var ClearJSON = window.ClearJSON || {};
       '<h2>Large File Detected</h2>' +
       '<p>This JSON file is <strong>' + sizeStr + '</strong>.</p>' +
       '<p>Free viewers may freeze or crash on files this large.</p>' +
-      '<p style="margin-bottom:16px"><strong>ClearJSON Pro</strong> handles files up to 500 MB with zero lag — virtual scrolling and streaming parser.</p>' +
+      '<p class="cj-upgrade-highlight"><strong>ClearJSON Pro</strong> handles files up to 500 MB with zero lag — virtual scrolling and streaming parser.</p>' +
       '<div class="cj-upgrade-actions">' +
         '<button class="cj-btn-primary" id="cj-btn-try-parse">Try Anyway</button>' +
         '<button class="cj-btn-upgrade" id="cj-btn-upgrade">Learn About Pro</button>' +
@@ -222,12 +222,12 @@ var ClearJSON = window.ClearJSON || {};
     // Loading indicator
     var loadingEl = document.createElement('div');
     loadingEl.id = 'cj-loading';
-    loadingEl.innerHTML = '<div style="padding:40px;text-align:center;font-size:16px;color:var(--cj-text-secondary)">Streaming parse…</div>';
+    loadingEl.innerHTML = '<div class="cj-streaming-status">Streaming parse…</div>';
     document.body.appendChild(loadingEl);
 
     C.StreamParser.parseLarge(rawText, function (progress) {
       if (loadingEl) {
-        loadingEl.innerHTML = '<div style="padding:40px;text-align:center;font-size:16px;color:var(--cj-text-secondary)">Streaming parse… ' + Math.round(progress.percent) + '%</div>';
+        loadingEl.innerHTML = '<div class="cj-streaming-status">Streaming parse… ' + Math.round(progress.percent) + '%</div>';
       }
     }).then(function (result) {
       if (loadingEl) { loadingEl.remove(); loadingEl = null; }
@@ -658,9 +658,13 @@ var ClearJSON = window.ClearJSON || {};
     var themeBtn = document.querySelector('.cj-tb-theme');
     if (themeBtn) {
       themeBtn.textContent = C.Themes.getThemeLabel(next);
-      // Show Pro badge if on a Pro theme
+      // Highlight theme button if on a Pro theme
       var isProTheme = isPro && C.Themes.PRO_THEMES.indexOf(next) !== -1;
-      themeBtn.style.color = isProTheme ? 'var(--cj-accent, #cba6f7)' : '';
+      if (isProTheme) {
+        themeBtn.classList.add('cj-theme-pro-active');
+      } else {
+        themeBtn.classList.remove('cj-theme-pro-active');
+      }
     }
 
     showToast('Theme: ' + C.Themes.getThemeLabel(next));

@@ -94,7 +94,7 @@
     document.getElementById('btn-load-sample').addEventListener('click', function () {
       var sample = JSON.stringify({
         name: 'ClearJSON',
-        version: '1.1.1',
+        version: '1.1.2',
         free: true,
         themes: ['dark', 'light', 'sepia', 'monokai', 'dracula'],
         stats: { users: 1234, rating: 4.8 },
@@ -130,7 +130,7 @@
 
     // Settings
     document.getElementById('btn-settings-view').addEventListener('click', function () {
-      if (settingsPage.style.display === 'none' || !settingsPage.style.display) {
+      if (settingsPage.classList.contains('cj-hidden')) {
         showSettingsPage();
       } else {
         hideSettingsPage();
@@ -159,18 +159,18 @@
     });
 
     // Drop file anywhere on landing page
-    landing.addEventListener('dragover', function (e) { e.preventDefault(); landing.style.opacity = '0.6'; });
-    landing.addEventListener('dragleave', function () { landing.style.opacity = ''; });
+    landing.addEventListener('dragover', function (e) { e.preventDefault(); landing.classList.add('cj-drag-over'); });
+    landing.addEventListener('dragleave', function () { landing.classList.remove('cj-drag-over'); });
     landing.addEventListener('drop', function (e) {
       e.preventDefault();
-      landing.style.opacity = '';
+      landing.classList.remove('cj-drag-over');
       var file = e.dataTransfer.files[0];
       if (file) readFile(file);
     });
 
     // Paste anywhere on page → auto-format
     document.addEventListener('paste', function (e) {
-      if (landing.style.display === 'none') return;
+      if (landing.classList.contains('cj-hidden')) return;
       if (e.target.tagName === 'INPUT') return;
       var text = (e.clipboardData || window.clipboardData).getData('text');
       if (text && text.trim()) {
@@ -215,16 +215,14 @@
 
   function formatLargeJSON(text, sizeBytes) {
     hideAll();
-    landing.style.display = 'none';
-    toolbar.style.display = 'flex';
-    treeView.style.display = '';
-    rawView.style.display = 'none';
-    document.getElementById('btn-back').style.display = '';
+    toolbar.classList.remove('cj-hidden');
+    treeView.classList.remove('cj-hidden');
+    rawView.classList.add('cj-hidden');
 
-    treeView.innerHTML = '<div style="padding:40px;text-align:center;color:var(--cj-text-secondary)">Streaming parse…</div>';
+    treeView.innerHTML = '<div class="cj-streaming-status">Streaming parse…</div>';
 
     ClearJSON.StreamParser.parseLarge(text, function (progress) {
-      treeView.innerHTML = '<div style="padding:40px;text-align:center;color:var(--cj-text-secondary)">Streaming parse… ' + Math.round(progress.percent) + '%</div>';
+      treeView.innerHTML = '<div class="cj-streaming-status">Streaming parse… ' + Math.round(progress.percent) + '%</div>';
     }).then(function (result) {
       if (!result.ok) { showError(result); return; }
 
@@ -252,11 +250,11 @@
 
   function showResult(result) {
     hideAll();
-    toolbar.style.display = 'flex';
-    treeView.style.display = '';
-    rawView.style.display = 'none';
+    toolbar.classList.remove('cj-hidden');
+    treeView.classList.remove('cj-hidden');
+    rawView.classList.add('cj-hidden');
     document.getElementById('btn-raw').textContent = 'Raw';
-    document.getElementById('btn-back').style.display = '';
+    document.getElementById('btn-raw').classList.remove('cj-hidden');
 
     treeView.innerHTML = '';
     var rendered = ClearJSON.Tree.render(result.data, {
@@ -267,7 +265,7 @@
     treeView.appendChild(state.treeRoot);
 
     // Stats bar
-    statsBar.style.display = 'flex';
+    statsBar.classList.remove('cj-hidden');
     updateStats(result.stats);
   }
 
@@ -278,9 +276,9 @@
     state.rawText = '';
     state.rawMode = false;
     hideAll();
-    toolbar.style.display = 'none';
-    landing.style.display = '';
-    statsBar.style.display = 'none';
+    toolbar.classList.add('cj-hidden');
+    statsBar.classList.add('cj-hidden');
+    landing.classList.remove('cj-hidden');
     treeView.innerHTML = '';
     rawView.innerHTML = '';
     document.getElementById('cj-search-input').value = '';
@@ -290,8 +288,9 @@
 
   function showLargeFileGate(text) {
     hideAll();
-    toolbar.style.display = 'none';
-    treeView.style.display = '';
+    toolbar.classList.add('cj-hidden');
+    statsBar.classList.add('cj-hidden');
+    treeView.classList.remove('cj-hidden');
     treeView.innerHTML = '';
 
     var sizeMB = (text.length / 1048576).toFixed(1);
@@ -328,23 +327,23 @@
     state.rawMode = !state.rawMode;
 
     if (state.rawMode) {
-      treeView.style.display = 'none';
+      treeView.classList.add('cj-hidden');
       var formatted = state.parsedData ? JSON.stringify(state.parsedData, null, 2) : state.rawText;
       rawView.innerHTML = ClearJSON.Tokenizer.toHTML(formatted, true);
-      rawView.style.display = '';
+      rawView.classList.remove('cj-hidden');
       document.getElementById('btn-raw').textContent = 'Tree';
     } else {
-      rawView.style.display = 'none';
-      treeView.style.display = '';
+      rawView.classList.add('cj-hidden');
+      treeView.classList.remove('cj-hidden');
       document.getElementById('btn-raw').textContent = 'Raw';
     }
   }
 
   function showError(result) {
     hideAll();
-    toolbar.style.display = 'flex';
-    document.getElementById('btn-raw').style.display = 'none';
-    treeView.style.display = '';
+    toolbar.classList.remove('cj-hidden');
+    document.getElementById('btn-raw').classList.add('cj-hidden');
+    treeView.classList.remove('cj-hidden');
     treeView.innerHTML = '';
 
     var box = document.createElement('div');
@@ -355,8 +354,8 @@
       '<p>' + escapeHTML(result.error) + '</p>' +
       '<p class="cj-error-location">Line ' + result.line + ', Column ' + result.column + '</p>';
     treeView.appendChild(box);
-    statsBar.style.display = 'flex';
-    statsBar.innerHTML = '<span class="cj-stat-item" style="color: var(--cj-null)">Parse Error</span>';
+    statsBar.classList.remove('cj-hidden');
+    statsBar.innerHTML = '<span class="cj-stat-item cj-stat-error">Parse Error</span>';
   }
 
   // ================================================================
@@ -473,10 +472,10 @@
 
     var menu = document.createElement('div');
     menu.className = 'cj-quick-menu';
-    menu.style.cssText = 'position:fixed;z-index:9999;background:var(--cj-surface);border:1px solid var(--cj-guide);border-radius:8px;padding:4px;box-shadow:0 4px 16px rgba(0,0,0,0.2);min-width:200px;';
 
     var exportBtn = document.getElementById('btn-export');
     var rect = exportBtn.getBoundingClientRect();
+    // Position near the Export button — requires JS, legitimate use of inline styles
     menu.style.top = (rect.bottom + 4) + 'px';
     menu.style.right = (window.innerWidth - rect.right) + 'px';
 
@@ -484,9 +483,6 @@
       var el = document.createElement('div');
       el.className = 'cj-menu-item';
       el.textContent = item.label;
-      el.style.cssText = 'padding:8px 12px;font-size:12px;cursor:pointer;border-radius:4px;color:var(--cj-text);white-space:nowrap;';
-      el.addEventListener('mouseenter', function () { el.style.background = 'var(--cj-hover)'; });
-      el.addEventListener('mouseleave', function () { el.style.background = 'transparent'; });
       el.addEventListener('click', function () {
         menu.remove();
         item.action();
@@ -510,10 +506,10 @@
     navigator.clipboard.writeText(text).then(function () {
       var orig = btn.textContent;
       btn.textContent = '✓ Copied';
-      btn.style.color = 'var(--cj-string)';
+      btn.classList.add('cj-copied');
       setTimeout(function () {
         btn.textContent = orig;
-        btn.style.color = '';
+        btn.classList.remove('cj-copied');
       }, 1500);
     });
   }
@@ -524,21 +520,21 @@
 
   function showSettingsPage() {
     hideAll();
-    toolbar.style.display = 'none';
-    settingsPage.style.display = '';
+    toolbar.classList.add('cj-hidden');
+    settingsPage.classList.remove('cj-hidden');
     renderThemeGrid();
     renderURLList();
     window.location.hash = 'settings';
   }
 
   function hideSettingsPage() {
-    settingsPage.style.display = 'none';
+    settingsPage.classList.add('cj-hidden');
     if (state.parsedData) {
-      toolbar.style.display = 'flex';
-      treeView.style.display = '';
-      statsBar.style.display = 'flex';
+      toolbar.classList.remove('cj-hidden');
+      treeView.classList.remove('cj-hidden');
+      statsBar.classList.remove('cj-hidden');
     } else {
-      landing.style.display = '';
+      landing.classList.remove('cj-hidden');
     }
     window.location.hash = '';
   }
@@ -605,8 +601,12 @@
     if (!table || !group) return;
 
     var isPro = ClearJSON.License.isActive();
-    group.style.display = isPro ? 'block' : 'none';
-    if (!isPro) return;
+    if (isPro) {
+      group.classList.remove('cj-hidden');
+    } else {
+      group.classList.add('cj-hidden');
+      return;
+    }
 
     table.innerHTML = '';
     var shortcuts = state.settings.shortcuts || {};
@@ -738,8 +738,8 @@
 
   function showProPage() {
     hideAll();
-    toolbar.style.display = 'none';
-    proPage.style.display = '';
+    toolbar.classList.add('cj-hidden');
+    proPage.classList.remove('cj-hidden');
     checkProStatus();
     window.location.hash = 'upgrade';
   }
@@ -750,15 +750,15 @@
     var activeEl = document.getElementById('cj-pro-active');
 
     if (active) {
-      if (section) section.style.display = 'none';
+      if (section) section.classList.add('cj-hidden');
       if (activeEl) {
-        activeEl.style.display = '';
+        activeEl.classList.remove('cj-hidden');
         var info = ClearJSON.License.getInfo();
         document.getElementById('pro-active-info').textContent = info.keyPreview || '';
       }
     } else {
-      if (section) section.style.display = '';
-      if (activeEl) activeEl.style.display = 'none';
+      if (section) section.classList.remove('cj-hidden');
+      if (activeEl) activeEl.classList.add('cj-hidden');
     }
   }
 
@@ -768,19 +768,19 @@
 
     if (!key) {
       statusEl.textContent = 'Enter a license key';
-      statusEl.style.color = 'var(--cj-null)';
+      statusEl.className = 'cj-license-status cj-status-error';
       return;
     }
 
     if (ClearJSON.License.storeLicense(key)) {
       statusEl.textContent = '✓ License activated! Pro features unlocked.';
-      statusEl.style.color = 'var(--cj-string)';
+      statusEl.className = 'cj-license-status cj-status-success';
       checkProStatus();
       renderThemeGrid();
       showToast('Pro activated!');
     } else {
       statusEl.textContent = 'Invalid license key';
-      statusEl.style.color = 'var(--cj-null)';
+      statusEl.className = 'cj-license-status cj-status-error';
     }
   }
 
@@ -815,11 +815,11 @@
   // ================================================================
 
   function hideAll() {
-    landing.style.display = 'none';
-    settingsPage.style.display = 'none';
-    if (proPage) proPage.style.display = 'none';
-    treeView.style.display = 'none';
-    rawView.style.display = 'none';
+    landing.classList.add('cj-hidden');
+    settingsPage.classList.add('cj-hidden');
+    if (proPage) proPage.classList.add('cj-hidden');
+    treeView.classList.add('cj-hidden');
+    rawView.classList.add('cj-hidden');
   }
 
   function updateStats(stats) {

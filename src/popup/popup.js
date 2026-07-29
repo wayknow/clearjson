@@ -33,7 +33,7 @@
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       if (!tabs || tabs.length === 0) {
         statusEl.textContent = 'Unknown';
-        statusEl.style.color = '#f38ba8';
+        statusEl.className = 'popup-status cj-status-error';
         return;
       }
 
@@ -42,13 +42,13 @@
 
       if (url.startsWith('chrome://') || url.startsWith('chrome-extension://')) {
         statusEl.textContent = 'System page — no access';
-        statusEl.style.color = '#9399b2';
+        statusEl.className = 'popup-status';
       } else if (url.endsWith('.json') || url.includes('application/json')) {
         statusEl.textContent = 'JSON detected — using ClearJSON';
-        statusEl.style.color = '#a6e3a1';
+        statusEl.className = 'popup-status cj-status-success';
       } else {
         statusEl.textContent = 'Not a JSON page';
-        statusEl.style.color = '#9399b2';
+        statusEl.className = 'popup-status';
       }
     });
   }

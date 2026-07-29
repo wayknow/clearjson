@@ -1,0 +1,570 @@
+/**
+ * ClearJSON — Viewer Page Styles
+ */
+
+/* ================================================================
+   LANDING PAGE
+   ================================================================ */
+
+.cj-viewer-landing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 40px;
+  text-align: center;
+}
+
+.cj-viewer-landing h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.cj-viewer-landing > p {
+  color: var(--cj-text-secondary);
+  margin-bottom: 24px;
+  max-width: 400px;
+  line-height: 1.6;
+}
+
+.cj-input-area {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cj-input-area textarea {
+  width: 100%;
+  height: 200px;
+  padding: 16px;
+  font-family: 'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--cj-text);
+  background: var(--cj-surface);
+  border: 2px solid var(--cj-guide);
+  border-radius: 8px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.cj-input-area textarea:focus {
+  border-color: var(--cj-key);
+}
+
+.cj-input-area textarea:focus-visible {
+  outline: 2px solid var(--cj-key);
+  outline-offset: 1px;
+}
+
+.cj-input-area textarea::placeholder {
+  color: var(--cj-line-number);
+}
+
+.cj-input-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.cj-btn-format {
+  padding: 8px 20px;
+  font-size: 13px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #89b4fa;
+  color: #1e1e2e;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.cj-btn-format:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.cj-btn-format:active {
+  opacity: 0.7;
+  transform: translateY(0);
+}
+
+.cj-btn-format:focus-visible {
+  outline: 2px solid #89b4fa;
+  outline-offset: 2px;
+}
+
+.cj-btn-load,
+.cj-btn-clear {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--cj-text-secondary);
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.cj-btn-load {
+  background: var(--cj-surface);
+  border: 1px solid var(--cj-guide);
+}
+
+.cj-btn-load:hover {
+  background: var(--cj-hover);
+  color: var(--cj-text);
+}
+
+.cj-btn-load:active {
+  opacity: 0.8;
+}
+
+.cj-btn-load:focus-visible,
+.cj-btn-clear:focus-visible {
+  outline: 2px solid var(--cj-key);
+  outline-offset: 2px;
+}
+
+.cj-btn-clear {
+  background: transparent;
+  margin-left: auto;
+}
+
+.cj-btn-clear:hover {
+  color: var(--cj-null);
+}
+
+.cj-btn-clear:active {
+  opacity: 0.7;
+}
+
+/* ================================================================
+   SETTINGS PANEL
+   ================================================================ */
+
+.cj-settings-panel {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 24px;
+}
+
+.cj-settings-panel h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.cj-settings-group {
+  margin-bottom: 20px;
+}
+
+.cj-settings-group label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--cj-text-secondary);
+  margin-bottom: 6px;
+}
+
+.cj-settings-group select,
+.cj-settings-group input[type="text"] {
+  width: 100%;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--cj-text);
+  background: var(--cj-surface);
+  border: 1px solid var(--cj-guide);
+  border-radius: 6px;
+  outline: none;
+}
+
+.cj-settings-group select:focus,
+.cj-settings-group input:focus {
+  border-color: var(--cj-key);
+}
+
+.cj-settings-group select:focus-visible,
+.cj-settings-group input:focus-visible {
+  outline: 2px solid var(--cj-key);
+  outline-offset: 1px;
+}
+
+.cj-theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.cj-theme-chip {
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: 11px;
+  text-align: center;
+  color: var(--cj-text-secondary);
+  background: var(--cj-surface);
+  border: 2px solid var(--cj-guide);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s;
+}
+
+.cj-theme-chip:hover {
+  border-color: var(--cj-key);
+  color: var(--cj-text);
+}
+
+.cj-theme-chip:active {
+  opacity: 0.8;
+}
+
+.cj-theme-chip:focus-visible {
+  outline: 2px solid var(--cj-key);
+  outline-offset: 2px;
+}
+
+.cj-theme-chip.cj-active {
+  border-color: var(--cj-key);
+  color: var(--cj-key);
+  font-weight: 600;
+  background: var(--cj-selected);
+}
+
+.cj-theme-chip.cj-pro-theme {
+  position: relative;
+}
+
+.cj-theme-chip .cj-pro-badge {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 7px;
+  color: var(--cj-key);
+  font-weight: 700;
+}
+
+.cj-url-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cj-url-row {
+  display: flex;
+  gap: 4px;
+}
+
+.cj-url-row input {
+  flex: 1;
+}
+
+.cj-url-row button {
+  padding: 4px 10px;
+  font-family: inherit;
+  font-size: 12px;
+  background: transparent;
+  color: var(--cj-null);
+  border: 1px solid var(--cj-guide);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.cj-url-row button:hover {
+  background: var(--cj-hover);
+}
+
+.cj-url-row button:focus-visible {
+  outline: 2px solid var(--cj-key);
+  outline-offset: 1px;
+}
+
+/* ================================================================
+   UPGRADE / PRO PAGE
+   ================================================================ */
+
+.cj-pro-page {
+  max-width: 560px;
+  margin: 40px auto;
+  padding: 32px;
+  text-align: center;
+}
+
+.cj-pro-page h2 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.cj-pro-page .cj-pro-price {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--cj-key);
+  margin: 16px 0;
+}
+
+.cj-pro-page .cj-pro-price span {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--cj-text-secondary);
+}
+
+.cj-pro-feature-list {
+  text-align: left;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cj-pro-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--cj-text);
+}
+
+.cj-pro-feature .cj-check {
+  color: var(--cj-string);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.cj-license-input {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+  justify-content: center;
+}
+
+.cj-license-input input {
+  padding: 10px 14px;
+  font-family: 'SF Mono', 'Menlo', monospace;
+  font-size: 14px;
+  color: var(--cj-text);
+  background: var(--cj-surface);
+  border: 2px solid var(--cj-guide);
+  border-radius: 8px;
+  outline: none;
+  width: 280px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.cj-license-input input:focus {
+  border-color: var(--cj-key);
+}
+
+.cj-license-input input:focus-visible {
+  outline: 2px solid var(--cj-key);
+  outline-offset: 1px;
+}
+
+.cj-license-status {
+  font-size: 12px;
+  margin-top: 8px;
+  min-height: 20px;
+}
+
+.cj-settings-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 8px;
+}
+
+.cj-pro-buy-wrap {
+  margin: 20px 0;
+}
+
+.cj-pro-active-text {
+  color: var(--cj-string);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cj-pro-active-info {
+  font-size: 11px;
+  color: var(--cj-text-secondary);
+  margin-top: 4px;
+}
+
+.cj-license-hint {
+  font-size: 12px;
+  color: var(--cj-text-secondary);
+}
+
+.cj-btn-deactivate {
+  margin-top: 8px;
+}
+
+/* Buy button — an <a> styled as .cj-btn-primary */
+.cj-pro-buy-wrap .cj-btn-primary {
+  display: inline-block;
+  text-decoration: none;
+}
+
+/* ================================================================
+   MISC
+   ================================================================ */
+
+/* File input — hidden, triggered by button */
+#file-input {
+  display: none;
+}
+
+/* Bottom status in toolbar */
+.cj-tb-status {
+  font-size: 10px;
+  color: var(--cj-key);
+  font-weight: 600;
+}
+
+/* Add URL pattern button */
+.cj-settings-group .cj-tb-btn {
+  margin-top: 6px;
+}
+
+/* ================================================================
+   SHORTCUTS TABLE
+   ================================================================ */
+
+.cj-shortcut-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.cj-shortcut-label {
+  flex: 1;
+  font-size: 12px;
+  color: var(--cj-text);
+}
+
+.cj-shortcut-input {
+  width: 120px;
+  padding: 4px 8px;
+  font-family: 'SF Mono', 'Menlo', monospace;
+  font-size: 11px;
+  text-align: center;
+  color: var(--cj-key);
+  background: var(--cj-surface);
+  border: 1px solid var(--cj-guide);
+  border-radius: 4px;
+  outline: none;
+}
+
+.cj-shortcut-input:focus {
+  border-color: var(--cj-key);
+}
+
+.cj-shortcut-input:focus-visible {
+  outline: 2px solid var(--cj-key);
+  outline-offset: 1px;
+}
+
+.cj-shortcut-default {
+  font-size: 10px;
+  color: var(--cj-text-secondary);
+  width: 80px;
+}
+
+.cj-shortcut-reset {
+  font-size: 10px;
+  padding: 2px 6px;
+  background: none;
+  color: var(--cj-text-secondary);
+  border: 1px solid var(--cj-guide);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.cj-shortcut-reset:hover {
+  color: var(--cj-null);
+}
+
+.cj-shortcut-reset:focus-visible {
+  outline: 2px solid var(--cj-key);
+  outline-offset: 1px;
+}
+
+.cj-shortcut-group-header {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--cj-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 0 2px;
+}
+
+/* ================================================================
+   UTILITY STATES
+   ================================================================ */
+
+/* Drag-over visual feedback */
+.cj-drag-over {
+  opacity: 0.6;
+}
+
+/* Streaming parse status text */
+.cj-streaming-status {
+  padding: 40px;
+  text-align: center;
+  color: var(--cj-text-secondary);
+}
+
+/* Stats bar error item */
+.cj-stat-error {
+  color: var(--cj-null);
+}
+
+/* Copy button feedback */
+.cj-tb-btn.cj-copied {
+  color: var(--cj-string);
+}
+
+/* License status feedback */
+.cj-status-success {
+  color: var(--cj-string);
+}
+
+.cj-status-error {
+  color: var(--cj-null);
+}
+
+/* ================================================================
+   QUICK MENU (export dropdown)
+   ================================================================ */
+
+.cj-quick-menu {
+  position: fixed;
+  z-index: 9999;
+  background: var(--cj-surface);
+  border: 1px solid var(--cj-guide);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  min-width: 200px;
+}
+
+.cj-quick-menu .cj-menu-item {
+  padding: 8px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  color: var(--cj-text);
+  white-space: nowrap;
+  transition: background 0.1s;
+}
+
+.cj-quick-menu .cj-menu-item:hover {
+  background: var(--cj-hover);
+}
