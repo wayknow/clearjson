@@ -1,8 +1,7 @@
 # Chrome Web Store — Listing Assets
 
-> ✅ v1.1.0（含 Pro 内购）已上架：https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk
-> $29 终身，Creem 外部支付 — 2026-07-13 审核通过
-> 🔄 v1.1.1 审核中（2026-07-23 提交）— 审核期间无法编辑清单，审核通过后立即替换以下优化版
+> ✅ v1.1.2（UI 规范化）已提交审核：https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk
+> $29 终身，Creem 外部支付 — v1.1.1 已于 2026-07-25 审核通过
 
 ## Title (优化版，待审核通过后替换)
 
