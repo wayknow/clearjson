@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-07-29 | 当前版本：v1.1.1（CWS 已上架 ✅）| Edge v1.1.2（审核中）| Glama score A/A/B ✅ | Product Hunt 已更新
+> 最后更新：2026-07-29 | 当前版本：v1.1.2（CWS 已提交审核）| Edge v1.1.2（审核中）| Glama score A/A/B ✅ | Product Hunt 已更新
 
 ---
 
@@ -246,18 +246,17 @@
 - **首页 logo**：wayknow 网站 `/assets/clearjson-logo.svg` + `.png` 与扩展图标统一
 - `clearjson-v1.1.1.zip` 已提交 CWS 审核，2026-07-25 审核通过 ✅
 
-### v1.1.2 修复（2026-07-24，未正式发布）
+### v1.1.2 修复与 UI 规范化（2026-07-29）
 - **content script 误判修复**：`detectJSON()` 在 Content-Type 非 JSON 时，`<pre>` 内容需占页面正文 ≥80% 才触发格式化，避免 GitHub README 等含 JSON 代码块的普通网页被误接管
 - **Promo 图片修复**：3 张 promo tile 的 `{}` 旧 logo 替换为当前两条蓝色竖线设计
-
-### UI 设计系统规范化（2026-07-29）
-- **无障碍**：所有交互元素添加 `:focus-visible` 焦点指示器（2px outline），图标按钮添加 `aria-label`
-- **对比度**：popup 中 `#585b70` → `#8a8da0`，使版本号/section 标题/footer 链接满足 WCAG AA 4.5:1
-- **动画**：添加 `prefers-reduced-motion` 媒体查询，toast/button/link 动画 ≤200ms，仅操作 `transform` + `opacity`
-- **样式管理**：移除了 viewer.html 全部 15 处内联 `style` 属性，提取 `<style>` 块到 `viewer.css`；viewer.js 和 popup.js 中所有 `element.style.*` 改为 CSS 类操作
-- **组件规范**：按钮添加 `:active` 态、`border-radius` 统一 6px、间距对齐 4px 基数系统、移除 `!important`
-- **Toast**：新增 CSS slide-up 进入动画，transition 从 0.3s 缩短到 0.2s
-- **新增文件**：`src/viewer/viewer.css`
+- **UI 设计系统规范化**：
+  - **无障碍**：所有交互元素添加 `:focus-visible` 焦点指示器（2px outline），图标按钮添加 `aria-label`
+  - **对比度**：popup 中 `#585b70` → `#8a8da0`，使版本号/section 标题/footer 链接满足 WCAG AA 4.5:1
+  - **动画**：添加 `prefers-reduced-motion` 媒体查询，toast/button/link 动画 ≤200ms，仅操作 `transform` + `opacity`
+  - **样式管理**：移除 viewer.html 全部内联 `style` 属性，提取 `<style>` 块到 `viewer.css`；JS 中 `element.style.*` 全部改为 CSS 类操作
+  - **组件规范**：按钮添加 `:active` 态、`border-radius` 统一 6px、间距对齐 4px 基数系统、移除 `!important`
+  - **Toast**：新增 CSS slide-up 进入动画，transition 0.3s → 0.2s
+  - **新增文件**：`src/viewer/viewer.css`
 
 ### 分发 & 推广推进（2026-07-24）
 - **GitHub repo 公开**：设 public，开源 MIT，方便 MCP 目录收录和社区协作
