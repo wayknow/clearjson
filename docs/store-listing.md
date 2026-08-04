@@ -154,3 +154,41 @@ All promo tiles are in `promo/` directory. HTML source files for editing, PNG re
 - Flow: purchase → license key emailed → activate in extension (Settings → Pro → paste key)
 
 > ⚠️ CWS submission form: declare that the item **contains paid features** and set the "In-app purchases / paid features" disclosure. Since billing is external (Creem), there are no Google-managed IAP SKUs to configure — the disclosure + an accurate description are what's required.
+
+---
+
+## Edge Add-ons — Certification Notes
+
+> 此内容仅在 Edge Partner Center 审核流程中使用，用户不可见。
+
+```
+=== How to Test ClearJSON ===
+
+BASIC FUNCTIONALITY:
+1. Install the extension, then navigate to any JSON URL (e.g., https://jsonplaceholder.typicode.com/users)
+2. The JSON content will auto-format with syntax highlighting and a collapsible tree view
+3. Test toolbar buttons: Collapse/Expand, Raw view toggle, Copy, Theme cycle, Search
+4. Open the standalone viewer by clicking the extension icon → "Open JSON Viewer"
+5. In the viewer, paste JSON text, drag-drop a .json file, or click "Try Sample"
+
+PRO FEATURES (no purchase needed for review):
+1. Open the standalone viewer (click extension icon → "Open JSON Viewer")
+2. Open DevTools (F12) and run: localStorage.setItem('clearjson_pro_dev', '1')
+3. Reload the viewer page
+4. All Pro features are now unlocked for testing:
+   - Large file support (>2MB): load any large JSON file
+   - JWT decode: paste an eyJ... token in the viewer
+   - Regex search: toggle .* in the search bar
+   - CSV/TSV/YAML/TypeScript export: click Export button
+   - 30 themes: click Theme to cycle through all themes
+   - Custom keyboard shortcuts: go to Settings
+
+PERMISSIONS:
+- storage: saves theme, settings, and license key locally
+- activeTab: detects JSON only when user interacts with the extension
+- file:// host permission: allows formatting local JSON files opened in Edge
+
+DEPENDENCIES: None. The extension works fully offline. Pro license verification
+is the only network call and only triggers when activating a license key. No
+accounts, no analytics, no tracking, no external services required.
+```
