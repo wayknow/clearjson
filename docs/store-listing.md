@@ -173,9 +173,10 @@ BASIC FUNCTIONALITY:
 
 PRO FEATURES (no purchase needed for review):
 1. Open the standalone viewer (click extension icon → "Open JSON Viewer")
-2. Open DevTools (F12) and run: localStorage.setItem('clearjson_pro_dev', '1')
-3. Reload the viewer page
-4. All Pro features are now unlocked for testing:
+2. Click "PRO ↑" in the toolbar or navigate to the Pro/Upgrade page
+3. Enter this license key to activate Pro: CLJ-Q46R-EQMG-4ZDE
+4. Click "Activate" — the key will be verified against our license server
+5. All Pro features are now unlocked for testing:
    - Large file support (>2MB): load any large JSON file
    - JWT decode: paste an eyJ... token in the viewer
    - Regex search: toggle .* in the search bar
