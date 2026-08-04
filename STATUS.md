@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-08-04 | 当前版本：v1.1.4（待提交 CWS + Edge）| CWS ✅ | Edge ✅ | Glama score A/A/B ✅ | Product Hunt 已发布
+> 最后更新：2026-08-04 | 当前版本：v1.1.4（CWS + Edge 审核中）| Glama score A/A/B ✅ | Product Hunt 已发布
 
 ---
 
@@ -557,6 +557,12 @@ var ClearJSON = window.ClearJSON || {};
 4. **工具栏 padding 增加** — `6px 12px` → `8px 16px`，整体更有呼吸感
 
 **改动文件：** `src/content/content.css`、`src/viewer/viewer.html`
+
+**配套改动：**
+- **CWS 描述修正** — 删除不存在的 "JSONP" 功能声明、"30 premium themes" → "20 premium themes"、"100MB+" → "500 MB" 统一大文件容量宣称
+- **Edge 打包指南** — 文档化 CWS vs Edge manifest 差异（去掉 `minimum_chrome_version` + `themes/*.css`）
+- **Edge 认证说明** — 改用真实 D1 测试密钥 `CLJ-Q46R-EQMG-4ZDE` 替代 DevTools localStorage 方式，审核人员体验完整激活链路
+- **发布打包** — `clearjson-v1.1.4.zip`（CWS）和 `clearjson-edge-v1.1.4.zip`（Edge）已分别打包
 
 ### v1.1.2 → v1.1.3（2026-08-04）— Pro 可见性优化
 
