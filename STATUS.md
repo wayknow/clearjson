@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-07-29 | 当前版本：v1.1.2（CWS 已提交审核）| Edge v1.1.2（审核中）| Glama score A/A/B ✅ | Product Hunt 已更新
+> 最后更新：2026-07-30 | 当前版本：v1.1.2（CWS ✅ | Edge ✅）| Glama score A/A/B ✅ | Product Hunt 已更新
 
 ---
 
@@ -257,6 +257,8 @@
   - **组件规范**：按钮添加 `:active` 态、`border-radius` 统一 6px、间距对齐 4px 基数系统、移除 `!important`
   - **Toast**：新增 CSS slide-up 进入动画，transition 0.3s → 0.2s
   - **新增文件**：`src/viewer/viewer.css`
+- **CWS 审核**：2026-07-29 提交，2026-07-30 审核通过 ✅
+- **Edge 审核**：2026-07-24 提交，2026-07-30 审核通过 ✅
 
 ### 分发 & 推广推进（2026-07-24）
 - **GitHub repo 公开**：设 public，开源 MIT，方便 MCP 目录收录和社区协作

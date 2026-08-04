@@ -2,6 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/clearjson-mcp)](https://www.npmjs.com/package/clearjson-mcp)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/bgcicghmdpefapfdeghgealacphkgobk)](https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk)
+[![Edge Add-ons](https://img.shields.io/badge/edge-v1.1.2-0078D7)](https://microsoftedge.microsoft.com/addons/detail/clearjson/kdebbkdldjhhboafpflimanekmhinelg)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 > Privacy-first browser JSON viewer. Zero tracking. Fully local. Plus an MCP server for AI agents.
@@ -54,6 +55,9 @@ For AI agents (Claude Code, etc.): `npx -y clearjson-mcp`
 
 ### Chrome Web Store
 **[Install ClearJSON Free](https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk)**
+
+### Edge Add-ons
+**[Get ClearJSON on Edge](https://microsoftedge.microsoft.com/addons/detail/clearjson/kdebbkdldjhhboafpflimanekmhinelg)**
 
 ### Load Unpacked (Development)
 1. Clone this repo
