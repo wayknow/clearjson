@@ -21,14 +21,14 @@ ClearJSON is the trustworthy JSON viewer you've been looking for — built after
 
 • 100% Local — Every byte stays on your machine. Zero network requests.
 • Privacy First — No analytics, no tracking, no accounts, no ads. Not now, not ever.
-• Lightning Fast — Handles everything from tiny API responses to 100MB+ data dumps with virtual scrolling (Pro).
+• Lightning Fast — Handles everything from tiny API responses to 500 MB data dumps with virtual scrolling (Pro).
 • One-Time Purchase — $29 lifetime. No subscriptions. Covers 3 devices.
 
 ━━━━━━━━━━━━━━━━━━━━━━
 🆓 Free Features (Forever)
 ━━━━━━━━━━━━━━━━━━━━━━
 
-• Auto-detect & format JSON, JSON-LD, JSON:API, NDJSON, and JSONP
+• Auto-detect & format JSON, JSON-LD, JSON:API, and NDJSON
 • Collapsible tree view with indent guides and element counts
 • Syntax highlighting — strings, numbers, booleans, null, keys, punctuation
 • 10 built-in themes with automatic dark/light system-follow
@@ -44,11 +44,11 @@ ClearJSON is the trustworthy JSON viewer you've been looking for — built after
 💰 Pro ($29 Lifetime — No Subscription)
 ━━━━━━━━━━━━━━━━━━━━━━
 
-• Large file virtual scrolling — 100MB+ JSON without freezing (Web Worker + streaming parser)
+• Large file virtual scrolling — 500 MB JSON without freezing (Web Worker + streaming parser)
 • JWT auto-decode — detect eyJ... tokens, inline display header + payload, highlight expiry
 • Advanced search — regex with match navigation and full-document highlighting
 • Multi-format export — CSV, TSV, YAML, TypeScript type definitions (recursive inference)
-• 30 premium themes — Monokai, Dracula, Nord, One Dark, Solarized, Catppuccin, GitHub, Tokyo Night, Gruvbox, and more
+• 20 premium themes — Monokai, Dracula, Nord, One Dark, Solarized, Catppuccin, GitHub, Tokyo Night, Gruvbox, and more
 • Custom keyboard shortcuts — remap all 6 shortcuts to your preference
 
 ━━━━━━━━━━━━━━━━━━━━━━
