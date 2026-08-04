@@ -614,10 +614,25 @@
   color: var(--cj-key);
   border-color: var(--cj-key);
   font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
 }
 
 .cj-toolbar .cj-tb-btn.cj-tb-pro:hover {
-  background: var(--cj-selected);
+  background: var(--cj-key);
+  color: var(--cj-bg);
+  transform: translateY(-1px);
+}
+
+.cj-toolbar .cj-tb-btn.cj-tb-pro:active {
+  background: var(--cj-key);
+  opacity: 0.8;
+  transform: translateY(0);
+}
+
+.cj-toolbar .cj-tb-btn.cj-tb-pro:focus-visible {
+  outline: 2px solid var(--cj-key);
+  outline-offset: 2px;
 }
 
 /* Theme button when a Pro-only theme is active */

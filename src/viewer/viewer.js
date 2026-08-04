@@ -802,7 +802,7 @@
 
   /**
    * Lightweight check — only toggles toolbar Pro button visibility.
-   * Called from showResult and showLanding without the full pro page DOM check.
+   * Called from showResult (toolbar is hidden in showLanding, so no need there).
    */
   function checkToolbarProBtn() {
     var proBtn = document.getElementById('btn-pro');

@@ -599,19 +599,7 @@
   flex-shrink: 0;
 }
 
-/* Toolbar Pro upgrade button */
-.cj-tb-pro-btn {
-  color: var(--cj-key) !important;
-  font-weight: 700 !important;
-  text-decoration: none;
-  border-color: var(--cj-key) !important;
-  transition: background 0.15s, color 0.15s;
-}
-
-.cj-tb-pro-btn:hover {
-  background: var(--cj-key) !important;
-  color: #1e1e2e !important;
-}
+/* Toolbar Pro upgrade button — styled by content.css .cj-toolbar .cj-tb-btn.cj-tb-pro */
 
 /* Locked shortcuts preview in settings */
 .cj-shortcut-locked-preview {
@@ -662,15 +650,14 @@
 /* Upgrade button (used in locked shortcuts section) */
 .cj-btn-upgrade {
   display: inline-block;
-  padding: 8px 20px;
+  padding: 8px 16px;
   font-size: 13px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-weight: 600;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   background: var(--cj-key);
-  color: #1e1e2e;
+  color: var(--cj-bg);
   transition: opacity 0.15s, transform 0.15s;
 }
 
