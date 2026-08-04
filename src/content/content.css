@@ -35,7 +35,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 12px;
+  padding: 8px 16px;
   background: var(--cj-toolbar-bg);
   border-bottom: 1px solid var(--cj-toolbar-border);
   position: sticky;
@@ -59,9 +59,9 @@
 }
 
 .cj-tb-btn {
-  padding: 4px 12px;
+  padding: 6px 14px;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--cj-text-secondary);
   background: transparent;
   border: 1px solid transparent;
@@ -441,8 +441,8 @@
 }
 
 .cj-search-wrap .cj-tb-btn.cj-search-nav {
-  font-size: 8px;
-  padding: 2px 6px;
+  font-size: 11px;
+  padding: 4px 8px;
   line-height: 1;
 }
 

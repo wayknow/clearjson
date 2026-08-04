@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-08-04 | 当前版本：v1.1.3（待提交 CWS + Edge）| CWS ✅ | Edge ✅ | Glama score A/A/B ✅ | Product Hunt 已发布
+> 最后更新：2026-08-04 | 当前版本：v1.1.4（待提交 CWS + Edge）| CWS ✅ | Edge ✅ | Glama score A/A/B ✅ | Product Hunt 已发布
 
 ---
 
@@ -503,6 +503,19 @@ var ClearJSON = window.ClearJSON || {};
 ---
 
 ## 十一、变更记录
+
+### v1.1.3 → v1.1.4（2026-08-04）— 工具栏按钮优化
+
+**改动原因：** 工具栏按钮整体偏小、Settings 按钮只有 ⚙ 图标用户不知道功能，与竞品相比按钮尺寸和可读性不足。
+
+**具体改动：**
+
+1. **按钮尺寸增大** — `.cj-tb-btn` padding `4px 12px` → `6px 14px`，font-size `12px` → `13px`
+2. **Settings 按钮文字化** — `⚙` 图标 → `Settings` 文字标签，与其他按钮保持一致
+3. **搜索导航按钮增大** — ▲▼ 按钮 font-size `8px` → `11px`，padding `2px 6px` → `4px 8px`
+4. **工具栏 padding 增加** — `6px 12px` → `8px 16px`，整体更有呼吸感
+
+**改动文件：** `src/content/content.css`、`src/viewer/viewer.html`
 
 ### v1.1.2 → v1.1.3（2026-08-04）— Pro 可见性优化
 
