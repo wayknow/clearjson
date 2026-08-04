@@ -255,6 +255,8 @@
     rawView.classList.add('cj-hidden');
     document.getElementById('btn-raw').textContent = 'Raw';
     document.getElementById('btn-raw').classList.remove('cj-hidden');
+    // Update Pro button visibility
+    checkToolbarProBtn();
 
     treeView.innerHTML = '';
     var rendered = ClearJSON.Tree.render(result.data, {
@@ -448,6 +450,11 @@
         if (csv) ClearJSON.Export.downloadFile(csv, 'data.csv', 'text/csv');
         else showToast('CSV export requires an array of objects');
       }});
+      items.push({ label: 'Export TSV', action: function () {
+        var tsv = ClearJSON.Export.toTSV(state.parsedData);
+        if (tsv) ClearJSON.Export.downloadFile(tsv, 'data.tsv', 'text/tab-separated-values');
+        else showToast('TSV export requires an array of objects');
+      }});
       items.push({ label: 'Export TypeScript Types', action: function () {
         var ts = ClearJSON.Export.toTypeScript(state.parsedData, 'Root');
         ClearJSON.Export.downloadFile(ts, 'types.ts', 'text/typescript');
@@ -457,9 +464,10 @@
         ClearJSON.Export.downloadFile(yaml, 'data.yaml', 'text/yaml');
       }});
     } else {
-      items.push({ label: 'CSV / TS / YAML → (Pro)', action: function () {
-        showProPage();
-      }});
+      items.push({ label: 'CSV → Download', action: function () { showProPage(); }, proOnly: true });
+      items.push({ label: 'TSV → Download', action: function () { showProPage(); }, proOnly: true });
+      items.push({ label: 'YAML → Download', action: function () { showProPage(); }, proOnly: true });
+      items.push({ label: 'TypeScript Types → Download', action: function () { showProPage(); }, proOnly: true });
     }
 
     // Simple dropdown via a quick menu
@@ -482,7 +490,13 @@
     items.forEach(function (item) {
       var el = document.createElement('div');
       el.className = 'cj-menu-item';
-      el.textContent = item.label;
+      if (item.proOnly) {
+        el.classList.add('cj-menu-item-pro');
+        el.innerHTML = item.label + ' <span class="cj-pro-badge-inline">PRO</span>';
+        el.title = 'Upgrade to ClearJSON Pro — $29 lifetime';
+      } else {
+        el.textContent = item.label;
+      }
       el.addEventListener('click', function () {
         menu.remove();
         item.action();
@@ -601,13 +615,32 @@
     if (!table || !group) return;
 
     var isPro = ClearJSON.License.isActive();
-    if (isPro) {
-      group.classList.remove('cj-hidden');
-    } else {
-      group.classList.add('cj-hidden');
+    // Always show the shortcuts section — Pro users can edit, free users see a locked preview
+    group.classList.remove('cj-hidden');
+
+    if (!isPro) {
+      // Show locked preview with upgrade prompt
+      table.innerHTML = '';
+      table.classList.add('cj-shortcuts-locked');
+      var preview = document.createElement('div');
+      preview.className = 'cj-shortcut-locked-preview';
+      preview.innerHTML =
+        '<p class="cj-pro-lock-msg">Custom keyboard shortcuts are a Pro feature</p>' +
+        '<ul class="cj-shortcut-default-list">' +
+        SHORTCUT_DEFS.map(function(d) {
+          return '<li><kbd>' + escapeHTML(d.defaultKey) + '</kbd> — ' + escapeHTML(d.label) + '</li>';
+        }).join('') +
+        '</ul>' +
+        '<button class="cj-btn-upgrade" id="cj-btn-upgrade-shortcuts">Upgrade to Pro — $29</button>';
+      table.appendChild(preview);
+      document.getElementById('cj-btn-upgrade-shortcuts').addEventListener('click', function () {
+        hideSettingsPage();
+        showProPage();
+      });
       return;
     }
 
+    table.classList.remove('cj-shortcuts-locked');
     table.innerHTML = '';
     var shortcuts = state.settings.shortcuts || {};
     var lastGroup = null;
@@ -748,6 +781,7 @@
     var active = ClearJSON.License.isActive();
     var section = document.getElementById('cj-license-section');
     var activeEl = document.getElementById('cj-pro-active');
+    var proBtn = document.getElementById('btn-pro');
 
     if (active) {
       if (section) section.classList.add('cj-hidden');
@@ -756,9 +790,28 @@
         var info = ClearJSON.License.getInfo();
         document.getElementById('pro-active-info').textContent = info.keyPreview || '';
       }
+      // Hide Pro upgrade button in toolbar
+      if (proBtn) proBtn.classList.add('cj-hidden');
     } else {
       if (section) section.classList.remove('cj-hidden');
       if (activeEl) activeEl.classList.add('cj-hidden');
+      // Show Pro upgrade button in toolbar
+      if (proBtn) proBtn.classList.remove('cj-hidden');
+    }
+  }
+
+  /**
+   * Lightweight check — only toggles toolbar Pro button visibility.
+   * Called from showResult and showLanding without the full pro page DOM check.
+   */
+  function checkToolbarProBtn() {
+    var proBtn = document.getElementById('btn-pro');
+    if (!proBtn) return;
+    var active = ClearJSON.License.isActive();
+    if (active) {
+      proBtn.classList.add('cj-hidden');
+    } else {
+      proBtn.classList.remove('cj-hidden');
     }
   }
 
