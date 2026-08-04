@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ClearJSON",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Privacy-first JSON viewer. Zero tracking. Fully local.",
   "author": "ClearJSON",
   "homepage_url": "https://wayknow.tech/clearjson.html",

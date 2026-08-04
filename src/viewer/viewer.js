@@ -94,7 +94,7 @@
     document.getElementById('btn-load-sample').addEventListener('click', function () {
       var sample = JSON.stringify({
         name: 'ClearJSON',
-        version: '1.1.2',
+        version: '1.1.3',
         free: true,
         themes: ['dark', 'light', 'sepia', 'monokai', 'dracula'],
         stats: { users: 1234, rating: 4.8 },
