@@ -183,6 +183,22 @@
         }
       }
     });
+
+    // Browser back/forward support — sync hash changes with page state
+    window.addEventListener('hashchange', function () {
+      var hash = window.location.hash;
+      if (hash === '#settings' && settingsPage.classList.contains('cj-hidden')) {
+        showSettingsPage();
+      } else if (hash === '#upgrade' && proPage && proPage.classList.contains('cj-hidden')) {
+        showProPage();
+      } else if (hash === '' || hash === '#') {
+        if (!settingsPage.classList.contains('cj-hidden')) hideSettingsPage();
+        if (proPage && !proPage.classList.contains('cj-hidden')) {
+          proPage.classList.add('cj-hidden');
+          goToMain();
+        }
+      }
+    });
   }
 
   // ================================================================
@@ -538,19 +554,29 @@
     settingsPage.classList.remove('cj-hidden');
     renderThemeGrid();
     renderURLList();
-    window.location.hash = 'settings';
+    if (window.location.hash !== '#settings') window.location.hash = 'settings';
   }
 
   function hideSettingsPage() {
     settingsPage.classList.add('cj-hidden');
+    goToMain();
+    if (window.location.hash) window.location.hash = '';
+  }
+
+  /**
+   * Show the main view (toolbar+tree or landing), hiding all sub-pages.
+   * Safe to call regardless of current page state.
+   */
+  function goToMain() {
+    if (proPage) proPage.classList.add('cj-hidden');
     if (state.parsedData) {
+      landing.classList.add('cj-hidden');
       toolbar.classList.remove('cj-hidden');
       treeView.classList.remove('cj-hidden');
       statsBar.classList.remove('cj-hidden');
     } else {
       landing.classList.remove('cj-hidden');
     }
-    window.location.hash = '';
   }
 
   function renderThemeGrid() {
@@ -774,7 +800,7 @@
     toolbar.classList.add('cj-hidden');
     proPage.classList.remove('cj-hidden');
     checkProStatus();
-    window.location.hash = 'upgrade';
+    if (window.location.hash !== '#upgrade') window.location.hash = 'upgrade';
   }
 
   function checkProStatus() {
