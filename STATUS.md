@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-08-03 | 当前版本：v1.1.3（待提交 CWS + Edge）| CWS ✅ | Edge ✅ | Glama score A/A/B ✅ | Product Hunt 已发布
+> 最后更新：2026-08-04 | 当前版本：v1.1.3（待提交 CWS + Edge）| CWS ✅ | Edge ✅ | Glama score A/A/B ✅ | Product Hunt 已发布
 
 ---
 
@@ -504,7 +504,7 @@ var ClearJSON = window.ClearJSON || {};
 
 ## 十一、变更记录
 
-### v1.1.2 → v1.1.3（2026-08-03）— Pro 可见性优化
+### v1.1.2 → v1.1.3（2026-08-04）— Pro 可见性优化
 
 **改动原因：** 43 安装 / 0 付费。按 1-3% freemium 转化率，100 安装才预期 1-3 个付费，0 是统计学正常的。但更深层的问题：Pro 功能（大文件虚拟滚动、CSV/TSV/YAML 导出、JWT 解码）是"深度需求"，99% 免费用户一辈子不会遇到。用户不知道 Pro 有什么，就不会升级。
 
@@ -512,12 +512,13 @@ var ClearJSON = window.ClearJSON || {};
 
 **具体改动：**
 
-1. **导出菜单** — 免费用户现在看到 4 个 Pro 格式分别列出（CSV → Download、TSV → Download、YAML → Download、TypeScript Types → Download），灰色 + `PRO` 角标，点击跳 Pro 购买页。原来是一行 `CSV / TS / YAML → (Pro)` 打包隐藏
+1. **导出菜单** — 免费用户看到 4 个 Pro 格式分别列出（CSV → Download、TSV → Download、YAML → Download、TypeScript Types → Download），灰色 + `PRO` 角标，点击跳 Pro 购买页。原来是一行 `CSV / TS / YAML → (Pro)` 打包隐藏
 2. **工具栏** — 非 Pro 用户在工具栏右侧看到 `PRO ↑` 按钮，直达 Creem 购买页（$29）。激活 Pro 后自动隐藏
-3. **设置页快捷键** — 不做完全隐藏，改为显示锁定预览：默认快捷键列表 + "Custom keyboard shortcuts are a Pro feature" + Upgrade 按钮
+3. **快捷键预览** — 不做完全隐藏，改为显示锁定预览：默认快捷键列表 + "Custom keyboard shortcuts are a Pro feature" + Upgrade 按钮
+4. **浏览器返回按钮** — Settings/Pro 页面现在支持浏览器 ← 返回，通过 `hashchange` 事件同步页面状态
 
 **改动文件：** `src/viewer/viewer.html`、`src/viewer/viewer.js`、`src/viewer/viewer.css`、`src/content/content.css`
-**CSS 合规修复：** 移除 5 处 `!important`，复用 content.css 现有 `.cj-tb-pro` 样式，修复硬编码颜色和间距
+**CSS 合规：** 移除 5 处 `!important`，复用 content.css 现有 `.cj-tb-pro` 样式，修复硬编码颜色（`var(--cj-bg)`）和间距（4px 网格）
 
 ---
 
