@@ -337,6 +337,47 @@ cd clearjson
 cd server && npm install   # 许可证服务器依赖
 ```
 
+### 发布打包
+
+CWS 和 Edge 需要两个不同的 zip 包，因为 Edge 的 manifest 验证更严格。
+
+**CWS 包** — 直接使用仓库中的 `manifest.json`（含 `minimum_chrome_version` + `themes/*.css`）：
+
+```bash
+zip -r clearjson-vX.Y.Z.zip manifest.json icons/ src/ -x "*.DS_Store"
+```
+
+**Edge 包** — 需要去掉两个 CWS 专属内容：
+
+1. 删除 `minimum_chrome_version` 字段（Edge 不识别，会报错）
+2. 从 `web_accessible_resources.resources` 中移除 `"themes/*.css"`（目录不存在，Edge 验证严格）
+
+```bash
+# 构建 Edge 专用目录
+rm -rf /tmp/clearjson-edge && mkdir -p /tmp/clearjson-edge/icons
+cp -r icons/* /tmp/clearjson-edge/icons/
+for d in content popup utils viewer; do
+  mkdir -p /tmp/clearjson-edge/src/$d
+  cp src/$d/* /tmp/clearjson-edge/src/$d/
+done
+# 生成去掉 CWS 专属字段的 manifest.json（或用你熟悉的工具）
+# 推荐保存一份 edge-manifest.json 模板在 repo 里，打包时直接复制
+cp manifest.json /tmp/clearjson-edge/manifest.json
+# 手动删除 minimum_chrome_version 行和 themes/*.css 行（或用 sed）
+sed -i '' '/minimum_chrome_version/d' /tmp/clearjson-edge/manifest.json
+sed -i '' '/themes\/\*\.css/d' /tmp/clearjson-edge/manifest.json
+# 修复删除 themes/*.css 后留下的空行（可选，不影响功能）
+
+cd /tmp/clearjson-edge && zip -r /path/to/clearjson/clearjson-edge-vX.Y.Z.zip manifest.json icons/ src/ -x "*.DS_Store"
+```
+
+**CWS vs Edge manifest 差异速查表：**
+
+| 字段 | CWS | Edge |
+|---|---|---|
+| `minimum_chrome_version` | ✅ 保留 | ❌ 删除 |
+| `web_accessible_resources` 中的 `themes/*.css` | ✅ 保留 | ❌ 删除 |
+
 ### 加载扩展（Chrome）
 1. `chrome://extensions/` → 开启"开发者模式"
 2. "加载已解压的扩展程序" → 选择项目目录
