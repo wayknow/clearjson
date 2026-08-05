@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-08-04 | 当前版本：v1.1.4（CWS + Edge 审核中）| Glama score A/A/B ✅ | Product Hunt 已发布
+> 最后更新：2026-08-05 | 当前版本：v1.1.4（CWS ✅ | Edge 审核中）| Glama score A/A/B ✅ | Product Hunt 已发布
 
 ---
 
