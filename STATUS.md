@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-08-05 | 当前版本：v1.1.4（CWS ✅ | Edge 审核中）| Glama score A/A/B ✅ | Product Hunt 已发布
+> 最后更新：2026-08-05 | 当前版本：v1.1.4（CWS ✅ | Edge 审核中）| Glama score A/A/B ✅ | Product Hunt 已发布 | dev.to ✅ | HN 评论 ✅
 
 ---
 
@@ -535,11 +535,14 @@ var ClearJSON = window.ClearJSON || {};
 
 ## 十、推广计划
 
-1. **借势**：Hacker News 旧工具背叛用户的热帖
-2. **Product Hunt**：周二/周三发布
-3. **GitHub**：Star 数积累 → 自然流量
-4. **交叉推广**：与 SnapMark 互相导流
-5. **中文市场**：CSDN、知乎、V2EX
+1. **借势**：Hacker News 旧工具背叛用户的热帖 ✅ 2026-08-05 已回复 3 条评论
+2. **Product Hunt** ✅ 已发布（7/14，5 comments）
+3. **dev.to** ✅ 2026-08-05 已发布文章
+4. **GitHub**：Star 数积累 → 自然流量
+5. **交叉推广**：与 SnapMark 互相导流
+6. **Reddit**：已放弃（karma 门槛 + 反自荐规则）
+7. **中文市场**：CSDN、知乎、V2EX（待尝试）
+8. **Hacker News Show HN**：待时机成熟
 
 ---
 
