@@ -543,7 +543,7 @@ var ClearJSON = window.ClearJSON || {};
 5. **交叉推广**：与 SnapMark 互相导流
 6. **Reddit**：已放弃（karma 门槛 + 反自荐规则）
 7. **中文市场**：CSDN、知乎、V2EX（待尝试）
-8. **Hacker News Show HN**：待时机成熟
+8. **Hacker News Show HN** ✅ 2026-08-10 已发布（"ClearJSON – privacy-first JSON viewer, zero network calls for free users"）
 
 ---
 
