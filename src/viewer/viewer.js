@@ -137,6 +137,10 @@
       }
     });
     document.getElementById('btn-close-settings').addEventListener('click', hideSettingsPage);
+
+    // Landing page quick links — Settings & Pro must be reachable from the input page
+    var landingSettingsBtn = document.getElementById('btn-landing-settings');
+    if (landingSettingsBtn) landingSettingsBtn.addEventListener('click', showSettingsPage);
     document.getElementById('btn-save-settings').addEventListener('click', saveAllSettings);
     document.getElementById('btn-add-url').addEventListener('click', addURLPattern);
 

@@ -410,6 +410,20 @@
   text-decoration: none;
 }
 
+/* Landing page quick links (Settings / Pro) */
+.cj-landing-links {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 4px 0 16px;
+}
+
+.cj-landing-links .cj-btn-load {
+  text-decoration: none;
+  font-size: 13px;
+  padding: 6px 14px;
+}
+
 /* Pro price sub-line (yearly) */
 .cj-pro-price-sub {
   font-size: 14px;
