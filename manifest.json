@@ -1,30 +1,29 @@
 {
   "manifest_version": 3,
   "name": "ClearJSON",
-  "version": "1.1.4",
+  "version": "2.0.0",
   "description": "Privacy-first JSON viewer. Zero tracking. Fully local.",
   "author": "ClearJSON",
   "homepage_url": "https://wayknow.tech/clearjson.html",
   "minimum_chrome_version": "110",
-
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-
   "permissions": [
     "storage",
     "activeTab"
   ],
-
   "host_permissions": [
     "file:///*"
   ],
-
   "content_scripts": [
     {
-      "matches": ["*://*/*", "file:///*"],
+      "matches": [
+        "*://*/*",
+        "file:///*"
+      ],
       "js": [
         "src/utils/parser.js",
         "src/utils/tokenizer.js",
@@ -43,17 +42,18 @@
       "run_at": "document_start"
     }
   ],
-
   "web_accessible_resources": [
     {
       "resources": [
         "themes/*.css",
         "src/viewer/*"
       ],
-      "matches": ["*://*/*", "file:///*"]
+      "matches": [
+        "*://*/*",
+        "file:///*"
+      ]
     }
   ],
-
   "action": {
     "default_popup": "src/popup/popup.html",
     "default_icon": {
@@ -63,7 +63,6 @@
     },
     "default_title": "ClearJSON — Settings"
   },
-
   "options_ui": {
     "page": "src/viewer/viewer.html",
     "open_in_tab": false
