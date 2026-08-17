@@ -121,7 +121,7 @@ async function authenticate(request, env) {
  * Send license key to customer via Resend (100 free emails/day).
  * Requires RESEND_API_KEY set as Cloudflare Worker secret.
  */
-async function sendLicenseEmail(toEmail, licenseKey, env) {
+async function sendLicenseEmail(toEmail, licenseKey, plan, expiresAt, env) {
   const apiKey = env.RESEND_API_KEY;
   if (!apiKey) {
     console.error('RESEND_API_KEY not configured — skipping email');
@@ -130,8 +130,8 @@ async function sendLicenseEmail(toEmail, licenseKey, env) {
 
   const htmlBody = `<!DOCTYPE html>
 <html><body style="font-family: system-ui, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
-  <h2 style="color: #6366F1;">Thank you for upgrading to ClearJSON Pro!</h2>
-  <p>Your lifetime license key is ready:</p>
+  <h2 style="color: #6366F1;">Thank you for subscribing to ClearJSON Pro!</h2>
+  <p>Your license key is ready (${plan === 'yearly' ? 'yearly' : 'monthly'}, valid until <strong>${expiresAt}</strong>):</p>
   <div style="background: #eef2ff; border: 2px solid #6366F1; border-radius: 8px; padding: 16px; text-align: center; margin: 24px 0;">
     <code style="font-size: 22px; font-weight: bold; letter-spacing: 2px;">${licenseKey}</code>
   </div>
@@ -141,21 +141,21 @@ async function sendLicenseEmail(toEmail, licenseKey, env) {
     <li>Go to <strong>Settings</strong></li>
     <li>Enter the license key and click <strong>Activate</strong></li>
   </ol>
-  <p>This key covers <strong>3 devices</strong> with lifetime access. No subscription, no recurring charges.</p>
+  <p>This key covers <strong>3 devices</strong> and renews automatically with your subscription. Canceling stops it at the end of the billing period.</p>
   <p style="color: #888; font-size: 13px; margin-top: 32px;">Need help? Reply to this email or contact <a href="mailto:support@wayknow.tech">support@wayknow.tech</a>.</p>
 </body></html>`;
 
-  const textBody = `Thank you for upgrading to ClearJSON Pro!
+  const textBody = `Thank you for subscribing to ClearJSON Pro!
 
-Your lifetime license key: ${licenseKey}
+Your license key: ${licenseKey}
+Plan: ${plan} · Valid until: ${expiresAt}
 
 How to activate:
 1. Click the ClearJSON icon in your Chrome toolbar
 2. Go to Settings
 3. Enter the license key and click Activate
 
-This key covers 3 devices with lifetime access.
-
+This key covers 3 devices and renews automatically with your subscription.
 Need help? Contact support@wayknow.tech`;
 
   try {
@@ -370,6 +370,13 @@ async function verifyCreemSignature(request, rawBody, env) {
   }
 }
 
+function nextExpiry(plan) {
+  const d = new Date();
+  if (plan === 'yearly') d.setUTCFullYear(d.getUTCFullYear() + 1);
+  else d.setUTCMonth(d.getUTCMonth() + 1);
+  return d.toISOString().slice(0, 10);
+}
+
 async function handleCreemWebhook(request, env) {
   const rawBody = await request.text();
 
@@ -390,50 +397,74 @@ async function handleCreemWebhook(request, env) {
 
   const eventType = body.eventType;
   const obj = body.object || {};
+  const email = obj.customer?.email || obj.email;
+  const subscriptionId = obj.subscription?.id || obj.id;
 
-  if (eventType !== 'checkout.completed') {
-    return json({ received: true, action: 'ignored', event: eventType });
+  // Subscription model (2026-08-15: ClearJSON moved from buy-once to subscription)
+  const GRANT_EVENTS = ['subscription.active', 'subscription.paid', 'subscription.trialing'];
+  const REVOKE_EVENTS = ['subscription.canceled', 'subscription.expired', 'subscription.paused', 'subscription.unpaid'];
+
+  if (eventType === 'checkout.completed') {
+    return json({ received: true, action: 'ignored', event: eventType }); // one-time payments: not our model anymore
+  }
+  if (!GRANT_EVENTS.includes(eventType) && !REVOKE_EVENTS.includes(eventType)) {
+    return json({ received: true, action: 'ignored', event: eventType }); // scheduled_cancel / past_due / update / others
+  }
+  if (!email || !subscriptionId) {
+    return json({ error: 'missing_email_or_subscription' }, 400);
   }
 
-  const email = obj.customer?.email;
-  if (!email) {
-    return json({ error: 'missing_customer_email' }, 400);
+  const plan = (obj.plan?.interval || 'month').includes('year') ? 'yearly' : 'monthly';
+
+  if (REVOKE_EVENTS.includes(eventType)) {
+    const status = eventType === 'subscription.paused' ? 'paused' : 'canceled';
+    await env.DB.prepare(
+      "UPDATE licenses SET status = ? WHERE creem_subscription_id = ?"
+    ).bind(status, subscriptionId).run();
+    return json({ received: true, action: 'revoked', event: eventType });
   }
 
-  const orderId = obj.order?.id;
-  if (orderId) {
-    const existing = await env.DB.prepare(
-      'SELECT license_key FROM licenses WHERE creem_order_id = ?'
-    ).bind(orderId).first();
-    if (existing) {
-      return json({ received: true, action: 'already_issued', license_key: existing.license_key });
-    }
+  // Grant / renew — idempotent on creem_subscription_id
+  const existing = await env.DB.prepare(
+    'SELECT id, license_key FROM licenses WHERE creem_subscription_id = ?'
+  ).bind(subscriptionId).first();
+  const expiresAt = obj.subscription?.current_period_end
+    ? String(obj.subscription.current_period_end).slice(0, 10)
+    : nextExpiry(plan);
+
+  if (existing) {
+    await env.DB.prepare(
+      "UPDATE licenses SET status = 'active', plan = ?, expires_at = ?, email = ? WHERE id = ?"
+    ).bind(plan, expiresAt, email, existing.id).run();
+    return json({ received: true, action: 'renewed', license_key: existing.license_key, expires_at: expiresAt });
   }
 
   const key = generateLicenseKey();
   await env.DB.prepare(
-    `INSERT INTO licenses (license_key, email, tier, max_devices, creem_customer_id, creem_order_id)
-     VALUES (?, ?, 'pro', ?, ?, ?)`
-  ).bind(key, email, MAX_DEVICES, obj.customer?.id || null, orderId || null).run();
+    `INSERT INTO licenses (license_key, email, status, tier, plan, max_devices, expires_at, creem_customer_id, creem_order_id, creem_subscription_id)
+     VALUES (?, ?, 'active', 'pro', ?, ?, ?, ?, ?, ?)`
+  ).bind(key, email, plan, MAX_DEVICES, expiresAt, obj.customer?.id || null, obj.order?.id || null, subscriptionId).run();
 
-  console.log(`License issued: ${key} -> ${email} (order: ${orderId || 'N/A'})`);
+  console.log(`License issued: ${key} -> ${email} (${plan}, expires ${expiresAt})`);
 
   // Send license key via email
-  await sendLicenseEmail(email, key, env);
+  await sendLicenseEmail(email, key, plan, expiresAt, env);
 
   return json({
     received: true,
     action: 'license_issued',
     license_key: key,
     email,
+    plan,
+    expires_at: expiresAt,
   }, 201);
 }
 
 function handleCheckoutPro(env) {
   return json({
     product: 'ClearJSON Pro',
-    price: '$29.00',
-    url: CREEM_CHECKOUT_URL,
+    price: '$2.99/month or $19.99/year',
+    url: CREEM_CHECKOUT_URL, // TODO: point to subscription plan (monthly/yearly) once created in Creem
   });
 }
 

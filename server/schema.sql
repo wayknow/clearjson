@@ -13,8 +13,10 @@ CREATE TABLE IF NOT EXISTS licenses (
   max_devices INTEGER NOT NULL DEFAULT 3,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   expires_at TEXT,                                    -- NULL = lifetime
+  plan TEXT DEFAULT 'monthly',                        -- monthly / yearly
   creem_customer_id TEXT,
   creem_order_id TEXT,
+  creem_subscription_id TEXT,                         -- subscription events key (idempotency)
   notes TEXT
 );
 
