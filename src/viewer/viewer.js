@@ -195,10 +195,23 @@
         showSettingsPage();
       } else if (hash === '#upgrade' && proPage && proPage.classList.contains('cj-hidden')) {
         showProPage();
+      } else if (hash === '#view') {
+        // Forward/restore to the results view
+        goToMain();
       } else if (hash === '' || hash === '#') {
-        if (!settingsPage.classList.contains('cj-hidden')) hideSettingsPage();
+        var wasOverlay = false;
+        if (!settingsPage.classList.contains('cj-hidden')) {
+          hideSettingsPage();
+          wasOverlay = true;
+        }
         if (proPage && !proPage.classList.contains('cj-hidden')) {
           proPage.classList.add('cj-hidden');
+          wasOverlay = true;
+        }
+        if (!wasOverlay) {
+          // Browser back from results → landing (input page)
+          showLanding();
+        } else {
           goToMain();
         }
       }
@@ -289,6 +302,9 @@
     // Stats bar
     statsBar.classList.remove('cj-hidden');
     updateStats(result.stats);
+
+    // Track the results view in history so the browser back button returns to the input page
+    if (window.location.hash !== '#view') window.location.hash = '#view';
   }
 
   function showLanding() {
