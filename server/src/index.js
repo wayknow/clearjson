@@ -138,7 +138,7 @@ async function sendLicenseEmail(toEmail, licenseKey, plan, expiresAt, env) {
   </div>
   <p><strong>How to activate:</strong></p>
   <ol>
-    <li>Click the ClearJSON icon in your Chrome toolbar</li>
+    <li>Click the ClearJSON icon in your browser toolbar</li>
     <li>Go to <strong>Settings</strong></li>
     <li>Enter the license key and click <strong>Activate</strong></li>
   </ol>
@@ -152,7 +152,7 @@ Your license key: ${licenseKey}
 Plan: ${plan} · Valid until: ${expiresAt}
 
 How to activate:
-1. Click the ClearJSON icon in your Chrome toolbar
+1. Click the ClearJSON icon in your browser toolbar
 2. Go to Settings
 3. Enter the license key and click Activate
 
