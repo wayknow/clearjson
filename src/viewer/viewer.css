@@ -410,18 +410,16 @@
   text-decoration: none;
 }
 
-/* Landing page quick links (Settings / Pro) */
-.cj-landing-links {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  margin: 4px 0 16px;
+/* Separator between action buttons and Settings/Pro */
+.cj-input-actions-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--cj-border, rgba(255, 255, 255, 0.15));
+  margin: 0 6px;
 }
 
-.cj-landing-links .cj-btn-load {
+.cj-input-actions #btn-landing-pro {
   text-decoration: none;
-  font-size: 13px;
-  padding: 6px 14px;
 }
 
 /* Pro price sub-line (yearly) */
