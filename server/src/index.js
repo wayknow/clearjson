@@ -30,7 +30,8 @@ const KEY_SEGMENTS = 3;
 const MAX_DEVICES = 3;
 
 // Creem product ID — set in Cloudflare Worker env var CREEM_PRODUCT_ID
-const CREEM_CHECKOUT_URL = 'https://www.creem.io/payment/prod_5Aha8NpKKi8AUd2sLaPRgM';
+const CREEM_MONTHLY_URL = 'https://www.creem.io/payment/prod_3ybErRdC6hwdGF8cJt21IF';
+const CREEM_YEARLY_URL = 'https://www.creem.io/payment/prod_XyNSKueGiqmuSxa9b9xRH';
 
 // ============ Helpers ============
 
@@ -429,7 +430,7 @@ async function handleCreemWebhook(request, env) {
     'SELECT id, license_key FROM licenses WHERE creem_subscription_id = ?'
   ).bind(subscriptionId).first();
   const expiresAt = obj.subscription?.current_period_end
-    ? String(obj.subscription.current_period_end).slice(0, 10)
+    ? new Date(Number(obj.subscription.current_period_end) * 1000).toISOString().slice(0, 10)
     : nextExpiry(plan);
 
   if (existing) {
@@ -464,7 +465,8 @@ function handleCheckoutPro(env) {
   return json({
     product: 'ClearJSON Pro',
     price: '$2.99/month or $19.99/year',
-    url: CREEM_CHECKOUT_URL, // TODO: point to subscription plan (monthly/yearly) once created in Creem
+    monthly_url: CREEM_MONTHLY_URL,
+    yearly_url: CREEM_YEARLY_URL,
   });
 }
 
