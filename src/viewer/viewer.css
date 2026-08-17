@@ -410,12 +410,13 @@
   text-decoration: none;
 }
 
-/* Separator between action buttons and Settings/Pro */
+/* Separator between action buttons and Settings/Pro — pushes the right group to the edge */
 .cj-input-actions-sep {
+  margin-left: auto;
   width: 1px;
   height: 20px;
   background: var(--cj-border, rgba(255, 255, 255, 0.15));
-  margin: 0 6px;
+  margin-right: 6px;
 }
 
 .cj-input-actions #btn-landing-pro {
