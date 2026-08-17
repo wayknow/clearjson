@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-08-05 | 当前版本：v1.1.4（CWS ✅ | Edge ✅）| Glama score A/A/B ✅ | Product Hunt 已发布 | dev.to ✅ | HN 评论 ✅
+> 最后更新：2026-08-17 | 当前版本：v2.0.0（订阅化，CWS ⏳ 审核中 | Edge ⏳ 审核中）| Glama score A/A/B ✅
 
 ---
 
@@ -12,7 +12,7 @@
 - **产品页**：https://wayknow.tech/clearjson.html
 - **隐私政策**：https://wayknow.tech/clearjson-privacy.html
 - **定位**：替代被卖后注入广告的 JSON Formatter（曾 200 万用户）
-- **商业模式**：免费版永远免费，Pro 版 $29 终身买断，不做订阅
+- **商业模式**：免费版永远免费，Pro 版订阅制（$2.99/月 或 $19.99/年，Creem 收款，2026-08-15 起从买断转订阅）
 - **竞品格局**：5-10 个免费替代品，JSONVault Pro 是唯一付费竞品（订阅制）
 
 ---

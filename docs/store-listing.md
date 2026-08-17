@@ -1,7 +1,7 @@
 # Chrome Web Store — Listing Assets
 
 > ✅ v1.1.2（UI 规范化）已提交审核：https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk
-> $29 终身，Creem 外部支付 — v1.1.1 已于 2026-07-25 审核通过
+> 订阅制（$2.99/月 或 $19.99/年），Creem 外部支付 — v2.0.0 已提交 CWS + Edge 审核（2026-08-17）
 
 ## Title (优化版，待审核通过后替换)
 
@@ -22,7 +22,7 @@ ClearJSON is the trustworthy JSON viewer you've been looking for — built after
 • 100% Local — Every byte stays on your machine. Zero network requests.
 • Privacy First — No analytics, no tracking, no accounts, no ads. Not now, not ever.
 • Lightning Fast — Handles everything from tiny API responses to 500 MB data dumps with virtual scrolling (Pro).
-• One-Time Purchase — $29 lifetime. No subscriptions. Covers 3 devices.
+• Honest Pricing — $2.99/month or $19.99/year, cancel anytime. Covers 3 devices.
 
 ━━━━━━━━━━━━━━━━━━━━━━
 🆓 Free Features (Forever)
@@ -41,7 +41,7 @@ ClearJSON is the trustworthy JSON viewer you've been looking for — built after
 • URL exclusion list (regex) — skip sites with built-in JSON rendering
 
 ━━━━━━━━━━━━━━━━━━━━━━
-💰 Pro ($29 Lifetime — No Subscription)
+💰 Pro ($2.99/month — Cancel Anytime)
 ━━━━━━━━━━━━━━━━━━━━━━
 
 • Large file virtual scrolling — 500 MB JSON without freezing (Web Worker + streaming parser)
@@ -149,8 +149,8 @@ All promo tiles are in `promo/` directory. HTML source files for editing, PNG re
 ## Pricing
 
 - Free tier with core features (fully functional, no time limit)
-- Pro: $29 USD one-time (lifetime), covers up to 3 devices
-- **Payment via Creem (external checkout).** Chrome Web Store's own payments API was discontinued in 2021, so Pro is sold through Creem rather than in-store billing. Buy link: `https://www.creem.io/payment/prod_5Aha8NpKKi8AUd2sLaPRgM`
+- Pro: $2.99 USD/month or $19.99 USD/year (subscription), covers up to 3 devices, cancel anytime
+- **Payment via Creem (external checkout).** Chrome Web Store's own payments API was discontinued in 2021, so Pro is sold through Creem rather than in-store billing. Monthly link: `https://www.creem.io/payment/prod_3ybErRdC6hwdGF8cJt21IF` · Yearly link: `https://www.creem.io/payment/prod_XyNSKueGiqmuSxa9b9xRH`
 - Flow: purchase → license key emailed → activate in extension (Settings → Pro → paste key)
 
 > ⚠️ CWS submission form: declare that the item **contains paid features** and set the "In-app purchases / paid features" disclosure. Since billing is external (Creem), there are no Google-managed IAP SKUs to configure — the disclosure + an accurate description are what's required.
@@ -174,7 +174,7 @@ BASIC FUNCTIONALITY:
 PRO FEATURES (no purchase needed for review):
 1. Open the standalone viewer (click extension icon → "Open JSON Viewer")
 2. Click "PRO ↑" in the toolbar or navigate to the Pro/Upgrade page
-3. Enter this license key to activate Pro: CLJ-Q46R-EQMG-4ZDE
+3. Enter this license key to activate Pro: CLJ-JS2P-ULWU-CMKN
 4. Click "Activate" — the key will be verified against our license server
 5. All Pro features are now unlocked for testing:
    - Large file support (>2MB): load any large JSON file

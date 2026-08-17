@@ -20,8 +20,8 @@
 - 开发模式绕过 Pro：`localStorage.setItem('clearjson_pro_dev', '1')`
 - 本地测试服务器：`node test-data/server.js`（端口 8765，自动启用 Pro）
 - 许可证服务器：Cloudflare Worker + D1，域名 `api.wayknow.tech/clearjson/`
-- 竞品定位：替代被卖后注入广告的 JSON Formatter，$29 终身买断
-- 不做：AI、订阅制、JSON Diff、JSONPath 查询、高级编辑、云端同步、用户账号
+- 竞品定位：替代被卖后注入广告的 JSON Formatter；商业模式：免费核心 + Pro 订阅（$2.99/月 或 $19.99/年）
+- 不做：AI、JSON Diff、JSONPath 查询、高级编辑、云端同步、用户账号（注：订阅制已做，2026-08-15 起；JSON Diff/JSONPath 是 2.0 路线图）
 
 ## 设计系统
 
