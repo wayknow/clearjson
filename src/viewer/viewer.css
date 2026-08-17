@@ -410,6 +410,22 @@
   text-decoration: none;
 }
 
+/* Pro price sub-line (yearly) */
+.cj-pro-price-sub {
+  font-size: 14px;
+  color: var(--cj-text-secondary);
+  margin-top: -8px;
+  margin-bottom: 8px;
+}
+
+/* Secondary (yearly) subscribe button */
+.cj-pro-buy-wrap .cj-btn-secondary {
+  margin-left: 8px;
+  background: transparent;
+  border: 1px solid var(--cj-border, rgba(255, 255, 255, 0.2));
+  color: var(--cj-text-secondary);
+}
+
 /* ================================================================
    MISC
    ================================================================ */
