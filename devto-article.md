@@ -78,7 +78,7 @@ After two weeks of switching between tools depending on what I was doing, I buil
 - The Pro license verification is the ONLY network call, and only when activating a key.
 - All processing (parsing, formatting, rendering, search) happens on your device.
 
-**Pro features ($29 lifetime, no subscription):**
+**Pro features ($2.99/month or $19.99/year):**
 - Virtual scrolling for 500 MB+ JSON files (Web Worker + streaming parser)
 - JWT auto-decode — detects `eyJ...` tokens, inline displays header + payload, highlights expiry
 - Regex search with match navigation and full-document highlighting
@@ -103,9 +103,9 @@ After two weeks of switching between tools depending on what I was doing, I buil
 - No JSON Diff. Same reason — Just JSON and JsonKing do it better, for free.
 - Still early. ~43 installs as of writing. The product is solid, the user base is not.
 
-### Why $29 Lifetime?
+### Why subscription?
 
-JSON viewers have exactly zero marginal cost. No servers, no storage, no API calls. Charging a monthly subscription for one feels dishonest to me. The Pro tier unlocks features that took real engineering effort (virtual scrolling, streaming parser, JWT decode, multi-format export) — and a one-time payment reflects that value without the subscription fatigue.
+JSON viewers have exactly zero marginal cost. No servers, no storage, no API calls. Charging monthly for one felt wrong to me — and I started with a $29 lifetime buy. But the Pro tier unlocks features that took real engineering effort (virtual scrolling, streaming parser, JWT decode, multi-format export), and a subscription means I can keep shipping improvements instead of moving on to the next thing. $2.99/month or $19.99/year. Cancel anytime.
 
 ---
 **Try it:** [ClearJSON on Chrome Web Store](https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk) | [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/clearjson/kdebbkdldjhhboafpflimanekmhinelg)

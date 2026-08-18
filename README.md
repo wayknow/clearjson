@@ -43,7 +43,7 @@ For AI agents (Claude Code, etc.): `npx -y clearjson-mcp`
 - ✅ URL exclusion list (regex patterns)
 - ✅ 100% local processing — zero network requests
 
-### Pro ($29 lifetime)
+### Pro ($2.99/month or $19.99/year)
 - 💰 Large file virtual scrolling (100MB+ without freezing)
 - 💰 Advanced search (regex, match highlighting, result navigation)
 - 💰 JWT auto-decode (header + payload inline, expiry detection)
@@ -150,7 +150,7 @@ node test-data/server.js
 
 ### Current Status (v1.1.1 — live on CWS)
 
-All features implemented. Pro available via Creem ($29 lifetime).
+All features implemented. Pro available via Creem ($2.99/month or $19.99/year).
 136 unit tests passing. MCP server v1.1.0 published to npm.
 
 See [STATUS.md](STATUS.md) for full project state, architecture decisions, and release checklist.

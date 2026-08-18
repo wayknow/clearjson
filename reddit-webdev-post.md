@@ -13,7 +13,7 @@ After the original JSON Formatter extension got sold and started injecting track
 | JSON Formatter (arnav-kr) | ✅ | ✅ | 60+ themes, collapsible toolbar, solid replacement |
 | JSON Viewer Pro (PatilWeb) | ✅ | ❌ | 300K users, tree + chart view, JSONPath |
 | JSON Alexander (Wes Bos) | ✅ | ✅ | Clean, minimal, built in response to the scandal |
-| [ClearJSON](https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk) | ✅ | ✅ (MIT) | Privacy-first, 100% local, zero network requests. Pro $29 lifetime for large files/JWT/regex/export |
+| [ClearJSON](https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk) | ✅ | ✅ (MIT) | Privacy-first, 100% local, zero network requests. Pro $2.99/mo for large files/JWT/regex/export |
 | JsonDiscovery | ✅ | ❌ | Transforms page into interactive explorer, highest rated (4.88) |
 | Firefox built-in | ✅ | ✅ | Already there if you use FF, basic but works |
 
