@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-08-17 | 当前版本：v2.0.0（订阅化，**CWS ✅ 已上架 | Edge ✅ 已上架**）| Glama score A/A/B ✅
+> 最后更新：2026-08-17 | 当前版本：v2.0.0（订阅化，**CWS ✅ 已上架 | Edge ✅ 已上架**）| Glama score A/A/B ✅ | dev.to ✅ | HN 评论 ✅ | awesome-mcp PR ⏳
 
 ---
 
