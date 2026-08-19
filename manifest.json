@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "JSON Viewer & Formatter — ClearJSON",
-  "version": "2.0.1",
-  "description": "Privacy-first JSON viewer. Zero tracking. Fully local.",
+  "version": "2.0.2",
+  "description": "Format, view & search JSON with syntax highlighting, collapsible tree, 10 themes, 500MB+ virtual scrolling. JWT decode, CSV/YAML/TypeScript export. 100% local, no tracking.",
   "author": "ClearJSON",
   "homepage_url": "https://wayknow.tech/clearjson.html",
   "minimum_chrome_version": "110",
