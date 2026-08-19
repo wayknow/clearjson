@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "JSON Viewer & Formatter — ClearJSON",
-  "version": "2.0.3",
-  "description": "Format & view JSON: syntax highlighting, collapsible tree, 10 themes, 500MB+ support. JWT decode, regex search, CSV/YAML export. 100% local, no tracking.",
+  "version": "2.0.4",
+  "description": "Format & view JSON: syntax highlighting, collapsible tree, 10 themes, 500MB+. JWT decode, regex search, CSV/YAML export. 100% local.",
   "author": "ClearJSON",
   "homepage_url": "https://wayknow.tech/clearjson.html",
   "minimum_chrome_version": "110",
