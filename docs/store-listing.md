@@ -1,15 +1,15 @@
 # Chrome Web Store — Listing Assets
 
-> ✅ v1.1.2（UI 规范化）已提交审核：https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk
-> 订阅制（$2.99/月 或 $19.99/年），Creem 外部支付 — v2.0.0 已提交 CWS + Edge 审核（2026-08-17）
+> ✅ v2.0.0（订阅制）已上架 CWS + Edge（2026-08-17）
+> **CWS 标题优化**：关键词前置 — "JSON Viewer & Formatter — ClearJSON"（2026-08-19）
 
-## Title (优化版，待审核通过后替换)
+## Title (优化版，关键词前置)
 
-ClearJSON: Privacy-First JSON Viewer & Formatter
+JSON Viewer & Formatter — ClearJSON
 
 ## Short Description (优化版，≤132 chars)
 
-JSON viewer & formatter with syntax highlighting, collapsible tree, and 10 themes. 100% local, no tracking. Pro adds large file virtual scrolling, JWT decode, regex search, and multi-format export.
+JSON viewer & formatter with syntax highlighting, collapsible tree, and 10 themes. 100% local, no tracking. Pro adds 500MB+ virtual scrolling, JWT decode, regex search, and CSV/TSV/YAML export.
 
 ## Detailed Description (优化版，待审核通过后替换)
 
@@ -79,8 +79,9 @@ Developer Tools
 
 ## Keywords
 
-JSON, JSON viewer, JSON formatter, JSON parser, pretty print, syntax highlighting,
-tree view, developer tools, API debugger, JSON beautifier, JWT decoder, JSON to CSV
+JSON viewer, JSON formatter, JSON parser, pretty print, format JSON, syntax highlighting,
+tree view, developer tools, API debugger, JSON beautifier, JWT decoder, JSON to CSV,
+JSON to TypeScript, large JSON, 500MB JSON, virtual scrolling
 
 ## Language
 
