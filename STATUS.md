@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-08-20 | 当前版本：v2.0.4（**CWS ✅ 8/19 通过 | Edge ✅ 8/18 通过**）| Glama ✅ 已 claim | dev.to ✅ | HN 评论 ✅ | awesome-mcp PR ⏳ 等 merge（URL 已修正，checks 全绿）
+> 最后更新：2026-09-16 | 当前版本：v2.0.4（**CWS ✅ 8/19 通过 | Edge ✅ 8/18 通过**）| Glama ✅ 已 claim | dev.to ✅ | HN 评论 ✅ | awesome-mcp PR ⏳ 等 merge（URL 已修正，checks 全绿）
 
 ---
 
@@ -547,6 +547,16 @@ var ClearJSON = window.ClearJSON || {};
 6. **Reddit**：已放弃（karma 门槛 + 反自荐规则）
 7. **中文市场**：CSDN、知乎、V2EX（待尝试）
 8. **Hacker News Show HN** ✅ 2026-08-10 已发布（"ClearJSON – privacy-first JSON viewer, zero network calls for free users"）
+
+### 增长数据（2026-09-16）
+
+| 指标 | 数值 |
+|---|---|
+| 90 天累计安装 | 115 |
+| 当前用户数 | 16 |
+| 日均安装 | 1-2，峰值 3-4 |
+| CWS 总展示次数 | 612 |
+| 趋势 | 9/7 起缓慢上涨，9/16 达到 16 |
 
 ---
 
