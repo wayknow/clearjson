@@ -556,7 +556,9 @@ var ClearJSON = window.ClearJSON || {};
 | 当前用户数 | 16 |
 | 日均安装 | 1-2，峰值 3-4 |
 | CWS 总展示次数 | 612 |
+| CWS 转化率 | 18.8%（行业平均 5-10%） |
 | 趋势 | 9/7 起缓慢上涨，9/16 达到 16 |
+| 流量来源 | Google 搜索索引产品页（wayknow.tech/clearjson.html） |
 
 ---
 
