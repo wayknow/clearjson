@@ -70,4 +70,4 @@
 
 - 代码改动后更新 STATUS.md 同步状态
 - 提交前跑 `npm test`
-- 上下文快满时说"做检查点"：更新 STATUS.md → git commit → 提示清空重启
+- 上下文快满时说"做检查点"：更新 STATUS.md → git commit → git push → 提示清空重启
