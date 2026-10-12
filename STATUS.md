@@ -564,6 +564,18 @@ var ClearJSON = window.ClearJSON || {};
 
 ## 十一、变更记录
 
+### 版本号对齐（2026-10-12）
+
+**改动原因：** 根 `package.json` 版本仍停留在 `1.1.4`（v1.1.4 遗留），文档里的扩展版本引用也停留在 v1.0.0/v1.1.0/v1.1.1/v1.1.2，与已发布的 `manifest.json` v2.0.4 不一致。
+
+**具体改动：**
+- 根 `package.json` `version` `1.1.4` → `2.0.4`
+- `package-lock.json` 根包版本 `0.2.0` → `2.0.4`
+- `README.md`（Edge badge、Current Status）、`CLAUDE.md`、`features.md`、`PRODUCT.md` 的扩展版本引用统一为 v2.0.4（MCP 自身的 `v1.1.0` 引用保持不变）
+
+**改动文件：** `package.json`、`package-lock.json`、`README.md`、`CLAUDE.md`、`features.md`、`PRODUCT.md`、`STATUS.md`
+**验证：** `npm test` 136 个测试全通过。
+
 ### v1.1.3 → v1.1.4（2026-08-04）— 工具栏按钮优化
 
 **改动原因：** 工具栏按钮整体偏小、Settings 按钮只有 ⚙ 图标用户不知道功能，与竞品相比按钮尺寸和可读性不足。

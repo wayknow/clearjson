@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/clearjson-mcp)](https://www.npmjs.com/package/clearjson-mcp)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/bgcicghmdpefapfdeghgealacphkgobk)](https://chromewebstore.google.com/detail/clearjson/bgcicghmdpefapfdeghgealacphkgobk)
-[![Edge Add-ons](https://img.shields.io/badge/edge-v1.1.2-0078D7)](https://microsoftedge.microsoft.com/addons/detail/clearjson/kdebbkdldjhhboafpflimanekmhinelg)
+[![Edge Add-ons](https://img.shields.io/badge/edge-v2.0.4-0078D7)](https://microsoftedge.microsoft.com/addons/detail/clearjson/kdebbkdldjhhboafpflimanekmhinelg)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 > Privacy-first browser JSON viewer. Zero tracking. Fully local. Plus an MCP server for AI agents.
@@ -148,7 +148,7 @@ node test-data/browser-test.js
 node test-data/server.js
 ```
 
-### Current Status (v1.1.1 — live on CWS)
+### Current Status (v2.0.4 — live on Chrome Web Store & Edge)
 
 All features implemented. Pro available via Creem ($2.99/month or $19.99/year).
 136 unit tests passing. MCP server v1.1.0 published to npm.
