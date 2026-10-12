@@ -7,9 +7,23 @@
 
 JSON Viewer & Formatter — ClearJSON
 
-## Short Description (优化版，≤132 chars)
+## Short Description (≤132 chars)
 
-JSON viewer & formatter with syntax highlighting, collapsible tree, and 10 themes. 100% local, no tracking. Pro adds 500MB+ virtual scrolling, JWT decode, regex search, and CSV/TSV/YAML export.
+> 商店"短描述"以 `manifest.json` 的 `description` 字段为准（CWS 上限 132 chars）。
+> ⚠️ 提交前务必核对长度，示例：`python3 -c "import json;print(len(json.load(open('manifest.json'))['description']))"`
+
+**当前线上版（与 manifest.json 完全一致 — 132 chars）**
+
+Format & view JSON: syntax highlighting, collapsible tree, 10 themes, 500MB+. JWT decode, regex search, CSV/YAML export. 100% local.
+
+**关键词增强建议（125 chars — 若采用需同步改 manifest.json）**
+
+把唯一差异化卖点 `virtual scrolling` 挤进短描述（原文只写 `500MB+`，搜不到该词）：
+
+Format & view JSON: syntax highlighting, collapsible tree, 500MB+ virtual scrolling. JWT decode, CSV/YAML export. 100% local.
+
+> 备选（126 chars，viewer 前置 + 补 `no tracking`）：
+> `JSON viewer & formatter: syntax highlighting, collapsible tree, 500MB+ virtual scrolling, JWT decode. 100% local, no tracking.`
 
 ## Detailed Description (优化版，待审核通过后替换)
 
@@ -82,6 +96,10 @@ Developer Tools
 JSON viewer, JSON formatter, JSON parser, pretty print, format JSON, syntax highlighting,
 tree view, developer tools, API debugger, JSON beautifier, JWT decoder, JSON to CSV,
 JSON to TypeScript, large JSON, 500MB JSON, virtual scrolling
+
+> 覆盖检查（2026-10-12）：详细描述已覆盖 `virtual scrolling` / `TypeScript` / `large file` 等词；
+> 但**短描述**（搜索结果的可见文案）此前只写 `500MB+`，漏掉唯一差异化词 `virtual scrolling` —— 见上方关键词增强建议。
+> Edge Add-ons 的公开 listing 文案（标题/描述/关键词）在 Edge Partner Center 单独填写，请与本节对齐。
 
 ## Language
 
