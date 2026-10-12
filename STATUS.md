@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-09-21 | 当前版本：v2.0.4（**CWS ✅ 8/19 通过 | Edge ✅ 8/18 通过**）| Glama ✅ 已 claim | dev.to ✅ | HN 评论 ✅ | awesome-mcp PR ⏳ 等 merge（已二次回复维护者确认 Glama claim）
+> 最后更新：2026-10-12 | 当前版本：v2.0.4（**CWS ✅ 8/19 通过 | Edge ✅ 8/18 通过**）| Glama ✅ 已 claim | dev.to ✅ | HN 评论 ✅ | awesome-mcp PR #11199 ✅ 已 rebase 解冲突（mergeable=clean），等维护者 merge
 
 ---
 
@@ -267,7 +267,7 @@
 - **GitHub repo 公开**：设 public，开源 MIT，方便 MCP 目录收录和社区协作
 - **README**：新增 badge（npm/CWS/license）+ npm/mcp.so 链接
 - **产品页**：`clearjson.html` 新增 MCP Server 区块（10 工具 + npx 一键安装）
-- **MCP 目录**：mcp.so ✅ | Glama 已收录 ✅（build 成功，v0.1.0 发布，score B）| awesome-mcp-servers PR 已加 badge，等 merge
+- **MCP 目录**：mcp.so ✅ | Glama 已收录 ✅（build 成功，v0.1.0 发布，score B）| awesome-mcp-servers PR #11199 ✅ 已 rebase 解冲突（mergeable=clean），等 merge
 - **Edge Add-ons**：已提交审核 ✅（Store ID: 0RDCKFRQ308M）
 - **Dockerfile**：根目录 + clearjson-mcp/ 各一个，用于 Glama 安全检查
 
@@ -288,7 +288,7 @@
 - 零后端，纯本地运行。用户接入：`npx -y clearjson-mcp`
 - 49 个单元测试全过
 - ~~待发布 npm~~ ✅ `v1.1.0` 已发布（含 Pro 许可证系统）：[npmjs.com/package/clearjson-mcp](https://www.npmjs.com/package/clearjson-mcp)
-- MCP 目录注册：mcp.so ✅ | awesome-mcp-servers PR 已提 ✅ | smithery.ai（不支持 stdio）
+- MCP 目录注册：mcp.so ✅ | awesome-mcp-servers PR #11199 已提 ✅（已 rebase）| smithery.ai（不支持 stdio）
 - 产品页（clearjson.html）已加 MCP Server 区块 ✅
 - Edge Add-ons 已提交审核 ✅（Store ID: 0RDCKFRQ308M）
 - 下一步：CWS 关键词优化 + Hacker News + 中文社区推广
@@ -563,6 +563,19 @@ var ClearJSON = window.ClearJSON || {};
 ---
 
 ## 十一、变更记录
+
+### awesome-mcp-servers PR 解冲突（2026-10-12）
+
+**背景：** PR [#11199](https://github.com/punkpeye/awesome-mcp-servers/pull/11199)（Add clearjson-mcp）长期未 merge，GitHub 判定 `mergeable_state: dirty`——分支与上游 `main` 冲突（相邻条目描述被上游改动）。
+
+**处理：**
+- 上游 HTTPS 被墙、SSH 可用 → 改用 SSH 拉取上游 `main`（shallow）
+- 将分支重建为单个 commit（`da071c6b`）置于最新 `main` 之上，diff 仅 `README.md` +1 行
+- 条目从 Aggregators 段落移到 **Developer Tools** 段落正确字母位（`VrtxOmega/omega-brain-mcp` 与 `Webvizio/mcp` 之间），与 PR 标题一致
+- force-push 后 PR 为 `mergeable_state: clean`，已在 PR 留言 re-ping 维护者
+
+**变更仓库：** `wayknow/awesome-mcp-servers`（fork 分支 `add-clearjson-mcp`）
+**验证：** GitHub `check-submission` ✅ | `mergeable: True` / `mergeable_state: clean`
 
 ### 版本号对齐（2026-10-12）
 
