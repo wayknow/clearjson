@@ -544,7 +544,7 @@ var ClearJSON = window.ClearJSON || {};
 4. **GitHub**：Star 数积累 → 自然流量
 5. **交叉推广**：与 SnapMark 互相导流
 6. **Reddit**：已放弃（karma 门槛 + 反自荐规则）
-7. **中文市场**：CSDN、知乎、V2EX（待尝试）
+7. **中文市场**：知乎 ✅ 2026-10-19 已发布（链接待补）| 掘金（技术版待发）| CSDN（待发）| V2EX ❌ 放弃（发帖需付费）
 8. **Hacker News Show HN** ✅ 2026-08-10 已发布（"ClearJSON – privacy-first JSON viewer, zero network calls for free users"）
 
 ### 增长数据
@@ -596,6 +596,16 @@ var ClearJSON = window.ClearJSON || {};
 ---
 
 ## 十一、变更记录
+
+### 知乎文章发布（2026-10-19）
+
+**进展：** 中文市场第一篇推广文已在知乎发布（链接待补）。
+
+**验证窗口：** 2026-10-19 起观察 7 天，重点看 CWS「展示次数」是否出现新台阶、日均安装能否从 ~1.5 升至 3+、中文（中国）语言占比是否上升。
+
+**渠道调整：** V2EX 放弃（发帖需付费）；掘金（技术版）与 CSDN 待发。
+
+**改动文件：** `STATUS.md`（十、推广计划）
 
 ### awesome-mcp-servers PR 已合并（2026-10-19）
 
