@@ -1,6 +1,6 @@
 # ClearJSON — 项目状态
 
-> 最后更新：2026-10-12 | 当前版本：v2.0.4（**CWS ✅ 8/19 通过 | Edge ✅ 8/18 通过**）| Glama ✅ 已 claim | dev.to ✅ | HN 评论 ✅ | awesome-mcp PR #11199 ✅ 已 rebase 解冲突（mergeable=clean），等维护者 merge
+> 最后更新：2026-10-19 | 当前版本：v2.0.4（**CWS ✅ 8/19 通过 | Edge ✅ 8/18 通过**）| Glama ✅ 已 claim | dev.to ✅ | HN 评论 ✅ | awesome-mcp PR #11199 ✅ 已 merge（2026-10-18）
 
 ---
 
@@ -265,7 +265,7 @@
 - **GitHub repo 公开**：设 public，开源 MIT，方便 MCP 目录收录和社区协作
 - **README**：新增 badge（npm/CWS/license）+ npm/mcp.so 链接
 - **产品页**：`clearjson.html` 新增 MCP Server 区块（10 工具 + npx 一键安装）
-- **MCP 目录**：mcp.so ✅ | Glama 已收录 ✅（build 成功，v0.1.0 发布，score B）| awesome-mcp-servers PR #11199 ✅ 已 rebase 解冲突（mergeable=clean），等 merge
+- **MCP 目录**：mcp.so ✅ | Glama 已收录 ✅（build 成功，v0.1.0 发布，score B）| awesome-mcp-servers ✅ 已 merge（PR #11199，2026-10-18）
 - **Edge Add-ons**：已提交审核 ✅（Store ID: 0RDCKFRQ308M）
 - **Dockerfile**：根目录 + clearjson-mcp/ 各一个，用于 Glama 安全检查
 
@@ -286,7 +286,7 @@
 - 零后端，纯本地运行。用户接入：`npx -y clearjson-mcp`
 - 49 个单元测试全过
 - ~~待发布 npm~~ ✅ `v1.1.0` 已发布（含 Pro 许可证系统）：[npmjs.com/package/clearjson-mcp](https://www.npmjs.com/package/clearjson-mcp)
-- MCP 目录注册：mcp.so ✅ | awesome-mcp-servers PR #11199 已提 ✅（已 rebase）| smithery.ai（不支持 stdio）
+- MCP 目录注册：mcp.so ✅ | awesome-mcp-servers ✅ 已 merge（PR #11199，2026-10-18）| smithery.ai（不支持 stdio）
 - 产品页（clearjson.html）已加 MCP Server 区块 ✅
 - Edge Add-ons 已提交审核 ✅（Store ID: 0RDCKFRQ308M）
 - 下一步：CWS 关键词优化 + Hacker News + 中文社区推广
@@ -576,7 +576,7 @@ var ClearJSON = window.ClearJSON || {};
 
 **下一步（按性价比，均属"分发"而非"产品"）：**
 1. 中文社区推广（CSDN/知乎/V2EX）—— 安装中中文语言占 40%，需求已验证，是唯一零成本且已有受众的杠杆
-2. 催 MCP 目录 PR merge —— 第二个自然流量入口
+2. ~~催 MCP 目录 PR merge~~ ✅ 已 merge（2026-10-18）—— 观察目录是否带来引流；下一步可提交 smithery.ai / Glama connectors
 3. 挖掘 ChromeOS 异常（安装中 ChromeOS 占 65%，远高于大盘），定位来源并放大
 4. 重启被放弃的渠道：Reddit、dev newsletter、再战 HN（换角度讲故事）
 5. 攒评分/评论 —— 同时提升排名（曝光）与转化
@@ -596,6 +596,16 @@ var ClearJSON = window.ClearJSON || {};
 ---
 
 ## 十一、变更记录
+
+### awesome-mcp-servers PR 已合并（2026-10-19）
+
+**进展：** PR [#11199](https://github.com/punkpeye/awesome-mcp-servers/pull/11199) 已于 **2026-10-18 02:16 UTC** 由 `punkpeye` 合并（merge commit `bf785c3`）。`clearjson-mcp` 正式收录于 awesome-mcp-servers 的 **Developer Tools** 段落。
+
+**后续机会：**
+- 维护者邀请加入 MCP Discord 并索取 username，以授予 **server-author flair**
+- 若提供远程 MCP endpoint，可登记到 https://glama.ai/mcp/connectors
+
+**改动文件：** `STATUS.md`（顶部状态、MCP 目录条目、增长诊断下一步）
 
 ### 增长瓶颈诊断（2026-10-12）
 
